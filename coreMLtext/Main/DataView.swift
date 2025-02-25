@@ -8,8 +8,107 @@
 import SwiftUI
 
 struct DataView: View {
+    @FetchRequest(entity: Word.entity(), sortDescriptors: []) var wordEntities: FetchedResults<Word>
+    
+    // Categories and their respective icons
+    private let categories = [
+        ("Home", "house.fill"),
+        ("Zoo", "pawprint.fill"),
+        ("School", "book.fill"),
+        ("Market", "cart.fill"),
+        ("Mall", "bag.fill")
+    ]
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack {
+            // Background gradient
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color.blue.opacity(0.1),
+                    Color.white.opacity(0.3),
+                    Color.blue.opacity(0.2)
+                ]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .edgesIgnoringSafeArea(.all)
+            
+            // Snow effect
+            SnowfallView()
+                .opacity(0.6)
+            
+            ScrollView {
+                VStack(spacing: 25) {
+                    // Title
+                    Text("Collection Progress")
+                        .font(.system(size: 40, weight: .bold, design: .rounded))
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [.blue.opacity(0.7), .white],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .padding(.top, 40)
+                        .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 2)
+                    
+                    // Total Progress Card
+                    SettingsCard {
+                        VStack(spacing: 15) {
+                            Text("Total Words")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                            
+                            CircularProgressView(
+                                totalWords: vocabularyList.count,
+                                currentWords: wordEntities.count
+                            )
+                        }
+                    }
+                    .padding(.horizontal)
+                    
+                    // Category Progress Cards
+                    LazyVGrid(columns: [
+                        GridItem(.flexible()),
+                        GridItem(.flexible())
+                    ], spacing: 20) {
+                        ForEach(categories, id: \.0) { category, icon in
+                            SettingsCard {
+                                VStack(spacing: 10) {
+                                    HStack {
+                                        Image(systemName: icon)
+                                            .foregroundColor(.blue)
+                                        Text(category)
+                                            .font(.headline)
+                                    }
+                                    
+                                    CircularProgressView(
+                                        totalWords: totalWordsForCategory(category),
+                                        currentWords: collectedWordsForCategory(category)
+                                    )
+                                    .frame(height: 120)
+                                }
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+            }
+        }
+    }
+    
+    // Calculate total words for a specific category
+    private func totalWordsForCategory(_ category: String) -> Int {
+        vocabularyList.filter { $0.category.hasPrefix(category) }.count
+    }
+    
+    // Calculate collected words for a specific category
+    private func collectedWordsForCategory(_ category: String) -> Int {
+        wordEntities.filter { word in
+            vocabularyList.contains { 
+                $0.E_word == word.word && $0.category.hasPrefix(category)
+            }
+        }.count
     }
 }
 

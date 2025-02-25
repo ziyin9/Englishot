@@ -46,6 +46,8 @@ struct TabContentView: View {
             .environmentObject(gameState)
         case .setting:
             SettingView()
+        case .data:
+            DataView()
         }
     }
 }
@@ -64,7 +66,7 @@ struct TopNavBarView: View {
     
     var body: some View {
         VStack(spacing: 15) {
-            ForEach([Tab.map, .backpack, .setting], id: \.self) { tab in
+            ForEach([Tab.map, .backpack, .setting , .data], id: \.self) { tab in
                 TopNavBarItem(
                     tab: tab,
                     isSelected: selectedTab == tab,
@@ -176,6 +178,7 @@ struct TopNavBarItem: View {
         case .map: return "mapicon"
         case .backpack: return "bbpicon"
         case .setting: return "nutsetting"
+        case .data: return "nutsetting"
         }
     }
 }
@@ -184,6 +187,7 @@ enum Tab {
     case map
     case backpack
     case setting
+    case data
 }
 
 
