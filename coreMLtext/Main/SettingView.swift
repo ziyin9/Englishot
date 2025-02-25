@@ -8,13 +8,10 @@ struct SettingView: View {
     
     @State private var volume: Double = 0.5 // 背景音樂音量
     @State private var soundEffectsEnabled = true // 音效開關
-    @State private var selectedLanguage = "English" // 語言選擇
     @State private var notificationsEnabled = true // 通知設定
     @State private var isDarkMode = false // 深色模式
     @State private var isPrivacyExpanded = false // 隱私展開收起
     @State private var selectedTab: Int = 0
-
-    var languages = ["English", "中文", "Español", "Français"]
 
     var body: some View {
         GeometryReader { geometry in
@@ -36,7 +33,7 @@ struct SettingView: View {
                     .opacity(0.6)
                 
                 VStack(spacing: 25) {
-                    // Title with ice effect
+                    // Title with ice effect and centered alignment
                     Text("Settings")
                         .font(.system(size: 40, weight: .bold, design: .rounded))
                         .foregroundStyle(
@@ -46,6 +43,7 @@ struct SettingView: View {
                                 endPoint: .bottomTrailing
                             )
                         )
+                        .frame(maxWidth: .infinity, alignment: .center) // Center the title
                         .padding(.top, 40)
                         .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 2)
                     
@@ -88,21 +86,6 @@ struct SettingView: View {
                                     }
                                 }
                                 .toggleStyle(IceToggleStyle())
-                            }
-                        }
-                        
-                        // Language Settings Card
-                        SettingsCard {
-                            HStack {
-                                Image(systemName: "globe")
-                                    .foregroundColor(.blue)
-                                Picker("Language", selection: $selectedLanguage) {
-                                    ForEach(languages, id: \.self) { language in
-                                        Text(language)
-                                            .foregroundColor(.primary)
-                                    }
-                                }
-                                .pickerStyle(MenuPickerStyle())
                             }
                         }
                         
@@ -301,3 +284,4 @@ struct SnowflakeView: View {
             }
     }
 }
+
