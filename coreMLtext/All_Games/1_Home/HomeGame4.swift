@@ -28,7 +28,7 @@ struct HomeGame4: View {
 
     
     var body: some View {
-        GameView_1_4(showAnswer: $showAnswer, showingCamera: $gameState.showingCamera)
+        GameView(showAnswer: $showAnswer, showingCamera: $gameState.showingCamera, levelID: "garage")
             .onAppear {
                     uiState.isNavBarVisible = false
                         }
@@ -37,15 +37,7 @@ struct HomeGame4: View {
 //                        }
 //        Text(highestConfidenceWord)
 //
-        
-            .toolbar(content: {
-                ToolbarItem(placement: .topBarLeading) {
-                    BackButton{
-                        dismiss()
-                    }
-                }
-            })
-        .overlay(
+                .overlay(
             GeometryReader { geometry in
                 ZStack {
                     Text("Highest Confidence Word: \(highestConfidenceWord)")

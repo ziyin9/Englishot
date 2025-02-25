@@ -30,7 +30,7 @@ struct ZooView: View {
            ("Mammals2", "tortoise.fill", AnyView(HomeGame2().navigationBarBackButtonHidden(true))),
            ("Mammals3", "dog.fill", AnyView(HomeGame3().navigationBarBackButtonHidden(true))),
            ("Marine Animals", "fish.fill", AnyView(HomeGame4().navigationBarBackButtonHidden(true))),
-           ("Birds", "bird.fill", AnyView(HomeGame5().navigationBarBackButtonHidden(true)))
+
        ]
     
     var body: some View {

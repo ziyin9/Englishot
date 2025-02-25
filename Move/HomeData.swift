@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+
+
 let BathroomData = GameLevelData(
     title: "Bathroom",
     backgroundImage: "Bathroom_background",
@@ -47,6 +49,8 @@ let BathroomData = GameLevelData(
         ]
 )
 
+
+
 let KitchenData = GameLevelData(
     title: "Kitchen",
     backgroundImage: "Kitchen_background",
@@ -83,6 +87,8 @@ let KitchenData = GameLevelData(
             vocabularyList[3]
         ]
 )
+
+
 
 let Living_roomData = GameLevelData(
     title: "Living Room",
@@ -121,6 +127,8 @@ let Living_roomData = GameLevelData(
             vocabularyList[8]
         ]
 )
+
+
 
 let GarageData = GameLevelData(
     title: "Garage",

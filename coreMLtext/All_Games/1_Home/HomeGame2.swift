@@ -19,17 +19,11 @@ struct HomeGame2: View {
 
     
     var body: some View {
-        GameView_1_2(showAnswer: $showAnswer, showingCamera: $gameState.showingCamera)
+        GameView(showAnswer: $showAnswer, showingCamera: $gameState.showingCamera, levelID: "kitchen")
             .onAppear {
                     uiState.isNavBarVisible = false // 隱藏
                         }
-            .toolbar(content: {
-                ToolbarItem(placement: .topBarLeading) {
-                    BackButton{
-                        dismiss()
-                    }
-                }
-            })
+            
         
         .overlay(
             GeometryReader { geometry in

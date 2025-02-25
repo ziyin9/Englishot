@@ -29,7 +29,7 @@ struct SchoolView: View {
         ("Classroom2", "pencil", AnyView(HomeGame2().navigationBarBackButtonHidden(true))),
         ("Music", "music.note", AnyView(HomeGame3().navigationBarBackButtonHidden(true))),
         ("Playground", "sportscourt.fill", AnyView(HomeGame4().navigationBarBackButtonHidden(true))),
-        ("Sports", "figure.walk", AnyView(HomeGame5().navigationBarBackButtonHidden(true)))
+
     ]
     
     var body: some View {

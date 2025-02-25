@@ -68,20 +68,24 @@ struct GameView: View {
                         Spacer()
 
                         Button(action: { uiState.showGameCardView = true }) {
-                            Image("ABC")
+                            Image("A")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 40, height: 40)
+                                .font(.title)
+                                .padding(6)
                                 .background(Color.blue.opacity(0.3))
                                 .clipShape(Circle())
                         }
-                        .padding(.trailing, 30)
+                        .padding(.trailing, 10)
 
                         Button(action: { gameState.showingCamera = true }) {
                             Image("camera")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 40, height: 40)
+                                .font(.title)
+                                .padding(6)
                                 .background(Color.blue.opacity(0.3))
                                 .clipShape(Circle())
                         }
@@ -150,16 +154,14 @@ struct GameView: View {
             uiState.isNavBarVisible = false
             highestConfidenceWord = recognizedObjects.first ?? ""
         }
-        .toolbar {
+        .toolbar(content: {
             ToolbarItem(placement: .topBarLeading) {
-                Button(action: { dismiss() }) {
-                    Image(systemName: "arrow.left.circle.fill")
-                        .resizable()
-                        .frame(width: 40, height: 40)
-                        .foregroundColor(.blue)
+                BackButton{
+                    dismiss()
                 }
             }
-        }
+        })
+        
     }
 }
 

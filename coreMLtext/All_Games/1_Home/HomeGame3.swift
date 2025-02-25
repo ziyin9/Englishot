@@ -34,17 +34,11 @@ struct HomeGame3: View {
 
     
     var body: some View {
-        GameView_1_3(showAnswer: $showAnswer, showingCamera: $gameState.showingCamera)
+        GameView(showAnswer: $showAnswer, showingCamera: $gameState.showingCamera, levelID: "living_room")
             .onAppear {
                     uiState.isNavBarVisible = false
                         }        
-            .toolbar(content: {
-                ToolbarItem(placement: .topBarLeading) {
-                    BackButton{
-                        dismiss()
-                    }
-                }
-            })
+          
         .overlay(
             GeometryReader { geometry in
                 ZStack {

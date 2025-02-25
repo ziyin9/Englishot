@@ -25,7 +25,7 @@ struct HomeGame1: View {
             
             
             ZStack {
-                GameView_1_1(showAnswer: $showAnswer, showingCamera: $gameState.showingCamera)
+                GameView(showAnswer: $showAnswer, showingCamera: $gameState.showingCamera, levelID: "bathroom")
                     .onAppear {
                         uiState.isNavBarVisible = false
                         checkAllWordsFound()
@@ -40,13 +40,7 @@ struct HomeGame1: View {
                         .offset(y: -180)
                 }
             }
-            .toolbar(content: {
-                ToolbarItem(placement: .topBarLeading) {
-                    BackButton{
-                        dismiss()
-                    }
-                }
-            })
+
             
             
             .overlay(

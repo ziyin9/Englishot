@@ -17,13 +17,12 @@ struct HomeView: View {
     @State private var selectedLevel: Int?
     @State private var snowflakes: [Snowflake] = (0..<50).map { _ in Snowflake() }
     // Level data
-    private let levels: [(name: String, icon: String, view: AnyView)] = [
-        ("Bathroom", "shower.fill", AnyView(HomeGame1() )),
-        ("Kitchen", "fork.knife", AnyView(HomeGame2().navigationBarBackButtonHidden(true))),
-        ("Living Room", "sofa.fill", AnyView(HomeGame3().navigationBarBackButtonHidden(true))),
-        ("Garage", "car.fill", AnyView(HomeGame4().navigationBarBackButtonHidden(true))),
-        ("Bedroom", "bed.double.fill", AnyView(HomeGame5().navigationBarBackButtonHidden(true)))
-    ]
+    private let levels: [(name: String, icon: String, view: AnyView, levelID: String)] = [
+            ("Bathroom", "shower.fill", AnyView(HomeGame1().navigationBarBackButtonHidden(true)),"bathroom"),
+            ("Kitchen", "fork.knife", AnyView(HomeGame2().navigationBarBackButtonHidden(true)),"kitchen"),
+            ("Living Room", "sofa.fill", AnyView(HomeGame3().navigationBarBackButtonHidden(true)),"living_room"),
+            ("Garage", "car.fill", AnyView(HomeGame4().navigationBarBackButtonHidden(true)),"garage"),
+        ]
     
     var body: some View {
         NavigationStack {
