@@ -15,7 +15,6 @@ import SwiftUI
 
 
 struct Vocabulary: Identifiable {
-    
     var id = UUID()
     var category: String
     var E_word: String
@@ -25,9 +24,8 @@ struct Vocabulary: Identifiable {
     var shotImage: UIImage?
     var assetName: String?
     var unlock: Bool = false
-    
-    
 }
+
 
 class GameState: ObservableObject {
     @Published var showingCamera: Bool = false

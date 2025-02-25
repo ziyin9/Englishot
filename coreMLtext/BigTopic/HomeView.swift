@@ -99,10 +99,6 @@ struct HomeView: View {
                         }
                 }
             })
-            
-            
-            
-            
             .onAppear {
                 uiState.isNavBarVisible = false
                 withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {

@@ -1,12 +1,4 @@
 //
-//  MallView.swift
-//  coreMLtext
-//
-//  Created by 陳姿縈 on 2/13/25.
-//
-
-
-//
 //  ParkView.swift
 //  coreMLtext
 //
