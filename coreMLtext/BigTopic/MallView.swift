@@ -20,11 +20,11 @@ struct MallView: View {
   
     // Level data
     private let levels: [(name: String, icon: String, view: AnyView, words: [Vocabulary])] = [
-        ("Food", "cart.fill", AnyView(HomeGame(levelData: BathroomData).navigationBarBackButtonHidden(true)), BathroomData.game_vocabulary),
-        ("Electronics Store", "desktopcomputer", AnyView(HomeGame(levelData: KitchenData).navigationBarBackButtonHidden(true)), KitchenData.game_vocabulary),
-        ("Clothing Store", "tshirt.fill", AnyView(HomeGame(levelData: Living_roomData).navigationBarBackButtonHidden(true)), Living_roomData.game_vocabulary)
-        
-    ]
+            ("Food", "cart.fill", AnyView(HomeGame(levelData: FoodData).navigationBarBackButtonHidden(true)), FoodData.game_vocabulary),
+            ("Electronics Store", "desktopcomputer", AnyView(HomeGame(levelData: Electronics_StoreData).navigationBarBackButtonHidden(true)), Electronics_StoreData.game_vocabulary),
+            ("Clothing Store", "tshirt.fill", AnyView(HomeGame(levelData: Clothing_StoreData).navigationBarBackButtonHidden(true)), Clothing_StoreData.game_vocabulary)
+            
+        ]
     var body: some View {
         NavigationStack {
             ZStack {

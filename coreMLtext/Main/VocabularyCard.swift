@@ -108,8 +108,7 @@ struct RoundedCorner: Shape {
             E_word: "apple",
             C_word: "蘋果",
             exSentence: "I eat an apple every day.",
-            audioURL: "https://example.com/apple.mp3",
-            assetName: "apple_image"
+            audioURL: "https://example.com/apple.mp3"
         )
     )
 }

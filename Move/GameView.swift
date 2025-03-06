@@ -28,14 +28,58 @@ struct GameView: View {
     
     private var levelData: GameLevelData {
             switch levelID {
+                
+                //home
             case "bathroom":
                 return BathroomData
             case "kitchen":
                 return KitchenData
             case "living_room":
-                return Living_roomData
+                return Living_RoomData
             case "garage":
                 return GarageData
+                
+                //Mall
+            case "food":
+                return FoodData
+            case "electronics_store":
+                return Electronics_StoreData
+            case "clothing_store":
+                return Clothing_StoreData
+                
+                //Market
+            case "fruit":
+                return FruitData
+            case "vegetable":
+                return VegetableData
+            case "spices":
+                return SpicesData
+                
+                //school
+            case "classroom1":
+                return Classroom1Data
+            case "classroom2":
+                return Classroom2Data
+            case "music":
+                return MusicData
+            case "playground":
+                return PlaygroundData
+            case "sports":
+                return SportsData
+                
+                
+                //Zoo
+            case "mammals1":
+                return Mammals1Data
+            case "mammals2":
+                return Mammals2Data
+            case "mammals3":
+                return Mammals3Data
+            case "marine_animals":
+                return Marine_AnimalsData
+            case "birds":
+                return BirdsData
+                
             default:
                 return BathroomData // 預設使用第一關//之後要改
             }

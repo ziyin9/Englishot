@@ -15,46 +15,47 @@ let BathroomData = GameLevelData(
     backgroundImage: "Bathroom_background",
     answers: [
         [nil, nil, nil, "t", nil, nil, nil, "t", nil, nil, nil],
-        [nil, nil, "c", "o", "m", "b", nil, "o", nil, nil, nil],
+        [nil, nil, nil, "o", nil, nil, nil, "o", nil, nil, nil],
         [nil, nil, nil, "o", nil, nil, nil, "i", nil, nil, nil],
         [nil, nil, nil, "t", "o", "w", "e", "l", nil, nil, nil],
         [nil, nil, nil, "h", nil, nil, nil, "e", nil, nil, nil],
         [nil, nil, nil, "b", nil, nil, nil, "t", nil, nil, nil],
         [nil, nil, nil, "r", nil, nil, nil, nil, nil, nil, nil],
-        [nil, nil, nil, "u", nil, nil, nil, nil, nil, nil, nil],
-        [nil, nil, nil, "s", "o", "a", "p", nil, nil, nil, nil],
+        [nil, nil, "c", "u", "p", nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, "s", nil, nil, nil, nil, nil, nil, nil],
         [nil, nil, nil, "h", nil, nil, nil, nil, nil, nil, nil],
     ],
     numberHints: [
-        ((1, 2), 1),
+        ((0, 3), 1),
+        ((3, 3), 2),
         ((0, 7), 3),
-        ((0, 3), 2),
-        ((3, 3), 4),
-        ((8, 3), 5)
+        ((7, 2), 4),
+
     ],
     acrossHints: [
-        "1. I use a c__b to style my hair.",
-        "4. I dry my hands with a t___l.",
-        "5. I wash my hands with s__p."
+        "2. I dry my hands with a t___l.",
+        "4. cup"
     ],
     downHints: [
-        "2. I use my t________h to clean my teeth.",
+        "1. I use my t________h to clean my teeth.",
         "3. Bob ran to the t____t because he had to pee."
     ],
     game_vocabulary: [
             vocabularyList[4],
             vocabularyList[5],
             vocabularyList[6],
-            vocabularyList[7],
-            vocabularyList[8]
+            vocabularyList[7]
         ],
-    wordsToCheck: ["comb", "toothbrush", "toilet", "soap", "towel"],
+    wordsToCheck: ["toothbrush", "toilet", "cup", "towel"],
     wordPositions: [
-            "comb": (2...5).map {GridPosition(row: 1, col: $0)},
-            "toothbrush": (0...9).map {GridPosition(row: $0, col: 3)},
-            "toilet": (0...5).map {GridPosition(row: $0, col: 7)},
-            "soap": (3...6).map {GridPosition(row: 8, col: $0)},
-            "towel": (3...7).map {GridPosition(row: 3, col: $0)}
+            "toothbrush": (0...9).map
+            {GridPosition(row: $0, col: 3)},
+            "toilet": (0...5).map
+            {GridPosition(row: $0, col: 7)},
+            "cup": (2...4).map
+            {GridPosition(row: 7, col: $0)},
+            "towel": (3...7).map
+            {GridPosition(row: 3, col: $0)}
     ]
 )
 
@@ -98,16 +99,20 @@ let KitchenData = GameLevelData(
         ],
     wordsToCheck: ["spoon", "fork", "knife", "plate"],
     wordPositions: [
-            "spoon": [GridPosition(row: 1, col: 2), GridPosition(row: 1, col: 3), GridPosition(row: 1, col: 4), GridPosition(row: 1, col: 5)],
-            "fork": (1...4).map {GridPosition(row: $0, col: 5)},
-            "knife": [GridPosition(row: 3, col: 3), GridPosition(row: 3, col: 4), GridPosition(row: 3, col: 5)],
-            "plate": [GridPosition(row: 8, col: 3), GridPosition(row: 8, col: 4), GridPosition(row: 8, col: 5), GridPosition(row: 8, col: 6)],
+            "spoon":(2...7).map
+            {GridPosition(row: 2, col: $0)},
+            "fork": (1...4).map
+            {GridPosition(row: $0, col: 5)},
+            "knife": (5...9).map
+            {GridPosition(row:4 , col: $0)},
+            "plate": (2...6).map
+            {GridPosition(row: $0 , col: 3)}
     ]
 )
 
 
 
-let Living_roomData = GameLevelData(
+let Living_RoomData = GameLevelData(
     levelID:"living_room",
     title: "Living Room",
     backgroundImage: "Livingroom_background",
@@ -138,19 +143,22 @@ let Living_roomData = GameLevelData(
         "2. We bought a new s__a that is soft and very comfortable."
     ],
     game_vocabulary: [
-            vocabularyList[4],
-            vocabularyList[5],
-            vocabularyList[6],
-            vocabularyList[7],
-            vocabularyList[8]
+            vocabularyList[8],
+            vocabularyList[9],
+            vocabularyList[10],
+            vocabularyList[11],
         ],
-    wordsToCheck: ["comb", "toothbrush", "toilet", "soap", "towel"],
+    wordsToCheck: ["key", "television", "sofa", "fan"],
     wordPositions: [
-            "comb": [GridPosition(row: 1, col: 2), GridPosition(row: 1, col: 3), GridPosition(row: 1, col: 4), GridPosition(row: 1, col: 5)],
-            "toothbrush": [GridPosition(row: 0, col: 3), GridPosition(row: 1, col: 3), GridPosition(row: 2, col: 3)],
-            "toilet": [GridPosition(row: 3, col: 3), GridPosition(row: 3, col: 4), GridPosition(row: 3, col: 5)],
-            "soap": [GridPosition(row: 8, col: 3), GridPosition(row: 8, col: 4), GridPosition(row: 8, col: 5), GridPosition(row: 8, col: 6)],
-            "towel": [GridPosition(row: 3, col: 5), GridPosition(row: 3, col: 6), GridPosition(row: 3, col: 7)]
+        "key": (4...6).map
+        {GridPosition(row: 1, col: $0)},
+        "television":  (0...9).map
+        {GridPosition(row: $0, col: 5)},
+        "sofa":  (4...7).map
+        {GridPosition(row: 8, col: $0)},
+        "fan": (7...9).map
+        {GridPosition(row: $0, col: 7)},
+
     ]
 )
 
@@ -162,45 +170,47 @@ let GarageData = GameLevelData(
     backgroundImage: "Garage_background",
     answers: [
         [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, "c", nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, "a", nil, "t", nil, nil],
+        [nil, nil, nil, nil, nil, nil, "r", nil, "i", nil, nil],
+        [nil, nil, "s", "c", "o", "o", "t", "e", "r", nil, nil],
+        [nil, nil, nil, "a", nil, nil, "o", nil, "e", nil, nil],
+        [nil, nil, nil, "r", nil, nil, "n", nil, nil, nil, nil],
         [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
-        [nil, nil, nil, "t", nil, nil, "s", nil, nil, nil, nil],
-        [nil, nil, "b", "i", "c", "y", "c", "l", "e", nil, nil],
-        [nil, nil, nil, "r", nil, nil, "o", nil, nil, nil, nil],
-        [nil, nil, nil, "e", nil, "b", "o", "x", nil, nil, nil],
-        [nil, nil, nil, nil, nil, nil, "t", nil, nil, nil, nil],
-        [nil, nil, nil, nil, nil, nil, "e", nil, nil, nil, nil],
-        [nil, nil, nil, nil, "c", "a", "r", nil, nil, nil, nil],
         [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
+
     ],
     numberHints: [
-        ((2, 3), 1),
-        ((3, 2), 3),
-        ((2, 6), 2),
-        ((5, 5), 4),
-        ((8, 4), 5),
+        ((1, 6), 1),
+        ((2, 8), 2),
+        ((4, 2), 3),
+        ((4, 3), 4)
     ],
     acrossHints: [
-        "1. The t__e of my bike is flat, so I need to pump it up. It helps the bike roll.",
         "3.I use my b__e to go to the park with my friends. It has two wheels and you pedal it."
     ],
     downHints: [
-        "2. I use my t________h to clean my teeth.",
-        "3. Bob ran to the t____t because he had to pee.",
-        "5. My dad drives a cr to work. It has four wheels and you need a key to start it."
+        "1. carton",
+        "2. tire",
+        "4. car"
     ],
     game_vocabulary: [
-            vocabularyList[4],
-            vocabularyList[5],
-            vocabularyList[6],
-            vocabularyList[7],
-            vocabularyList[8]
+            vocabularyList[12],
+            vocabularyList[13],
+            vocabularyList[14],
+            vocabularyList[15]
         ],
-    wordsToCheck: ["comb", "toothbrush", "toilet", "soap", "towel"],
+    wordsToCheck: ["tire", "scooter", "carton", "car"],
     wordPositions: [
-            "comb": [GridPosition(row: 1, col: 2), GridPosition(row: 1, col: 3), GridPosition(row: 1, col: 4), GridPosition(row: 1, col: 5)],
-            "toothbrush": [GridPosition(row: 0, col: 3), GridPosition(row: 1, col: 3), GridPosition(row: 2, col: 3)],
-            "toilet": [GridPosition(row: 3, col: 3), GridPosition(row: 3, col: 4), GridPosition(row: 3, col: 5)],
-            "soap": [GridPosition(row: 8, col: 3), GridPosition(row: 8, col: 4), GridPosition(row: 8, col: 5), GridPosition(row: 8, col: 6)],
-            "towel": [GridPosition(row: 3, col: 5), GridPosition(row: 3, col: 6), GridPosition(row: 3, col: 7)]
+            
+            "tire": (2...5).map
+            {GridPosition(row: $0, col: 8)},
+            "scooter":  (2...8).map
+            {GridPosition(row: 4, col: $0)},
+            "carton":  (1...6).map
+            {GridPosition(row:$0 , col: 6)},
+            "car": (4...6).map
+            {GridPosition(row:$0 , col: 3)},
     ]
 )

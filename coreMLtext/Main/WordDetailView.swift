@@ -242,7 +242,7 @@ struct WordDetailView: View {
 
 
 #Preview {
-    WordDetailView(vocabulary: Vocabulary(category: "Kitchen", E_word: "fork", C_word: "叉子", exSentence: "I use a fork to eat.", audioURL: "https://www.example.com/fork.mp3", assetName: "fork_image"))}
+    WordDetailView(vocabulary: Vocabulary(category: "Kitchen", E_word: "fork", C_word: "叉子", exSentence: "I use a fork to eat.", audioURL: "https://www.example.com/fork.mp3"))}
 
 
 
