@@ -34,18 +34,7 @@ struct SettingView: View {
                 
                 VStack(spacing: 25) {
                     // Title with ice effect and centered alignment
-                    Text("Settings")
-                        .font(.system(size: 40, weight: .bold, design: .rounded))
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [.blue.opacity(0.7), .white],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .frame(maxWidth: .infinity, alignment: .center) // Center the title
-                        .padding(.top, 40)
-                        .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 2)
+                    
                     
                     // Settings sections using custom card style
                     VStack(spacing: 20) {
@@ -157,6 +146,23 @@ struct SettingView: View {
                         }
                     }
                     .padding(.horizontal)
+                }
+                VStack{
+                    Text("Settings")
+                        .font(.system(size: 40, weight: .bold, design: .rounded))
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [.blue.opacity(0.7), .blue.opacity(0.5)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(maxWidth: .infinity, alignment: .center) // Center the title
+                        .padding(.top, 40)
+                        .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 2)
+                    Spacer()
+                    Spacer()
+
                 }
             }
         }
@@ -285,3 +291,6 @@ struct SnowflakeView: View {
     }
 }
 
+//#Preview{
+//    SettingView()
+//}

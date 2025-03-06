@@ -8,11 +8,18 @@
 import SwiftUI
 
 struct GameLevelData {
+    var levelID: String
     let title: String
     let backgroundImage: String
     let answers: [[String?]]
     let numberHints: [((Int, Int), Int)]
     let acrossHints: [String]
     let downHints: [String]
-    let vocabulary: [Vocabulary]
+    let game_vocabulary: [Vocabulary]
+    let wordsToCheck: [String]
+    let wordPositions: [String: [GridPosition]]
+}
+struct GridPosition {
+    let row: Int
+    let col: Int
 }

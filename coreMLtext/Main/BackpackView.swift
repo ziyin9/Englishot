@@ -14,7 +14,7 @@ class AudioPlayer: ObservableObject {
 
 struct BackpackView: View {
     @EnvironmentObject var gameState: GameState
-//    @EnvironmentObject var uiState: UIState
+    @EnvironmentObject var uiState: UIState
 
     @FetchRequest(entity: Word.entity(), sortDescriptors: []) var wordEntities: FetchedResults<Word>
     @State private var selectedCategory: String = "All"
@@ -46,20 +46,26 @@ struct BackpackView: View {
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
-                .edgesIgnoringSafeArea(.all)
                 
                 ScrollView {
                     VStack(spacing: 20) {
-                        Text("Vocabulary List")
-                            .font(.system(size: 40, weight: .bold, design: .serif))
-                            .fontWeight(.bold)
-                            .foregroundColor(.black)
-                            .padding(.top, 40)
-                            .shadow(color: .gray.opacity(0.3), radius: 2, x: 0, y: 2)
+                        Spacer()
+                        Spacer()
+
+//                        Text("Vocabulary List")
+//                            .font(.system(size: 40, weight: .bold, design: .serif))
+//                            .fontWeight(.bold)
+//                            .foregroundColor(.black)
+//                            .padding(.top, 40)
+//                            .shadow(color: .gray.opacity(0.3), radius: 2, x: 0, y: 2)
                         Button(action: {
                             deleteWord(wordString:"fork")
                             deleteWord(wordString:"soap")
-
+                            deleteWord(wordString:"fan")
+                            deleteWord(wordString:"sock")
+                            deleteWord(wordString:"comb")
+                            deleteWord(wordString:"television")
+                            deleteWord(wordString:"plug")
                         }) {
                             Image(systemName: "trash.fill")
                                 .font(.system(size: 20))
@@ -142,13 +148,38 @@ struct BackpackView: View {
                         .animation(.spring(response: 0.4, dampingFraction: 0.7), value: selectedCategory)
                     }
                 }
+                
 //                .onAppear {
 //                        uiState.isNavBarVisible = false // 隱藏
 //                            }
-                
+                VStack{
+                    Text("Vocabulary List")
+                        .font(.system(size: 40, weight: .bold, design: .rounded))
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [.blue.opacity(0.7), .blue.opacity(0.5)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(maxWidth: .infinity, alignment: .center)
+                    // Center the title
+                        .padding(.top, 40)
+                        .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 2)
+                    
+                    Spacer()
+                    Spacer()
+                    Spacer()
+                    Spacer()
+
+                }
 
             }
+            .edgesIgnoringSafeArea(.all)
+
         }
+        
+
         
     }
     private func filteredWords() -> [Word] {

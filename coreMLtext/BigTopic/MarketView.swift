@@ -7,6 +7,9 @@
 import SwiftUI
 
 struct MarketView: View {
+    @FetchRequest(entity: Word.entity(), sortDescriptors: []) var wordEntities: FetchedResults<Word>
+
+    
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var uiState: UIState
     
@@ -17,10 +20,10 @@ struct MarketView: View {
  
     
     // Level data
-    private let levels: [(name: String, icon: String, view: AnyView)] = [
-        ("Fruit", "applelogo", AnyView(HomeGame1().navigationBarBackButtonHidden(true))),
-        ("Vegetable", "carrot.fill", AnyView(HomeGame2().navigationBarBackButtonHidden(true))),
-        ("Spices", "flame.fill", AnyView(HomeGame3().navigationBarBackButtonHidden(true)))
+    private let levels: [(name: String, icon: String, view: AnyView, words: [Vocabulary])] = [
+        ("Fruit", "applelogo", AnyView(HomeGame(levelData: BathroomData).navigationBarBackButtonHidden(true)), BathroomData.game_vocabulary),
+        ("Vegetable", "carrot.fill", AnyView(HomeGame(levelData: KitchenData).navigationBarBackButtonHidden(true)), KitchenData.game_vocabulary),
+        ("Spices", "flame.fill", AnyView(HomeGame(levelData: Living_roomData).navigationBarBackButtonHidden(true)), Living_roomData.game_vocabulary)
     ]
     
     var body: some View {
@@ -70,12 +73,15 @@ struct MarketView: View {
                             GridItem(.flexible())
                         ], spacing: 20) {
                             ForEach(Array(levels.enumerated()), id: \.offset) { index, level in
+                                let progress = getProgressForLevel(wordsForLevel: level.words)
                                 LevelButton(
                                     index: index,
                                     icon: level.icon,
                                     name: level.name,
                                     destination: level.view,
-                                    isSelected: selectedLevel == index
+                                    isSelected: selectedLevel == index,
+                                    progress: progress // Pass progress
+
                                 )
                                 .offset(y: isLoaded ? 0 : 200)
                                 .animation(.spring(response: 0.6, dampingFraction: 0.7)
@@ -102,6 +108,15 @@ struct MarketView: View {
                 }
             }
         }
+    }
+    
+    func getProgressForLevel(wordsForLevel: [Vocabulary]) -> CGFloat {
+        let totalWords = wordsForLevel.count
+        let collectedWords = wordsForLevel.filter { vocabulary in
+            wordEntities.contains { $0.word == vocabulary.E_word }
+        }.count
+        
+        return totalWords > 0 ? CGFloat(collectedWords) / CGFloat(totalWords) : 0.0
     }
 }
 

@@ -39,19 +39,10 @@ struct DataView: View {
             
             ScrollView {
                 VStack(spacing: 25) {
-                    // Title
-                    Text("Collection Progress")
-                        .font(.system(size: 40, weight: .bold, design: .rounded))
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [.blue.opacity(0.7), .white],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .padding(.top, 40)
-                        .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 2)
-                    
+                    Spacer()
+                    Spacer()
+                    Spacer()
+
                     // Total Progress Card
                     SettingsCard {
                         VStack(spacing: 15) {
@@ -83,16 +74,34 @@ struct DataView: View {
                                     }
                                     
                                     CircularProgressView(
-                                        totalWords: totalWordsForCategory(category),
+//                                        totalWords: totalWordsForCategory(category),
+                                        totalWords: 20,
+
                                         currentWords: collectedWordsForCategory(category)
                                     )
-                                    .frame(height: 120)
+                                    
+                                    .frame( width: 150,height: 150)
                                 }
                             }
                         }
                     }
                     .padding(.horizontal)
                 }
+            }
+            VStack{
+                Text("Collection Progress")
+                    .font(.system(size: 40, weight: .bold, design: .rounded))
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [.blue.opacity(0.7), .blue.opacity(0.5)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .padding(.top, 40)
+                    .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 2)
+                Spacer()
+
             }
         }
     }

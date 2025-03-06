@@ -15,13 +15,16 @@ struct LevelButton<Destination: View>: View {
     let name: String
     let destination: Destination
     let isSelected: Bool
+    let progress: CGFloat
+    
     @State private var isHovered = false
+    @State private var isWaving = false
     
     var body: some View {
         NavigationLink(destination: destination) {
             VStack(spacing: 15) {
                 ZStack {
-                    //  background
+                    // Background circle
                     Circle()
                         .fill(
                             LinearGradient(
@@ -34,16 +37,31 @@ struct LevelButton<Destination: View>: View {
                             )
                         )
                         .frame(width: 100, height: 100)
-                        .overlay(
-                            Circle()
-                                .stroke(
-                                    LinearGradient(
-                                        colors: [.white, .blue.opacity(0.3)],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    ),
-                                    lineWidth: 2
-                                )
+                    
+                    // Water wave effect
+                    WaterWave(progress: progress, isWaving: isWaving)
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    Color.blue.opacity(0.3),
+                                    Color.blue.opacity(0.5)
+                                ],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        )
+                        .frame(width: 100, height: 100)
+                        .clipShape(Circle())
+                    
+                    // Ice crystal border
+                    Circle()
+                        .stroke(
+                            LinearGradient(
+                                colors: [.white, .blue.opacity(0.3)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 2
                         )
                         .shadow(color: .blue.opacity(0.2), radius: isHovered ? 10 : 5)
                     
@@ -58,7 +76,16 @@ struct LevelButton<Destination: View>: View {
                             )
                         )
                     
-                    // Ice crystals effect
+                    // Progress percentage
+                    Text("\(Int(progress * 100))%")
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding(4)
+                        .background(Color.blue.opacity(0.6))
+                        .clipShape(Capsule())
+                        .offset(y: 30)
+                    
+                    // Ice crystals effect when hovered
                     if isHovered {
                         ForEach(0..<6) { i in
                             Image(systemName: "snowflake")
@@ -80,10 +107,47 @@ struct LevelButton<Destination: View>: View {
             .scaleEffect(isHovered ? 1.05 : 1.0)
         }
         .buttonStyle(PlainButtonStyle())
+        .onAppear {
+            withAnimation(.linear(duration: 1).repeatForever(autoreverses: false)) {
+                isWaving = true
+            }
+        }
         .onHover { hovering in
             withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                 isHovered = hovering
             }
         }
+    }
+}
+
+// Water wave shape for filling effect
+struct WaterWave: Shape {
+    var progress: CGFloat
+    var isWaving: Bool
+    
+    var animatableData: CGFloat {
+        get { progress }
+        set { progress = newValue }
+    }
+    
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        let progressHeight = (1 - progress) * rect.height
+        let waveHeight: CGFloat = 5
+        
+        path.move(to: CGPoint(x: 0, y: progressHeight))
+        
+        for x in stride(from: 0, through: rect.width, by: 2) {
+            let relativeX = x / rect.width
+            let sine = sin(relativeX * .pi * 4 + (isWaving ? Date().timeIntervalSince1970 : 0))
+            let y = progressHeight + sine * waveHeight
+            path.addLine(to: CGPoint(x: x, y: y))
+        }
+        
+        path.addLine(to: CGPoint(x: rect.width, y: rect.height))
+        path.addLine(to: CGPoint(x: 0, y: rect.height))
+        path.closeSubpath()
+        
+        return path
     }
 }

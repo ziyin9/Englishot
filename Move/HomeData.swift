@@ -10,6 +10,7 @@ import SwiftUI
 
 
 let BathroomData = GameLevelData(
+    levelID:"bathroom",
     title: "Bathroom",
     backgroundImage: "Bathroom_background",
     answers: [
@@ -40,18 +41,27 @@ let BathroomData = GameLevelData(
         "2. I use my t________h to clean my teeth.",
         "3. Bob ran to the t____t because he had to pee."
     ],
-    vocabulary: [
+    game_vocabulary: [
             vocabularyList[4],
             vocabularyList[5],
             vocabularyList[6],
             vocabularyList[7],
             vocabularyList[8]
-        ]
+        ],
+    wordsToCheck: ["comb", "toothbrush", "toilet", "soap", "towel"],
+    wordPositions: [
+            "comb": (2...5).map {GridPosition(row: 1, col: $0)},
+            "toothbrush": (0...9).map {GridPosition(row: $0, col: 3)},
+            "toilet": (0...5).map {GridPosition(row: $0, col: 7)},
+            "soap": (3...6).map {GridPosition(row: 8, col: $0)},
+            "towel": (3...7).map {GridPosition(row: 3, col: $0)}
+    ]
 )
 
 
 
 let KitchenData = GameLevelData(
+    levelID:"kitchen",
     title: "Kitchen",
     backgroundImage: "Kitchen_background",
     answers: [
@@ -80,17 +90,25 @@ let KitchenData = GameLevelData(
         "2. I use my t________h to clean my teeth.",
         "3. Bob ran to the t____t because he had to pee."
     ],
-    vocabulary: [
+    game_vocabulary: [
             vocabularyList[0],
             vocabularyList[1],
             vocabularyList[2],
             vocabularyList[3]
-        ]
+        ],
+    wordsToCheck: ["spoon", "fork", "knife", "plate"],
+    wordPositions: [
+            "spoon": [GridPosition(row: 1, col: 2), GridPosition(row: 1, col: 3), GridPosition(row: 1, col: 4), GridPosition(row: 1, col: 5)],
+            "fork": (1...4).map {GridPosition(row: $0, col: 5)},
+            "knife": [GridPosition(row: 3, col: 3), GridPosition(row: 3, col: 4), GridPosition(row: 3, col: 5)],
+            "plate": [GridPosition(row: 8, col: 3), GridPosition(row: 8, col: 4), GridPosition(row: 8, col: 5), GridPosition(row: 8, col: 6)],
+    ]
 )
 
 
 
 let Living_roomData = GameLevelData(
+    levelID:"living_room",
     title: "Living Room",
     backgroundImage: "Livingroom_background",
     answers: [
@@ -119,18 +137,27 @@ let Living_roomData = GameLevelData(
         "1. I lost my house k_y and couldn’t open the door.",
         "2. We bought a new s__a that is soft and very comfortable."
     ],
-    vocabulary: [
+    game_vocabulary: [
             vocabularyList[4],
             vocabularyList[5],
             vocabularyList[6],
             vocabularyList[7],
             vocabularyList[8]
-        ]
+        ],
+    wordsToCheck: ["comb", "toothbrush", "toilet", "soap", "towel"],
+    wordPositions: [
+            "comb": [GridPosition(row: 1, col: 2), GridPosition(row: 1, col: 3), GridPosition(row: 1, col: 4), GridPosition(row: 1, col: 5)],
+            "toothbrush": [GridPosition(row: 0, col: 3), GridPosition(row: 1, col: 3), GridPosition(row: 2, col: 3)],
+            "toilet": [GridPosition(row: 3, col: 3), GridPosition(row: 3, col: 4), GridPosition(row: 3, col: 5)],
+            "soap": [GridPosition(row: 8, col: 3), GridPosition(row: 8, col: 4), GridPosition(row: 8, col: 5), GridPosition(row: 8, col: 6)],
+            "towel": [GridPosition(row: 3, col: 5), GridPosition(row: 3, col: 6), GridPosition(row: 3, col: 7)]
+    ]
 )
 
 
 
 let GarageData = GameLevelData(
+    levelID:"garage",
     title: "Garage",
     backgroundImage: "Garage_background",
     answers: [
@@ -161,11 +188,19 @@ let GarageData = GameLevelData(
         "3. Bob ran to the t____t because he had to pee.",
         "5. My dad drives a cr to work. It has four wheels and you need a key to start it."
     ],
-    vocabulary: [
+    game_vocabulary: [
             vocabularyList[4],
             vocabularyList[5],
             vocabularyList[6],
             vocabularyList[7],
             vocabularyList[8]
-        ]
+        ],
+    wordsToCheck: ["comb", "toothbrush", "toilet", "soap", "towel"],
+    wordPositions: [
+            "comb": [GridPosition(row: 1, col: 2), GridPosition(row: 1, col: 3), GridPosition(row: 1, col: 4), GridPosition(row: 1, col: 5)],
+            "toothbrush": [GridPosition(row: 0, col: 3), GridPosition(row: 1, col: 3), GridPosition(row: 2, col: 3)],
+            "toilet": [GridPosition(row: 3, col: 3), GridPosition(row: 3, col: 4), GridPosition(row: 3, col: 5)],
+            "soap": [GridPosition(row: 8, col: 3), GridPosition(row: 8, col: 4), GridPosition(row: 8, col: 5), GridPosition(row: 8, col: 6)],
+            "towel": [GridPosition(row: 3, col: 5), GridPosition(row: 3, col: 6), GridPosition(row: 3, col: 7)]
+    ]
 )
