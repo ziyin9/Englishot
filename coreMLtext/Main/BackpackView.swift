@@ -51,13 +51,6 @@ struct BackpackView: View {
                     VStack(spacing: 20) {
                         Spacer()
                         Spacer()
-
-//                        Text("Vocabulary List")
-//                            .font(.system(size: 40, weight: .bold, design: .serif))
-//                            .fontWeight(.bold)
-//                            .foregroundColor(.black)
-//                            .padding(.top, 40)
-//                            .shadow(color: .gray.opacity(0.3), radius: 2, x: 0, y: 2)
                         Button(action: {
                             deleteWord(wordString:"fork")
                             deleteWord(wordString:"soap")

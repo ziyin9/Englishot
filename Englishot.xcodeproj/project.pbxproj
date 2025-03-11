@@ -31,6 +31,11 @@
 			path = Move;
 			sourceTree = "<group>";
 		};
+		7EC0ED002D79FBFA00457B74 /* Data */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Data;
+			sourceTree = "<group>";
+		};
 		7EC74CBC2C9E99C000AD5E21 /* Camera */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Camera;
@@ -63,6 +68,7 @@
 				7ECC676A2C7D5F2200815098 /* coreMLtext */,
 				7ECC67692C7D5F2200815098 /* Products */,
 				7EC74CBC2C9E99C000AD5E21 /* Camera */,
+				7EC0ED002D79FBFA00457B74 /* Data */,
 				7EB36C972CB0163700FD745F /* Move */,
 				7E26B7022D4092F400F92701 /* Model */,
 			);
@@ -94,6 +100,7 @@
 			fileSystemSynchronizedGroups = (
 				7E26B7022D4092F400F92701 /* Model */,
 				7EB36C972CB0163700FD745F /* Move */,
+				7EC0ED002D79FBFA00457B74 /* Data */,
 				7EC74CBC2C9E99C000AD5E21 /* Camera */,
 				7ECC676A2C7D5F2200815098 /* coreMLtext */,
 			);
