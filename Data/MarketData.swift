@@ -40,13 +40,12 @@ let FruitData = GameLevelData(
         "5. My dad drives a cr to work. It has four wheels and you need a key to start it."
     ],
     game_vocabulary: [
-        //durian
-        //kiwi
-        //grape
-        //banana
-        //apple
+        vocabularyList[49],
+        vocabularyList[50],
+        vocabularyList[51],
+        vocabularyList[52],
+        vocabularyList[53]
         ],
-    wordsToCheck: ["durian", "kiwi", "grape" ,"banana","apple"],
     wordPositions: [
             "durian": (0...5).map {GridPosition(row: $0, col: 5)},
             "kiwi": (2...5).map {GridPosition(row: 3, col: $0)},
@@ -85,9 +84,12 @@ let VegetableData = GameLevelData(
         
     ],
     game_vocabulary: [
-        //pumpkin broccoli cabbage cucumber carrot
+        vocabularyList[54],
+        vocabularyList[55],
+        vocabularyList[56],
+        vocabularyList[57],
+        vocabularyList[58]
         ],
-    wordsToCheck: ["pumpkin", "broccoli", "cabbage" ,"cucumber","carrot"],
     wordPositions: [
             "pumpkin": (0...6).map {GridPosition(row: $0, col: 6)},
             "broccoli": (1...8).map {GridPosition(row: $0, col: 9)},
@@ -126,9 +128,11 @@ let SpicesData = GameLevelData(
         
     ],
     game_vocabulary: [
-        //chili garlic ginger onion
+        vocabularyList[59],
+        vocabularyList[60],
+        vocabularyList[61],
+        vocabularyList[62]
         ],
-    wordsToCheck: ["chili", "garlic", "ginger" ,"onion"],
     wordPositions: [
             "chili": (2...6).map {GridPosition(row: $0, col: 3)},
             "garlic": (2...7).map {GridPosition(row: $0, col: 7)},

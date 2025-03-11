@@ -38,11 +38,10 @@ let Classroom1Data = GameLevelData(
         "5. My dad drives a cr to work. It has four wheels and you need a key to start it."
     ],
     game_vocabulary: [
-        //scissors
-        //stapler
-        //pencil
+        vocabularyList[16],
+        vocabularyList[17],
+        vocabularyList[18]
         ],
-    wordsToCheck: ["scissors", "stapler", "pencil"],
     wordPositions: [
             "scissors": (1...8).map {GridPosition(row: $0, col: 2)},
             "stapler": (2...8).map {GridPosition(row: 1, col: $0)},
@@ -85,12 +84,11 @@ let Classroom2Data = GameLevelData(
         "5. My dad drives a cr to work. It has four wheels and you need a key to start it."
     ],
     game_vocabulary: [
-        //calculator
-        //broom
-        //mop
-        //clock
+        vocabularyList[19],
+        vocabularyList[20],
+        vocabularyList[21],
+        vocabularyList[22]
         ],
-    wordsToCheck: ["calculator", "broom", "mop", "clock"],
     wordPositions: [
             "calculator": (0...9).map {GridPosition(row: $0, col: 4)},
             "broom": (1...5).map {GridPosition(row: 8, col: $0)},
@@ -107,15 +105,15 @@ let MusicData = GameLevelData(
     backgroundImage: "Music_background",
     answers: [
         [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, "d", "r", "u", "m", nil, nil, nil],
+        [nil, nil, nil, nil, nil, "e", nil, nil, nil, nil, nil],
+        [nil, nil, nil, "p", nil, "c", nil, nil, nil, nil, nil],
+        [nil, nil, nil, "i", nil, "o", nil, nil, nil, nil, nil],
+        [nil, nil, nil, "a", nil, "r", nil, nil, nil, nil, nil],
+        [nil, nil, nil, "n", nil, "d", nil, nil, nil, nil, nil],
+        [nil, nil, "n", "o", "t", "e", nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, "r", nil, nil, nil, nil, nil],
         [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
-        [nil, nil, nil, nil, nil, "d", "r", "u", "m", nil, nil],
-        [nil, nil, nil, nil, nil, nil, "e", nil, nil, nil, nil],
-        [nil, nil, nil, nil, "p", nil, "c", nil, nil, nil, nil],
-        [nil, nil, nil, nil, "i", nil, "o", nil, nil, nil, nil],
-        [nil, nil, nil, nil, "a", nil, "r", nil, nil, nil, nil],
-        [nil, nil, nil, nil, "n", nil, "d", nil, nil, nil, nil],
-        [nil, nil, nil, "n", "o", "t", "e", nil, nil, nil, nil],
-        [nil, nil, nil, nil, nil, nil, "r", nil, nil, nil, nil],
         
                 
     ],
@@ -135,12 +133,11 @@ let MusicData = GameLevelData(
         "5. My dad drives a cr to work. It has four wheels and you need a key to start it."
     ],
     game_vocabulary: [
-        //drum
-        //piano
-        //recorder
-        //note
+        vocabularyList[23],
+        vocabularyList[24],
+        vocabularyList[25],
+        vocabularyList[26]
         ],
-    wordsToCheck: ["drum", "piano", "recorder", "note"],
     wordPositions: [
             "drum": (5...8).map {GridPosition(row: 2, col: $0)},
             "piano": (4...8).map {GridPosition(row: $0, col: 4)},
@@ -184,11 +181,10 @@ let PlaygroundData = GameLevelData(
         "5. My dad drives a cr to work. It has four wheels and you need a key to start it."
     ],
     game_vocabulary: [
-        //slide
-        //swing
-        //seesaw
+        vocabularyList[27],
+        vocabularyList[28],
+        vocabularyList[29]
         ],
-    wordsToCheck: ["slide", "swing", "seesaw"],
     wordPositions: [
             "slide": (4...8).map {GridPosition(row: 5, col: $0)},
             "swing": (3...7).map {GridPosition(row: 7, col: $0)},
@@ -228,12 +224,11 @@ let SportsData = GameLevelData(
         "5. My dad drives a cr to work. It has four wheels and you need a key to start it."
     ],
     game_vocabulary: [
-        //basketball
-        //soccer
-        //tennis
-        //badminton
+        vocabularyList[30],
+        vocabularyList[31],
+        vocabularyList[32],
+        vocabularyList[33]
         ],
-    wordsToCheck: ["basketball", "soccer", "tennis" ,"badminton"],
     wordPositions: [
             "basketball": (0...9).map {GridPosition(row: $0, col: 1)},
             "soccer": (1...6).map {GridPosition(row: 2, col: $0)},
@@ -241,4 +236,3 @@ let SportsData = GameLevelData(
             "badminton": (1...9).map {GridPosition(row: 6, col: $0)},
     ]
 )
-

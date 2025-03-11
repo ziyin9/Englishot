@@ -39,12 +39,11 @@ let FoodData = GameLevelData(
         "5. My dad drives a cr to work. It has four wheels and you need a key to start it."
     ],
     game_vocabulary: [
-        //pizza
-        //pasta
-        //dumpling
-        //hamburger
+        vocabularyList[34],
+        vocabularyList[35],
+        vocabularyList[36],
+        vocabularyList[37]
         ],
-    wordsToCheck: ["pizza", "pasta", "dumpling" ,"hamburger"],
     wordPositions: [
             "pizza": (4...8).map {GridPosition(row: 1, col: $0)},
             "pasta": (5...9).map {GridPosition(row: $0, col: 4)},
@@ -86,13 +85,12 @@ let Electronics_StoreData = GameLevelData(
         "5. My dad drives a cr to work. It has four wheels and you need a key to start it."
     ],
     game_vocabulary: [
-        //watch
-        //camera
-        //keyboard
-        //smartphone
-        //mouse
+        vocabularyList[38],
+        vocabularyList[39],
+        vocabularyList[40],
+        vocabularyList[41],
+        vocabularyList[42]
         ],
-    wordsToCheck: ["watch", "camera", "keyboard" ,"smartphone","mouse"],
     wordPositions: [
             "watch": (1...5).map {GridPosition(row: $0, col: 9)},
             "camera": (4...9).map {GridPosition(row: 2, col: $0)},
@@ -136,14 +134,13 @@ let Clothing_StoreData = GameLevelData(
         "5. My dad drives a cr to work. It has four wheels and you need a key to start it."
     ],
     game_vocabulary: [
-        //shirt
-        //shorts
-        //cap
-        //backpack
-        //glasses
-        //shoes
+        vocabularyList[43],
+        vocabularyList[44],
+        vocabularyList[45],
+        vocabularyList[46],
+        vocabularyList[47],
+        vocabularyList[48]
         ],
-    wordsToCheck: ["shirt", "shorts", "cap" ,"backpack","glasses","shoes"],
     wordPositions: [
             "shirt": (5...9).map {GridPosition(row: $0, col: 8)},
             "shorts": (1...6).map {GridPosition(row: 9, col: $0)},

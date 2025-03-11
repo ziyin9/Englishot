@@ -46,7 +46,6 @@ let BathroomData = GameLevelData(
             vocabularyList[6],
             vocabularyList[7]
         ],
-    wordsToCheck: ["toothbrush", "toilet", "cup", "towel"],
     wordPositions: [
             "toothbrush": (0...9).map
             {GridPosition(row: $0, col: 3)},
@@ -97,7 +96,6 @@ let KitchenData = GameLevelData(
             vocabularyList[2],
             vocabularyList[3]
         ],
-    wordsToCheck: ["spoon", "fork", "knife", "plate"],
     wordPositions: [
             "spoon":(2...7).map
             {GridPosition(row: 2, col: $0)},
@@ -148,7 +146,6 @@ let Living_RoomData = GameLevelData(
             vocabularyList[10],
             vocabularyList[11],
         ],
-    wordsToCheck: ["key", "television", "sofa", "fan"],
     wordPositions: [
         "key": (4...6).map
         {GridPosition(row: 1, col: $0)},
@@ -201,7 +198,6 @@ let GarageData = GameLevelData(
             vocabularyList[14],
             vocabularyList[15]
         ],
-    wordsToCheck: ["tire", "scooter", "carton", "car"],
     wordPositions: [
             
             "tire": (2...5).map

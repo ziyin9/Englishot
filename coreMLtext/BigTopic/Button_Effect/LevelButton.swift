@@ -53,17 +53,6 @@ struct LevelButton<Destination: View>: View {
                         .frame(width: 100, height: 100)
                         .clipShape(Circle())
                     
-                    // Ice crystal border
-                    Circle()
-                        .stroke(
-                            LinearGradient(
-                                colors: [.white, .blue.opacity(0.3)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            lineWidth: 2
-                        )
-                        .shadow(color: .blue.opacity(0.2), radius: isHovered ? 10 : 5)
                     
                     // Icon
                     Image(systemName: icon)

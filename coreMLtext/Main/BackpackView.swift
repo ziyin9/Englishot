@@ -20,13 +20,7 @@ struct BackpackView: View {
     @State private var selectedCategory: String = "All"
     @State private var subCategories: [String] = []
     private let mainCategories = ["All", "Home", "School", "Zoo", "Mall", "Market"]
-    private let categoryMapping: [String: [String]] = [
-        "Home": ["Kitchen", "Bathroom", "Livingroom","Garage"],
-        "School": ["Classroom", "Library", "Playground"],
-        "Zoo": ["Mammals", "Birds", "Reptiles"],
-        "Mall": ["Clothing", "Food Court", "Electronics"],
-        "Market": ["Fruits", "Vegetables", "Seafood"],
-    ]//之後要改
+
     private let columns = [
         GridItem(.flexible(), spacing: -20),
         GridItem(.flexible(), spacing: -20)
@@ -52,23 +46,25 @@ struct BackpackView: View {
                         Spacer()
                         Spacer()
                         Button(action: {
-                            deleteWord(wordString:"fork")
-                            deleteWord(wordString:"soap")
-                            deleteWord(wordString:"fan")
-                            deleteWord(wordString:"sock")
-                            deleteWord(wordString:"comb")
-                            deleteWord(wordString:"television")
-                            deleteWord(wordString:"plug")
-                            deleteWord(wordString:"knife")
-                            deleteWord(wordString:"spoon")
-                            deleteWord(wordString:"toothbrush")
-                            deleteWord(wordString:"towel")
-                            deleteWord(wordString:"lamp")
-                            deleteWord(wordString:"cup")
-                            deleteWord(wordString:"bicycle")
-                            deleteWord(wordString:"key")
+//                            deleteWord(wordString:"fork")
+//                            deleteWord(wordString:"soap")
+//                            deleteWord(wordString:"fan")
+//                            deleteWord(wordString:"sock")
+//                            deleteWord(wordString:"comb")
+//                            deleteWord(wordString:"television")
+//                            deleteWord(wordString:"plug")
+//                            deleteWord(wordString:"knife")
+//                            deleteWord(wordString:"spoon")
+//                            deleteWord(wordString:"toothbrush")
+//                            deleteWord(wordString:"towel")
+//                            deleteWord(wordString:"lamp")
+//                            deleteWord(wordString:"cup")
+//                            deleteWord(wordString:"bicycle")
+//                            deleteWord(wordString:"key")
                             deleteWord(wordString:"box")
-                            deleteWord(wordString:"toilet")
+                            deleteWord(wordString:"fork")
+
+//                            deleteWord(wordString:"toilet")
                         }) {
                             Image(systemName: "trash.fill")
                                 .font(.system(size: 20))
@@ -81,8 +77,8 @@ struct BackpackView: View {
                                 )
                         }
                         CircularProgressView(
-                            totalWords: totalWordsForCategory(),
-                            currentWords: currentWordsForCategory()
+                            totalWords: totalWordsForCategory(selectedCategory),
+                            currentWords: collectedWordsForCategory(selectedCategory)
                         )
                         .transition(.scale.combined(with: .opacity))
 
@@ -92,7 +88,6 @@ struct BackpackView: View {
                                     Button(action: {
                                         withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
                                             selectedCategory = category
-                                            subCategories = categoryMapping[category] ?? []
                                             cardScale = 0.8
                                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                                                 withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
@@ -185,43 +180,37 @@ struct BackpackView: View {
 
         
     }
+    // Calculate total words for a specific category
+    private func totalWordsForCategory(_ bigtopic: String) -> Int {
+                    if selectedCategory == "All" {
+                        return vocabularyList.count
+                    } else{
+                        return vocabularyList.filter { $0.bigtopic.hasPrefix(bigtopic) }.count
+                    }
+    }
+    
+    // Calculate collected words for a specific category
+    private func collectedWordsForCategory(_ bigtopic: String) -> Int {
+                if selectedCategory == "All" {
+                       return wordEntities.count
+                }else {
+                       return wordEntities.filter { word in
+                        vocabularyList.contains {
+                            $0.E_word == word.word && $0.bigtopic.hasPrefix(bigtopic)
+                        }
+                    }.count
+                }
+    }
+
     private func filteredWords() -> [Word] {
-            if selectedCategory == "All" {
-                return Array(wordEntities)
-            } else if let subCategories = categoryMapping[selectedCategory] {
-                return wordEntities.filter { word in
-                    vocabularyList.contains { $0.E_word == word.word && subCategories.contains($0.category) }
-                }
-            } else {
-                return wordEntities.filter { word in
-                    vocabularyList.contains { $0.E_word == word.word && $0.category == selectedCategory }
-                }
+        if selectedCategory == "All" {
+            return Array(wordEntities)
+        } else {
+            return wordEntities.filter { word in
+                vocabularyList.contains { $0.E_word == word.word && $0.bigtopic == selectedCategory }
             }
         }
-
-        private func totalWordsForCategory() -> Int {
-            if selectedCategory == "All" {
-                return vocabularyList.count
-            } else if let subCategories = categoryMapping[selectedCategory] {
-                return vocabularyList.filter { subCategories.contains($0.category) }.count
-            } else {
-                return vocabularyList.filter { $0.category == selectedCategory }.count
-            }
-        }
-
-        private func currentWordsForCategory() -> Int {
-            if selectedCategory == "All" {
-                return wordEntities.count
-            } else if let subCategories = categoryMapping[selectedCategory] {
-                return wordEntities.filter { word in
-                    vocabularyList.contains { $0.E_word == word.word && subCategories.contains($0.category) }
-                }.count
-            } else {
-                return wordEntities.filter { word in
-                    vocabularyList.contains { $0.E_word == word.word && $0.category == selectedCategory }
-                }.count
-            }
-        }
+    }
 
 
     }

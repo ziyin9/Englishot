@@ -25,7 +25,6 @@ struct HomeGame: View {
     @State private var allWordsFound: Bool = false
     
     var levelData: GameLevelData
-//    let wordsToCheck = ["comb", "toothbrush", "toilet", "towel","soap"]
     
     var body: some View {
         NavigationStack {
@@ -63,13 +62,21 @@ struct HomeGame: View {
                 }
             )
             
+//            .onAppear {
+//                for word in levelData.wordsToCheck {
+//                    if let wordEntity = wordEntities.first(where: { $0.word == word }) {
+//                        checkAndReveal(wordEntity: wordEntity)
+//                    }
+//                }
+//            }
             .onAppear {
-                for word in levelData.wordsToCheck {
-                    if let wordEntity = wordEntities.first(where: { $0.word == word }) {
+                for vocabulary in levelData.game_vocabulary {
+                    if let wordEntity = wordEntities.first(where: { $0.word == vocabulary.E_word }) {
                         checkAndReveal(wordEntity: wordEntity)
                     }
                 }
             }
+
             
             .onChange(of: highestConfidenceWord) { newValue in
                             processRecognizedWord(newValue)
@@ -84,22 +91,27 @@ struct HomeGame: View {
         
     }
     private func processRecognizedWord(_ word: String) {
-            let lowercasedWord = word.components(separatedBy: " - ").first?.lowercased() ?? word.lowercased()
-            print("🔍 辨識到單字: \(lowercasedWord)")
-            if levelData.wordsToCheck.contains(lowercasedWord) {
-                print("✅ '\(lowercasedWord)' 在 wordsToCheck 裡")
-                addNewWord(wordString: lowercasedWord, image: image!)
-                if let wordEntity = wordEntities.first(where: { $0.word == lowercasedWord }) {
-                    revealWord(wordEntity: wordEntity)
-                }
-                passToFoundWordSeetWord = lowercasedWord
-                showimagePop = true
-                print("✅ showimagePop 設為 true，應該顯示 FoundWordPopup")
+        let lowercasedWord = word.components(separatedBy: " - ").first?.lowercased() ?? word.lowercased()
+        print("🔍 辨識到單字: \(lowercasedWord)")
+
+        // 檢查 game_vocabulary 是否包含該單字
+        if levelData.game_vocabulary.contains(where: { $0.E_word.lowercased() == lowercasedWord }) {
+            print("✅ '\(lowercasedWord)' 在 game_vocabulary 裡")
+            addNewWord(wordString: lowercasedWord, image: image!)
+            
+            // 根據 lowercasedWord 查找對應的 wordEntity
+            if let wordEntity = wordEntities.first(where: { $0.word == lowercasedWord }) {
+                revealWord(wordEntity: wordEntity)
             }
-        else {
-                print("⚠️ '\(lowercasedWord)' 不在 wordsToCheck 裡") // ❌ 單字不在 wordsToCheck，問題可能出在這裡！
-            }
+            
+            passToFoundWordSeetWord = lowercasedWord
+            showimagePop = true
+            print("✅ showimagePop 設為 true，應該顯示 FoundWordPopup")
+        } else {
+            print("⚠️ '\(lowercasedWord)' 不在 game_vocabulary 裡") // ❌ 單字不在 game_vocabulary，問題可能出在這裡！
         }
+    }
+
     
     private func checkAndReveal(wordEntity: Word) {
             if wordEntity.controlshow, let positions = levelData.wordPositions[wordEntity.word ?? "default"] {
@@ -116,11 +128,10 @@ struct HomeGame: View {
         }
     }
     func checkAllWordsFound() {
-                
-                allWordsFound = levelData.wordsToCheck.allSatisfy { word in
-                    wordEntities.first(where: { $0.word == word })?.controlshow ?? false
-                }
-            }
+        allWordsFound = levelData.game_vocabulary.allSatisfy { vocabulary in
+            wordEntities.first(where: { $0.word == vocabulary.E_word })?.controlshow ?? false
+        }
+    }
 }
 #Preview {
     let gameState = GameState()

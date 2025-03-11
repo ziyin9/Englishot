@@ -75,7 +75,8 @@ struct DataView: View {
                                     
                                     CircularProgressView(
 //                                        totalWords: totalWordsForCategory(category),
-                                        totalWords: 20,
+                                        totalWords:
+                                            totalWordsForCategory(category),
 
                                         currentWords: collectedWordsForCategory(category)
                                     )
@@ -107,18 +108,21 @@ struct DataView: View {
     }
     
     // Calculate total words for a specific category
-    private func totalWordsForCategory(_ category: String) -> Int {
-        vocabularyList.filter { $0.category.hasPrefix(category) }.count
+    private func totalWordsForCategory(_ bigtopic: String) -> Int {
+        vocabularyList.filter { $0.bigtopic.hasPrefix(bigtopic) }.count
     }
     
     // Calculate collected words for a specific category
-    private func collectedWordsForCategory(_ category: String) -> Int {
+    private func collectedWordsForCategory(_ bigtopic: String) -> Int {
         wordEntities.filter { word in
             vocabularyList.contains { 
-                $0.E_word == word.word && $0.category.hasPrefix(category)
+                $0.E_word == word.word && $0.bigtopic.hasPrefix(bigtopic)
             }
         }.count
     }
+    
+    
+    
 }
 
 #Preview {

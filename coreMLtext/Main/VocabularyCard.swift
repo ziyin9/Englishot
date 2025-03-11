@@ -104,6 +104,7 @@ struct RoundedCorner: Shape {
 #Preview {
     VocabularyCard(
         vocabulary: Vocabulary(
+            bigtopic:"Mall",
             category: "Kitchen",
             E_word: "apple",
             C_word: "蘋果",

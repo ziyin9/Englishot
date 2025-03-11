@@ -36,9 +36,13 @@ let Mammals1Data = GameLevelData(
     downHints: [
     ],
     game_vocabulary: [
-        //lion tiger elephant giraffe zebra monkey
+        vocabularyList[63],
+        vocabularyList[64],
+        vocabularyList[65],
+        vocabularyList[66],
+        vocabularyList[67],
+        vocabularyList[68]
     ],
-    wordsToCheck: ["lion", "tiger", "elephant" ,"giraffe","zebra","monkey"],
     wordPositions: [
             "lion": (6...9).map {GridPosition(row: $0, col: 4)},
             "tiger": (3...7).map {GridPosition(row: 7, col: $0)},
@@ -78,9 +82,13 @@ let Mammals2Data = GameLevelData(
     downHints: [
     ],
     game_vocabulary: [
-        //koala squirrel sloth bear panda kangaroo
+        vocabularyList[69],
+        vocabularyList[70],
+        vocabularyList[71],
+        vocabularyList[72],
+        vocabularyList[73],
+        vocabularyList[74],
     ],
-    wordsToCheck: ["koala", "squirrel", "sloth" ,"bear","panda","kangaroo"],
     wordPositions: [
             "koala": (0...4).map {GridPosition(row: $0, col: 3)},
             "squirrel": (2...9).map {GridPosition(row: 6, col: $0)},
@@ -119,9 +127,12 @@ let Mammals3Data = GameLevelData(
     downHints: [
     ],
     game_vocabulary: [
-        //camel buffalo deer wolf fox
+        vocabularyList[75],
+        vocabularyList[76],
+        vocabularyList[77],
+        vocabularyList[78],
+        vocabularyList[79]
     ],
-    wordsToCheck: ["camel", "buffalo", "deer" ,"wolf","fox"],
     wordPositions: [
             "camel": (3...7).map {GridPosition(row: $0, col: 6)},
             "buffalo": (2...8).map {GridPosition(row: 4, col: $0)},
@@ -160,9 +171,11 @@ let Marine_AnimalsData = GameLevelData(
     downHints: [
     ],
     game_vocabulary: [
-        //dolphin shark whale jellyfish seahorse
+        vocabularyList[80],
+        vocabularyList[81],
+        vocabularyList[82],
+        vocabularyList[83]
         ],
-    wordsToCheck: ["dolphin", "shark", "whale" ,"jellyfish","seahorse"],
     wordPositions: [
             "dolphin": (3...9).map {GridPosition(row: $0, col: 6)},
             "shark": (4...8).map {GridPosition(row: $0, col: 8)},
@@ -199,9 +212,11 @@ let BirdsData = GameLevelData(
     downHints: [
     ],
     game_vocabulary: [
-        //parrot owl eagle penguin ostrich
+        vocabularyList[84],
+        vocabularyList[85],
+        vocabularyList[86],
+        vocabularyList[87],
     ],
-    wordsToCheck: ["parrot", "owl", "eagle" ,"penguin","ostrich"],
     wordPositions: [
             "parrot": (2...7).map {GridPosition(row: 2, col: $0)},
             "owl": (7...9).map {GridPosition(row: 0, col: $0)},

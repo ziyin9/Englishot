@@ -16,7 +16,6 @@ struct GameLevelData {
     let acrossHints: [String]
     let downHints: [String]
     let game_vocabulary: [Vocabulary]
-    let wordsToCheck: [String]
     let wordPositions: [String: [GridPosition]]
 }
 struct GridPosition {
