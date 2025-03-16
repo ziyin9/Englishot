@@ -8,7 +8,6 @@
 import SwiftUI
 
 let FoodData = GameLevelData(
-    levelID:"food",
     title: "Food",
     backgroundImage: "Food",
     answers: [
@@ -53,7 +52,6 @@ let FoodData = GameLevelData(
 )
 
 let Electronics_StoreData = GameLevelData(
-    levelID:"electronics_store",
     title: "Electronics Store",
     backgroundImage: "Electronicsstore",
     answers: [
@@ -101,7 +99,6 @@ let Electronics_StoreData = GameLevelData(
 )
 
 let Clothing_StoreData = GameLevelData(
-    levelID:"clothing_store",
     title: "Clothing Store",
     backgroundImage: "Clothingstore",
     answers: [

@@ -8,7 +8,6 @@
 import SwiftUI
 
 let FruitData = GameLevelData(
-    levelID:"fruit",
     title: "Fruit",
     backgroundImage: "Fruit",
     answers: [
@@ -56,7 +55,6 @@ let FruitData = GameLevelData(
 )
 
 let VegetableData = GameLevelData(
-    levelID:"vegetable",
     title: "Vegetable",
     backgroundImage: "Vegetable",
     answers: [
@@ -100,7 +98,6 @@ let VegetableData = GameLevelData(
 )
 
 let SpicesData = GameLevelData(
-    levelID:"spices",
     title: "Spices",
     backgroundImage: "Spices",
     answers: [

@@ -24,60 +24,60 @@ struct GameView: View {
     @FetchRequest(entity: Word.entity(), sortDescriptors: [])
     var wordEntities: FetchedResults<Word>
     
-    var levelID: String
+    var title: String
     
     private var levelData: GameLevelData {
-            switch levelID {
+            switch title {
                 
-                //home
-            case "bathroom":
+                //Home
+            case "Bathroom":
                 return BathroomData
-            case "kitchen":
+            case "Kitchen":
                 return KitchenData
-            case "living_room":
+            case "Living Room":
                 return Living_RoomData
-            case "garage":
+            case "Garage":
                 return GarageData
                 
                 //Mall
-            case "food":
+            case "Food":
                 return FoodData
-            case "electronics_store":
+            case "Electronics Store":
                 return Electronics_StoreData
-            case "clothing_store":
+            case "Clothing Store":
                 return Clothing_StoreData
                 
                 //Market
-            case "fruit":
+            case "Fruit":
                 return FruitData
-            case "vegetable":
+            case "Vegetable":
                 return VegetableData
-            case "spices":
+            case "Spices":
                 return SpicesData
                 
                 //school
-            case "classroom1":
+            case "Classroom1":
                 return Classroom1Data
-            case "classroom2":
+            case "Classroom2":
                 return Classroom2Data
             case "music":
                 return MusicData
-            case "playground":
+            case "Playground":
                 return PlaygroundData
-            case "sports":
+            case "Sports":
                 return SportsData
                 
                 
                 //Zoo
-            case "mammals1":
+            case "Mammals1":
                 return Mammals1Data
-            case "mammals2":
+            case "Mammals2":
                 return Mammals2Data
-            case "mammals3":
+            case "Mammals3":
                 return Mammals3Data
-            case "marine_animals":
+            case "Marine Animals":
                 return Marine_AnimalsData
-            case "birds":
+            case "Birds":
                 return BirdsData
                 
             default:
@@ -95,10 +95,24 @@ struct GameView: View {
 
             GeometryReader { geometry in
                 VStack(alignment: .center) {
-                    Text(levelData.title)
+                    if ("\(levelData.title)" == "Electronics Store"){
+                        Text("Electronics")
+                            .font(.system(size: 60, weight: .bold, design: .serif))
+                            .foregroundColor(.black)
+                            .padding(.top, 40)
+                        
+                    }else if ("\(levelData.title)" == "Clothing Store"){
+                        Text("Clothing")
+                            .font(.system(size: 60, weight: .bold, design: .serif))
+                            .foregroundColor(.black)
+                            .padding(.top, 40)
+                        
+                    }else{
+                        Text(levelData.title)
                         .font(.system(size: 60, weight: .bold, design: .serif))
                         .foregroundColor(.black)
                         .padding(.top, 40)
+                    }
 
                     GridView(
                         guessedLetters: $guessedLetters,
@@ -108,34 +122,9 @@ struct GameView: View {
                         showAnswer: $showAnswer
                     )
 
-                    HStack {
-                        Spacer()
 
-                        Button(action: { uiState.showGameCardView = true }) {
-                            Image("A")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 40, height: 40)
-                                .font(.title)
-                                .padding(6)
-                                .background(Color.blue.opacity(0.3))
-                                .clipShape(Circle())
-                        }
-                        .padding(.trailing, 10)
-
-                        Button(action: { gameState.showingCamera = true }) {
-                            Image("camera")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 40, height: 40)
-                                .font(.title)
-                                .padding(6)
-                                .background(Color.blue.opacity(0.3))
-                                .clipShape(Circle())
-                        }
-                        .padding(.trailing, 30)
-                    }
                     VStack {
+                        
                         GeometryReader { geometry in
                             let screenWidth = geometry.size.width
                             let screenheight = geometry.size.height
@@ -205,7 +194,33 @@ struct GameView: View {
                 }
             }
         })
-        
+        HStack {
+            Spacer()
+
+            Button(action: { uiState.showGameCardView = true }) {
+                Image("A")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 40, height: 40)
+                    .font(.title)
+                    .padding(6)
+                    .background(Color.blue.opacity(0.3))
+                    .clipShape(Circle())
+            }
+            .padding(.trailing, 10)
+
+            Button(action: { gameState.showingCamera = true }) {
+                Image("camera")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 40, height: 40)
+                    .font(.title)
+                    .padding(6)
+                    .background(Color.blue.opacity(0.3))
+                    .clipShape(Circle())
+            }
+            .padding(.trailing, 30)
+        }
     }
 }
 
@@ -213,7 +228,7 @@ struct GameView: View {
     GameView(
         showAnswer: .constant(Array(repeating: Array(repeating: false, count: 11), count: 10)),
         showingCamera: .constant(false),
-        levelID: "bathroom"
+        title: "bathroom"
     )
     .environmentObject(GameState())
     .environmentObject(UIState())

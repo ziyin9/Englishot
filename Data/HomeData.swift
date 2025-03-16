@@ -10,7 +10,6 @@ import SwiftUI
 
 
 let BathroomData = GameLevelData(
-    levelID:"bathroom",
     title: "Bathroom",
     backgroundImage: "Bathroom_background",
     answers: [
@@ -61,7 +60,6 @@ let BathroomData = GameLevelData(
 
 
 let KitchenData = GameLevelData(
-    levelID:"kitchen",
     title: "Kitchen",
     backgroundImage: "Kitchen_background",
     answers: [
@@ -111,7 +109,6 @@ let KitchenData = GameLevelData(
 
 
 let Living_RoomData = GameLevelData(
-    levelID:"living_room",
     title: "Living Room",
     backgroundImage: "Livingroom_background",
     answers: [
@@ -162,7 +159,6 @@ let Living_RoomData = GameLevelData(
 
 
 let GarageData = GameLevelData(
-    levelID:"garage",
     title: "Garage",
     backgroundImage: "Garage_background",
     answers: [

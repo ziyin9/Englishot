@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct GameLevelData {
-    var levelID: String
     let title: String
     let backgroundImage: String
     let answers: [[String?]]

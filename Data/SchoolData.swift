@@ -8,7 +8,6 @@
 import SwiftUI
 
 let Classroom1Data = GameLevelData(
-    levelID:"classroom1",
     title: "Classroom1",
     backgroundImage: "Classroom1_background",
     answers: [
@@ -52,7 +51,6 @@ let Classroom1Data = GameLevelData(
 )
 
 let Classroom2Data = GameLevelData(
-    levelID:"classroom2",
     title: "Classroom2",
     backgroundImage: "Classroom2_background",
     answers: [
@@ -100,7 +98,6 @@ let Classroom2Data = GameLevelData(
 )
 
 let MusicData = GameLevelData(
-    levelID:"music",
     title: "Music",
     backgroundImage: "Music_background",
     answers: [
@@ -149,7 +146,6 @@ let MusicData = GameLevelData(
 )
 
 let PlaygroundData = GameLevelData(
-    levelID:"playground",
     title: "Playground",
     backgroundImage: "Playground_background",
     answers: [
@@ -193,7 +189,6 @@ let PlaygroundData = GameLevelData(
 )
 
 let SportsData = GameLevelData(
-    levelID:"sports",
     title: "Sports",
     backgroundImage: "Sports_background",
     answers: [

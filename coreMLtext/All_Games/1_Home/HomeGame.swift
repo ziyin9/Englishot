@@ -31,7 +31,7 @@ struct HomeGame: View {
             
             
             ZStack {
-                GameView(showAnswer: $showAnswer, showingCamera: $gameState.showingCamera, levelID: levelData.levelID)
+                GameView(showAnswer: $showAnswer, showingCamera: $gameState.showingCamera, title: levelData.title)
                     .onAppear {
                         uiState.isNavBarVisible = false
                         checkAllWordsFound()

@@ -8,7 +8,6 @@
 import SwiftUI
 
 let Mammals1Data = GameLevelData(
-    levelID:"mammals1",
     title: "Mammals1",
     backgroundImage: "Mammals1",
     answers: [
@@ -20,8 +19,8 @@ let Mammals1Data = GameLevelData(
         [nil, "b", nil, "y", nil, nil, "f", nil, nil, nil, nil],
         [nil, "r", nil, nil, "l", nil, "f", nil, nil, nil, nil],
         [nil, "a", nil, "t", "i", "g", "e", "r", nil, nil, nil],
-        [nil,nil, nil, nil, "o", nil, nil, nil, nil, nil, nil],
-        [nil,nil, nil, nil, "n", nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, "o", nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, "n", nil, nil, nil, nil, nil, nil],
     ],
     numberHints: [
         ((0, 3), 1),
@@ -54,7 +53,6 @@ let Mammals1Data = GameLevelData(
 )
 
 let Mammals2Data = GameLevelData(
-    levelID:"mammals2",
     title: "Mammals2",
     backgroundImage: "Mammals2",
     answers: [
@@ -100,7 +98,6 @@ let Mammals2Data = GameLevelData(
 )
 
 let Mammals3Data = GameLevelData(
-    levelID:"mammals3",
     title: "Mammals3",
     backgroundImage: "Mammals3",
     answers: [
@@ -143,7 +140,6 @@ let Mammals3Data = GameLevelData(
 )
 
 let Marine_AnimalsData = GameLevelData(
-    levelID:"marine_animals",
     title: "Marine Animals",
     backgroundImage: "Marineanimals",
     answers: [
@@ -186,7 +182,6 @@ let Marine_AnimalsData = GameLevelData(
 )
 
 let BirdsData = GameLevelData(
-    levelID:"birds",
     title: "Birds",
     backgroundImage: "Birds",
     answers: [
