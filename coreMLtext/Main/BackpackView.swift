@@ -141,17 +141,19 @@ struct BackpackView: View {
                         }
                         
                         LazyVGrid(columns: columns, spacing: 15) {
-                            ForEach(filteredWords(), id: \.self) { wordEntity in
-                                if let index = vocabularyList.firstIndex(where: { $0.E_word == wordEntity.word }) {
+                            ForEach(Array(filteredWords().enumerated()), id: \.element) { index, wordEntity in
+                                if let vocabIndex = vocabularyList.firstIndex(where: { $0.E_word == wordEntity.word }) {
                                     let itemImage = wordEntity.itemimage
-                                    VocabularyCard(vocabulary: vocabularyList[index], showimage: itemImage)
+                                    VocabularyCard(vocabulary: vocabularyList[vocabIndex], showimage: itemImage)
                                         .scaleEffect(cardScale)
+                                        .onTapGesture {
+                                            selectedWordIndex = index  // Update to use the filtered list index
+                                        }
                                         .overlay(
                                             NavigationLink(destination: WordDetailView(
-                                                vocabularies: filteredCollectedWords(),
-                                                currentIndex: index,
-                                                selectedIndex: $selectedWordIndex,
-                                                showimages: getShowImages(for: filteredCollectedWords())
+                                                collectedWords: filteredCollectedWords(),
+                                                showImages: getShowImages(for: filteredCollectedWords()),
+                                                initialIndex: index  // Pass the correct index from filtered list
                                             )) {
                                                 Rectangle()
                                                     .foregroundColor(.clear)
