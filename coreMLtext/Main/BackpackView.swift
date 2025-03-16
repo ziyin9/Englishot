@@ -29,6 +29,7 @@ struct BackpackView: View {
     @State private var selectedCategoryOffset: CGFloat = 0
     @State private var cardScale: CGFloat = 1.0
     @Namespace private var animation
+    @State private var selectedWordIndex: Int = 0
 
     
     var body: some View {
@@ -146,8 +147,12 @@ struct BackpackView: View {
                                     VocabularyCard(vocabulary: vocabularyList[index], showimage: itemImage)
                                         .scaleEffect(cardScale)
                                         .overlay(
-                                            NavigationLink(destination: WordDetailView(vocabulary: vocabularyList[index],
-                                                                                     showimage: itemImage)) {
+                                            NavigationLink(destination: WordDetailView(
+                                                vocabularies: filteredCollectedWords(),
+                                                currentIndex: index,
+                                                selectedIndex: $selectedWordIndex,
+                                                showimages: getShowImages(for: filteredCollectedWords())
+                                            )) {
                                                 Rectangle()
                                                     .foregroundColor(.clear)
                                             }
@@ -254,8 +259,23 @@ struct BackpackView: View {
         }
     }
 
-
+    private func filteredCollectedWords() -> [Vocabulary] {
+        let collectedWords = wordEntities.compactMap { entity -> Vocabulary? in
+            vocabularyList.first { vocab in
+                vocab.E_word == entity.word &&
+                (selectedCategory == "All" || vocab.bigtopic == selectedCategory)
+            }
+        }
+        return collectedWords
     }
+
+    private func getShowImages(for vocabularies: [Vocabulary]) -> [Data?] {
+        return vocabularies.map { vocabulary in
+            wordEntities.first { $0.word == vocabulary.E_word }?.itemimage
+        }
+    }
+
+}
 
 
     #Preview {

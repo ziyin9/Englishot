@@ -15,9 +15,11 @@ struct CameraView: UIViewControllerRepresentable {
     @Binding var image: UIImage?
     @Binding var recognizedObjects: [String]
     @Binding var highestConfidenceWord: String // 傳遞最高辨識率單字的綁定變數
+    
+    @Binding var showRecognitionErrorView: Bool
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(image: $image, recognizedObjects: $recognizedObjects, highestConfidenceWord: $highestConfidenceWord)
+        Coordinator(image: $image, recognizedObjects: $recognizedObjects, highestConfidenceWord: $highestConfidenceWord, showRecognitionErrorView: $showRecognitionErrorView)
     }
     
     func makeUIViewController(context: Context) -> UIImagePickerController {
@@ -34,13 +36,16 @@ struct CameraView: UIViewControllerRepresentable {
         @Binding var image: UIImage?
         @Binding var recognizedObjects: [String]
         @Binding var highestConfidenceWord: String
+        
+        @Binding var showRecognitionErrorView: Bool
+        
         var model: VNCoreMLModel?
 
-        init(image: Binding<UIImage?>, recognizedObjects: Binding<[String]>, highestConfidenceWord: Binding<String>) {
+        init(image: Binding<UIImage?>, recognizedObjects: Binding<[String]>, highestConfidenceWord: Binding<String>, showRecognitionErrorView: Binding<Bool>) {
             _image = image
             _recognizedObjects = recognizedObjects
             _highestConfidenceWord = highestConfidenceWord
-            
+            _showRecognitionErrorView = showRecognitionErrorView
             // Initialize model and handle possible errors
             do {
                 let configuration = MLModelConfiguration()
@@ -90,6 +95,11 @@ struct CameraView: UIViewControllerRepresentable {
                 
                 DispatchQueue.main.async {
                     self.recognizedObjects = recognizedObjects
+                        if let highestConfidenceObservation = results.first, highestConfidenceObservation.confidence >= 0.5 {
+                            self.highestConfidenceWord = highestConfidenceObservation.identifier
+                        } else {
+                        self.showRecognitionErrorView = true // 辨識失敗，顯示錯誤視圖
+                        }
                 }
             }
             

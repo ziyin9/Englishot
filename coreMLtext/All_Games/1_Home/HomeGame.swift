@@ -24,6 +24,8 @@ struct HomeGame: View {
     @State private var showAnswer = Array(repeating: Array(repeating: false, count: 11), count: 10)
     @State private var allWordsFound: Bool = false
     
+    @State private var showRecognitionErrorView: Bool = false
+    
     var levelData: GameLevelData
     
     var body: some View {
@@ -58,6 +60,9 @@ struct HomeGame: View {
                                 FoundWordPopup(image: image, foundWord: passToFoundWordSeetWord, showimagePop: $showimagePop)
                             }
                         }
+                        else if showRecognitionErrorView {
+                                                    ErrorView(showRecognitionErrorView: $showRecognitionErrorView, showingCamera: $gameState.showingCamera)
+                                                    }
                     }
                 }
             )
@@ -83,7 +88,7 @@ struct HomeGame: View {
                         }
             
             .sheet(isPresented: $gameState.showingCamera) {
-                CameraView(image: $image, recognizedObjects: $recognizedObjects, highestConfidenceWord: $highestConfidenceWord)
+                CameraView(image: $image, recognizedObjects: $recognizedObjects, highestConfidenceWord: $highestConfidenceWord,showRecognitionErrorView: $showRecognitionErrorView)
             }
             
         }
@@ -108,6 +113,7 @@ struct HomeGame: View {
             showimagePop = true
             print("✅ showimagePop 設為 true，應該顯示 FoundWordPopup")
         } else {
+            showRecognitionErrorView = true
             print("⚠️ '\(lowercasedWord)' 不在 game_vocabulary 裡") // ❌ 單字不在 game_vocabulary，問題可能出在這裡！
         }
     }

@@ -12,7 +12,8 @@ struct SettingView: View {
     @State private var isDarkMode = false // 深色模式
     @State private var isPrivacyExpanded = false // 隱私展開收起
     @State private var selectedTab: Int = 0
-
+    @State private var showTutorial = false
+    
     var body: some View {
         GeometryReader { geometry in
             
@@ -35,11 +36,21 @@ struct SettingView: View {
                 
                 VStack(spacing: 25) {
                     // Title with ice effect and centered alignment
-                    
-                    
+                    Button(action: {
+                        showTutorial = true // 顯示教學彈窗
+                    }) {
+                        Image(systemName: "questionmark.circle.fill")
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                            .foregroundColor(.blue)
+                            .background(Circle().fill(Color.white).shadow(radius: 5))
+                    }
+                
+            
                     // Settings sections using custom card style
                     VStack(spacing: 20) {
                         // Audio Settings Card
+                        
                         SettingsCard {
                             VStack(spacing: 15) {
                                 // Volume Control
@@ -170,6 +181,10 @@ struct SettingView: View {
         .onAppear {
             privacyManager.updatePermissionsStatus()
         }
+        .overlay(
+                               showTutorial ? TutorialView(showTutorial: $showTutorial) : nil
+                           )
+        
     }
 }
 
