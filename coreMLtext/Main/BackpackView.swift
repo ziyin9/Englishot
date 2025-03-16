@@ -30,57 +30,70 @@ struct BackpackView: View {
     @State private var cardScale: CGFloat = 1.0
     @Namespace private var animation
 
+    
     var body: some View {
         NavigationView {
             ZStack(alignment: .bottomTrailing) {
                 
                     
                 LinearGradient(
-                    gradient: Gradient(colors: [Color.blue.opacity(0.1), Color.purple.opacity(0.1)]),
+                    gradient: Gradient(colors: [
+                        Color.white.opacity(0.3),
+                        Color.blue.opacity(0.1),
+                        Color.blue.opacity(0.2),
+                        Color.purple.opacity(0.1),
+                        Color.blue.opacity(0.2)
+                    ]),
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
+                .edgesIgnoringSafeArea(.all)
+                
+                // Snow particles effect
+                SnowfallView()
+                    .opacity(0.6)
                 
                 ScrollView {
                     VStack(spacing: 20) {
                         Spacer()
                         Spacer()
-                        Button(action: {
-//                            deleteWord(wordString:"fork")
-//                            deleteWord(wordString:"soap")
-//                            deleteWord(wordString:"fan")
-//                            deleteWord(wordString:"sock")
-//                            deleteWord(wordString:"comb")
-//                            deleteWord(wordString:"television")
-//                            deleteWord(wordString:"plug")
-//                            deleteWord(wordString:"knife")
-//                            deleteWord(wordString:"spoon")
-//                            deleteWord(wordString:"toothbrush")
-//                            deleteWord(wordString:"towel")
-//                            deleteWord(wordString:"lamp")
-//                            deleteWord(wordString:"cup")
-//                            deleteWord(wordString:"bicycle")
-//                            deleteWord(wordString:"key")
-                            deleteWord(wordString:"box")
-                            deleteWord(wordString:"fork")
-
-//                            deleteWord(wordString:"toilet")
-                        }) {
-                            Image(systemName: "trash.fill")
-                                .font(.system(size: 20))
-                                .foregroundColor(.white)
-                                .padding()
-                                .background(
-                                    Circle()
-                                        .fill(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.cyan]), startPoint: .top, endPoint: .bottom))
-                                        .shadow(radius: 10)
+                        VStack{
+                            Text("Vocabulary List")
+                                .font(.system(size: 40, weight: .bold, design: .rounded))
+                                .foregroundStyle(
+                                    LinearGradient(
+                                        colors: [.blue.opacity(0.7), .blue.opacity(0.5)],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
                                 )
+                                .frame(maxWidth: .infinity, alignment: .center)
+                            // Center the title
+                                .padding(.top, 40)
+                                .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 2)
+                            
+                            Spacer()
+                            Spacer()
+                            Spacer()
+                            Spacer()
+
                         }
+
+
                         CircularProgressView(
                             totalWords: totalWordsForCategory(selectedCategory),
-                            currentWords: collectedWordsForCategory(selectedCategory)
+                            currentWords: collectedWordsForCategory(selectedCategory),
+                            circlewidth: 150 ,
+                            circleheight: 150
+                            
                         )
                         .transition(.scale.combined(with: .opacity))
+                        .onTapGesture {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                uiState.showDataView = true
+                            }
+                        }
+                        
 
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 15) {
@@ -144,36 +157,65 @@ struct BackpackView: View {
                             }
                         }
                         .animation(.spring(response: 0.4, dampingFraction: 0.7), value: selectedCategory)
+                        Spacer()
+                        Spacer()
+                        Spacer()
+
                     }
                 }
-                
-//                .onAppear {
-//                        uiState.isNavBarVisible = false // 隱藏
-//                            }
-                VStack{
-                    Text("Vocabulary List")
-                        .font(.system(size: 40, weight: .bold, design: .rounded))
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [.blue.opacity(0.7), .blue.opacity(0.5)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .frame(maxWidth: .infinity, alignment: .center)
-                    // Center the title
-                        .padding(.top, 40)
-                        .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 2)
-                    
-                    Spacer()
-                    Spacer()
-                    Spacer()
-                    Spacer()
+                //                .onAppear {
+                //                        uiState.isNavBarVisible = false // 隱藏
+                //                            }
+                Button(action: {
+//                            deleteWord(wordString:"fork")
+//                            deleteWord(wordString:"soap")
+//                            deleteWord(wordString:"fan")
+//                            deleteWord(wordString:"sock")
+//                            deleteWord(wordString:"comb")
+//                            deleteWord(wordString:"television")
+//                            deleteWord(wordString:"plug")
+//                            deleteWord(wordString:"knife")
+//                            deleteWord(wordString:"spoon")
+//                            deleteWord(wordString:"toothbrush")
+//                            deleteWord(wordString:"towel")
+//                            deleteWord(wordString:"lamp")
+//                            deleteWord(wordString:"cup")
+//                            deleteWord(wordString:"bicycle")
+//                            deleteWord(wordString:"key")
+                    deleteWord(wordString:"box")
+                    deleteWord(wordString:"fork")
 
+//                            deleteWord(wordString:"toilet")
+                }) {
+                    Image(systemName: "trash.fill")
+                        .font(.system(size: 20))
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(
+                            Circle()
+                                .fill(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.cyan]), startPoint: .top, endPoint: .bottom))
+                                .shadow(radius: 10)
+                        )
                 }
+                if uiState.showDataView{
+                    PopupDataView()
+                }
+                
 
             }
             .edgesIgnoringSafeArea(.all)
+//            .overlay {
+//                if showingDataView {
+//                    PopupDataView(
+//                        isPresented: $showingDataView
+//                    )
+////                    .padding(20)
+//                    .edgesIgnoringSafeArea(.all)
+//
+////                    .ignoresSafeArea()
+//                    .transition(.scale.combined(with: .opacity))
+//                }
+//            }
 
         }
         

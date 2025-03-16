@@ -47,8 +47,8 @@ struct GameCardView: View {
                                         .resizable()
                                         .scaledToFit()
                                         .frame(width: 120, height: 120)
-                                        .clipShape(Circle())
-                                        .overlay(Circle().stroke(Color.white.opacity(0.6), lineWidth: 2))
+//                                        .clipShape(Circle())
+//                                        .overlay(Circle().stroke(Color.white.opacity(0.6), lineWidth: 2))
                                         .shadow(color: .blue.opacity(0.3), radius: 8)
                                     Text(item.E_word)
                                         .font(.system(size: 28, weight: .bold, design: .rounded))
@@ -86,35 +86,13 @@ struct GameCardView: View {
                                     )
                             )
                             .tag(index)
-                            .rotation3DEffect(.degrees(isDragging ? (offset > 0 ? -5 : 5) : 0), axis: (x: 0, y: 1, z: 0))
+//                            .rotation3DEffect(.degrees(isDragging ? (offset > 0 ? -5 : 5) : 0), axis: (x: 0, y: 1, z: 0))
                         }
                     }
                     .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
                     .frame(height: 300)
                     
-                    // Close button
-                    Button(action: {
-                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                            uiState.showGameCardView = false
-                        }
-                    }) {
-                        Text("Close")
-                            .font(.system(size: 17, weight: .semibold))
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 30)
-                            .padding(.vertical, 12)
-                            .background(
-                                Capsule()
-                                    .fill(
-                                        LinearGradient(
-                                            colors: [.blue, .blue.opacity(0.8)],
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
-                                        )
-                                    )
-                            )
-                            .shadow(color: .blue.opacity(0.3), radius: 5)
-                    }
+
                 }
                 .padding(.vertical, 30)
                 .transition(.move(edge: .bottom).combined(with: .opacity))

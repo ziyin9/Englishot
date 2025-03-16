@@ -92,6 +92,37 @@ struct GameView: View {
                 .scaledToFill()
                 .opacity(0.3)
                 .ignoresSafeArea()
+//            VStack{
+//                HStack {
+//                    Spacer()
+//                    
+//                    Button(action: { uiState.showGameCardView = true }) {
+//                        Image("A")
+//                            .resizable()
+//                            .scaledToFit()
+//                            .frame(width: 40, height: 40)
+//                            .font(.title)
+//                            .padding(6)
+//                            .background(Color.blue.opacity(0.3))
+//                            .clipShape(Circle())
+//                    }
+//                    .padding(.trailing, 10)
+//                    
+//                    Button(action: { gameState.showingCamera = true }) {
+//                        Image("camera")
+//                            .resizable()
+//                            .scaledToFit()
+//                            .frame(width: 40, height: 40)
+//                            .font(.title)
+//                            .padding(6)
+//                            .background(Color.blue.opacity(0.3))
+//                            .clipShape(Circle())
+//                    }
+//                    .padding(.trailing, 30)
+//                }
+//                .padding(.top, 35)
+//                Spacer()
+//            }
 
             GeometryReader { geometry in
                 VStack(alignment: .center) {
@@ -111,7 +142,7 @@ struct GameView: View {
                         Text(levelData.title)
                         .font(.system(size: 60, weight: .bold, design: .serif))
                         .foregroundColor(.black)
-                        .padding(.top, 40)
+                        .padding(.top, 60)
                     }
 
                     GridView(
@@ -191,36 +222,41 @@ struct GameView: View {
             ToolbarItem(placement: .topBarLeading) {
                 BackButton{
                     dismiss()
+                    uiState.showGameCardView = false
+
                 }
             }
+            ToolbarItem(placement: .topBarTrailing) {
+                HStack {
+                    Spacer()
+                    
+                    Button(action: { uiState.showGameCardView = true }) {
+                        Image("A")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 40, height: 40)
+                            .font(.title)
+                            .padding(6)
+                            .background(Color.blue.opacity(0.3))
+                            .clipShape(Circle())
+                    }
+                    
+                    Button(action: { gameState.showingCamera = true }) {
+                        Image("camera")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 40, height: 40)
+                            .font(.title)
+                            .padding(6)
+                            .background(Color.blue.opacity(0.3))
+                            .clipShape(Circle())
+                    }
+                    .padding(.trailing, 20)
+                }
+
+            }
+            
         })
-        HStack {
-            Spacer()
-
-            Button(action: { uiState.showGameCardView = true }) {
-                Image("A")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 40, height: 40)
-                    .font(.title)
-                    .padding(6)
-                    .background(Color.blue.opacity(0.3))
-                    .clipShape(Circle())
-            }
-            .padding(.trailing, 10)
-
-            Button(action: { gameState.showingCamera = true }) {
-                Image("camera")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 40, height: 40)
-                    .font(.title)
-                    .padding(6)
-                    .background(Color.blue.opacity(0.3))
-                    .clipShape(Circle())
-            }
-            .padding(.trailing, 30)
-        }
     }
 }
 

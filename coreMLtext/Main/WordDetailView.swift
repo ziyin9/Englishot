@@ -9,6 +9,8 @@ struct WordDetailView: View {
     @State private var isBackButtonHovered = false
     @State private var isArrowGlowing = false
     @State private var arrowPhase = 0.0
+    @Environment(\.dismiss) var dismiss
+
     
     var body: some View {
         ZStack {
@@ -28,7 +30,6 @@ struct WordDetailView: View {
             SnowfallView()
                 .opacity(0.6)
             
-            ScrollView {
                 VStack(spacing: 25) {
                     // Back button remains the same as it's already well-styled
                     HStack {
@@ -42,11 +43,11 @@ struct WordDetailView: View {
                         VStack(spacing: 20) {
                             // Word Title and Pronunciation
                             HStack(spacing: 15) {
-                                Text(vocabulary.E_word.capitalized)
+                                Text(vocabulary.E_word)
                                     .font(.system(size: 32, weight: .bold, design: .rounded))
                                     .foregroundStyle(
                                         LinearGradient(
-                                            colors: [.blue.opacity(0.7), .white],
+                                            colors: [.black, .black],
                                             startPoint: .topLeading,
                                             endPoint: .bottomTrailing
                                         )
@@ -62,6 +63,7 @@ struct WordDetailView: View {
                                         .foregroundStyle(
                                             LinearGradient(
                                                 colors: [.blue.opacity(0.8), .blue.opacity(0.7)],
+//                                                colors: .black,
                                                 startPoint: .top,
                                                 endPoint: .bottom
                                             )
@@ -86,14 +88,14 @@ struct WordDetailView: View {
                                 Image(uiImage: image)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(maxHeight: 200)
+                                    .frame(maxHeight: 400)
                                     .cornerRadius(15)
                                     .shadow(color: .blue.opacity(0.2), radius: 10)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 15)
                                             .stroke(
                                                 LinearGradient(
-                                                    colors: [.white.opacity(0.6), .blue.opacity(0.3)],
+                                                    colors: [.white.opacity(0.8), .blue.opacity(0.6)],
                                                     startPoint: .topLeading,
                                                     endPoint: .bottomTrailing
                                                 ),
@@ -109,7 +111,7 @@ struct WordDetailView: View {
                                     .foregroundColor(.blue.opacity(0.7))
                                 
                                 Text(vocabulary.exSentence)
-                                    .font(.body)
+                                    .font(.system(size: 18, weight: .bold, design: .rounded))
                                     .foregroundColor(.primary.opacity(0.8))
                                     .padding()
                                     .background(
@@ -123,6 +125,13 @@ struct WordDetailView: View {
                         .padding()
                     }
                     .padding(.horizontal)
+                }
+            
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                BackButton {
+                    dismiss()
                 }
             }
         }

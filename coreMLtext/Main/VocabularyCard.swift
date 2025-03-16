@@ -35,16 +35,43 @@ struct VocabularyCard: View {
                     }
                    
                     ZStack {
-                        Image("icecube")
-                            .resizable()
-                            .scaledToFill()
+                        Capsule()
+                            .fill(
+                                LinearGradient(
+                                    colors: [
+                                        Color.blue.opacity(0.6),
+                                        Color.blue.opacity(0.3)
+                                    ],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
                             .frame(width: 130, height: 25)
-                            .clipped()
-                            .clipShape(Capsule())
-                            .shadow(radius: 2)
+                            .overlay(
+                                Capsule()
+                                    .stroke(
+                                        LinearGradient(
+                                            colors: [.white.opacity(0.6), .blue.opacity(0.2)],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        ),
+                                        lineWidth: 1
+                                    )
+                            )
+                            .overlay(
+                                ZStack {
+                                    ForEach(0..<3) { index in
+                                        Capsule()
+                                            .fill(.white.opacity(0.1))
+                                            .frame(width: 130 - CGFloat(index * 15), height: 2)
+                                            .offset(y: -5 + CGFloat(index * 2))
+                                    }
+                                }
+                            )
+                            .shadow(color: .blue.opacity(0.3), radius: 3, x: 0, y: 2)
                         
                         HStack {
-                            Text(vocabulary.E_word.capitalized)
+                            Text(vocabulary.E_word)
                                 .foregroundColor(.white)
                                 .font(.headline)
                                 .padding(.leading, 5)

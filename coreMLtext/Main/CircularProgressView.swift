@@ -9,6 +9,8 @@ import SwiftUI
 struct CircularProgressView: View {
     var totalWords: Int  // 總單字數目
     var currentWords: Int  // 目前收集的單字數
+    var circlewidth: CGFloat
+    var circleheight: CGFloat
     
     @State private var animatedProgress: Double = 0
     @State private var showCelebration: Bool = false
@@ -36,7 +38,8 @@ struct CircularProgressView: View {
                     ),
                     style: StrokeStyle(lineWidth: 15, lineCap: .round)
                 )
-                .opacity(0.3)
+                .frame(width: circlewidth, height: circleheight)
+                .opacity(0.6)
             
             // Progress circle with ice crystal effect
             Circle()
@@ -61,6 +64,7 @@ struct CircularProgressView: View {
                         .rotationEffect(Angle(degrees: -90))
                         .blur(radius: 1)
                 )
+                .frame(width: circlewidth, height: circleheight)
                 .rotation3DEffect(.degrees(rotationAngle), axis: (x: 0, y: 1, z: 0))
             
             // Center content
@@ -133,4 +137,8 @@ struct CircularProgressView: View {
             showCelebration = (newProgress >= 1.0)
         }
     }
+}
+
+#Preview {
+    CircularProgressView(totalWords: 20, currentWords: 10, circlewidth:100 ,circleheight:100)
 }

@@ -15,6 +15,7 @@ struct SettingView: View {
 
     var body: some View {
         GeometryReader { geometry in
+            
             ZStack {
                 // Background gradient with snow effect
                 LinearGradient(

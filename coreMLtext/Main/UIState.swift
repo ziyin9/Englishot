@@ -18,5 +18,6 @@ import SwiftUI
 class UIState: ObservableObject {
     @Published var isNavBarVisible: Bool = true
     @Published var showGameCardView: Bool = false
+    @Published var showDataView: Bool = false
 
 }
