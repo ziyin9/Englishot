@@ -31,11 +31,11 @@ struct ZooView: View {
     
     // Level data with level ID and associated level name, icon, and view
     private let levels: [(name: String, icon: String, view: AnyView, words: [Vocabulary])] = [
-            ("Mammals1", "hare.fill", AnyView(HomeGame(levelData: Mammals1Data).navigationBarBackButtonHidden(true)), Mammals1Data.game_vocabulary),
-            ("Mammals2", "tortoise.fill", AnyView(HomeGame(levelData: Mammals2Data).navigationBarBackButtonHidden(true)), Mammals2Data.game_vocabulary),
-            ("Mammals3", "dog.fill", AnyView(HomeGame(levelData: Mammals3Data).navigationBarBackButtonHidden(true)), Mammals3Data.game_vocabulary),
-            ("Marine Animals", "fish.fill", AnyView(HomeGame(levelData: Marine_AnimalsData).navigationBarBackButtonHidden(true)), Marine_AnimalsData.game_vocabulary),
-            ("Birds", "fish.fill", AnyView(HomeGame(levelData: BirdsData).navigationBarBackButtonHidden(true)), BirdsData.game_vocabulary)
+            ("Mammals1", "hare.fill", AnyView(HomeGame(levelData: Mammals1Data, ML_model: "Zoo").navigationBarBackButtonHidden(true)), Mammals1Data.game_vocabulary),
+            ("Mammals2", "tortoise.fill", AnyView(HomeGame(levelData: Mammals2Data, ML_model: "Zoo").navigationBarBackButtonHidden(true)), Mammals2Data.game_vocabulary),
+            ("Mammals3", "dog.fill", AnyView(HomeGame(levelData: Mammals3Data, ML_model: "Zoo").navigationBarBackButtonHidden(true)), Mammals3Data.game_vocabulary),
+            ("Marine Animals", "fish.fill", AnyView(HomeGame(levelData: Marine_AnimalsData, ML_model: "Zoo").navigationBarBackButtonHidden(true)), Marine_AnimalsData.game_vocabulary),
+            ("Birds", "fish.fill", AnyView(HomeGame(levelData: BirdsData, ML_model: "Zoo").navigationBarBackButtonHidden(true)), BirdsData.game_vocabulary)
         ]
     
     var body: some View {

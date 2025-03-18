@@ -137,6 +137,8 @@ struct WordDetailView: View {
             ToolbarItem(placement: .topBarLeading) {
                 BackButton {
                     dismiss()
+                    
+                    
                 }
             }
         }

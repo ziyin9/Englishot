@@ -8,6 +8,7 @@
 import SwiftUI
 import AVFoundation
 import UIKit
+import Vision
 
 struct HomeGame: View {
     @Environment(\.dismiss) var dismiss
@@ -27,6 +28,7 @@ struct HomeGame: View {
     @State private var showRecognitionErrorView: Bool = false
     
     var levelData: GameLevelData
+    var ML_model: String?
     
     var body: some View {
         NavigationStack {
@@ -88,7 +90,7 @@ struct HomeGame: View {
                         }
             
             .sheet(isPresented: $gameState.showingCamera) {
-                CameraView(image: $image, recognizedObjects: $recognizedObjects, highestConfidenceWord: $highestConfidenceWord,showRecognitionErrorView: $showRecognitionErrorView)
+                CameraView(image: $image, recognizedObjects: $recognizedObjects, highestConfidenceWord: $highestConfidenceWord,showRecognitionErrorView: $showRecognitionErrorView,MLModel: ML_model)
             }
             
         }
@@ -143,7 +145,7 @@ struct HomeGame: View {
     let gameState = GameState()
     let uiState = UIState()
     
-    return HomeGame(levelData: BathroomData) // 這裡改成適用於所有關卡
+    return HomeGame(levelData: BathroomData, ML_model:"daf") // 這裡改成適用於所有關卡
             .environmentObject(gameState)
             .environmentObject(uiState)
 }

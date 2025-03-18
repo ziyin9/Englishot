@@ -17,9 +17,10 @@ struct CameraView: UIViewControllerRepresentable {
     @Binding var highestConfidenceWord: String // 傳遞最高辨識率單字的綁定變數
     
     @Binding var showRecognitionErrorView: Bool
+    var MLModel: String?
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(image: $image, recognizedObjects: $recognizedObjects, highestConfidenceWord: $highestConfidenceWord, showRecognitionErrorView: $showRecognitionErrorView)
+        Coordinator(image: $image, recognizedObjects: $recognizedObjects, highestConfidenceWord: $highestConfidenceWord, showRecognitionErrorView: $showRecognitionErrorView, Coordinator_MLModel: MLModel)
     }
     
     func makeUIViewController(context: Context) -> UIImagePickerController {
@@ -36,22 +37,47 @@ struct CameraView: UIViewControllerRepresentable {
         @Binding var image: UIImage?
         @Binding var recognizedObjects: [String]
         @Binding var highestConfidenceWord: String
-        
         @Binding var showRecognitionErrorView: Bool
+        
+        var Coordinator_MLModel: String?
         
         var model: VNCoreMLModel?
 
-        init(image: Binding<UIImage?>, recognizedObjects: Binding<[String]>, highestConfidenceWord: Binding<String>, showRecognitionErrorView: Binding<Bool>) {
+        init(image: Binding<UIImage?>, recognizedObjects: Binding<[String]>, highestConfidenceWord: Binding<String>, showRecognitionErrorView: Binding<Bool>, Coordinator_MLModel: String?) {
             _image = image
             _recognizedObjects = recognizedObjects
             _highestConfidenceWord = highestConfidenceWord
             _showRecognitionErrorView = showRecognitionErrorView
-            // Initialize model and handle possible errors
+
+            // Handle model initialization based on the provided model name
             do {
                 let configuration = MLModelConfiguration()
-                let coreMLModel = try Moretry300(configuration: configuration).model
+                var coreMLModel: MLModel
+                
+                // Check the model name and initialize the appropriate CoreML model
+                if let modelName = Coordinator_MLModel {
+                    switch modelName {
+                    case "Home_School":
+                        coreMLModel = try Home_School(configuration: configuration).model
+                    // Add more models as needed
+                    case "Mall_Market":
+                        coreMLModel = try Mall_Market(configuration: configuration).model
+                    case "Zoo":
+                        coreMLModel = try Zoo(configuration: configuration).model
+                    // Default case if the model name doesn't match
+                    default:
+                        print("⚠️ Model name not recognized. Using default Moretry300 model.")
+                        coreMLModel = try Moretry300(configuration: configuration).model
+                    }
+                } else {
+                    print("⚠️ No model name provided. Using default Moretry300 model.")
+                    coreMLModel = try Moretry300(configuration: configuration).model
+                }
+                
+                // Initialize VNCoreMLModel with the chosen model
                 model = try VNCoreMLModel(for: coreMLModel)
                 print("Model initialized successfully")
+                
             } catch {
                 print("Error initializing model: \(error.localizedDescription)")
             }

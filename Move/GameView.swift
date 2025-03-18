@@ -60,7 +60,7 @@ struct GameView: View {
                 return Classroom1Data
             case "Classroom2":
                 return Classroom2Data
-            case "music":
+            case "Music":
                 return MusicData
             case "Playground":
                 return PlaygroundData
@@ -95,7 +95,7 @@ struct GameView: View {
 //            VStack{
 //                HStack {
 //                    Spacer()
-//                    
+//
 //                    Button(action: { uiState.showGameCardView = true }) {
 //                        Image("A")
 //                            .resizable()
@@ -107,7 +107,7 @@ struct GameView: View {
 //                            .clipShape(Circle())
 //                    }
 //                    .padding(.trailing, 10)
-//                    
+//
 //                    Button(action: { gameState.showingCamera = true }) {
 //                        Image("camera")
 //                            .resizable()
