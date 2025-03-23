@@ -10,7 +10,7 @@ import AVFoundation
 import UIKit
 import Vision
 
-struct HomeGame: View {
+struct TGame: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var uiState: UIState
     @EnvironmentObject var gameState: GameState
@@ -145,7 +145,7 @@ struct HomeGame: View {
     let gameState = GameState()
     let uiState = UIState()
     
-    return HomeGame(levelData: BathroomData, ML_model:"daf") // 這裡改成適用於所有關卡
+    return TGame(levelData: BathroomData, ML_model:"daf") // 這裡改成適用於所有關卡
             .environmentObject(gameState)
             .environmentObject(uiState)
 }
