@@ -1,11 +1,3 @@
-
-
-
-
-
-
-
-
 import SwiftUI
 import AVFoundation
 
@@ -28,6 +20,7 @@ struct BackpackView: View {
     @State private var selectedCategory: String = "All"
     @State private var subCategories: [String] = []
     @State private var showMemoryGame = false
+    @State private var showAudioImageGame = false
     private let mainCategories = ["All", "Home", "School", "Zoo", "Mall", "Market"]
     
     private let columns = [
@@ -90,10 +83,11 @@ struct BackpackView: View {
                         
                         
     let isMemoryGamePlayable = wordEntities.count >= 6
+                        VStack{
                             Button(action: {
                                 if isMemoryGamePlayable {
-                                        showMemoryGame = true
-                                    }
+                                    showMemoryGame = true
+                                }
                             }) {
                                 HStack {
                                     Image(systemName: isMemoryGamePlayable ? "brain.head.profile" : "lock.fill")
@@ -116,6 +110,36 @@ struct BackpackView: View {
                                 .opacity(isMemoryGamePlayable ? 1.0 : 0.6)
                             }
                             .padding(.vertical, 20)
+                            
+                            Button(action: {
+                                if isMemoryGamePlayable {
+                                    showAudioImageGame = true
+                                }
+                            }) {
+                                HStack {
+                                    Image(systemName: isMemoryGamePlayable ? "speaker.wave.2.fill" : "lock.fill")
+                                        .font(.title2)
+                                    Text(isMemoryGamePlayable ? "Play Audio-Image Game" : "Need 6+ Words")
+                                        .font(.title3)
+                                        .fontWeight(.bold)
+                                }
+                                .foregroundColor(.white)
+                                .padding()
+                                .background(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [Color.blue, Color.cyan]),
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                                .cornerRadius(15)
+                                .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 3)
+                                .opacity(isMemoryGamePlayable ? 1.0 : 0.6)
+                            }
+                            .padding(.vertical, 20)
+                            
+                        }
+                        
                         
                         
                         CircularProgressView(
@@ -263,6 +287,10 @@ struct BackpackView: View {
                 //                }
                 //            }
                 
+            }
+            .sheet(isPresented: $showAudioImageGame) {
+                AudioImageMatchingGame()
+                    .edgesIgnoringSafeArea(.all)
             }
             
             
