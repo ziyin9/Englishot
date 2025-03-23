@@ -89,29 +89,33 @@ struct BackpackView: View {
                         }
                         
                         
-                        Button(action: {
-                            showMemoryGame = true
-                        }) {
-                            HStack {
-                                Image(systemName: "brain.head.profile")
-                                    .font(.title2)
-                                Text("Play Memory Game")
-                                    .font(.title3)
-                                    .fontWeight(.bold)
-                            }
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(
-                                LinearGradient(
-                                    gradient: Gradient(colors: [Color.blue, Color.cyan]),
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
+    let isMemoryGamePlayable = wordEntities.count >= 6
+                            Button(action: {
+                                if isMemoryGamePlayable {
+                                        showMemoryGame = true
+                                    }
+                            }) {
+                                HStack {
+                                    Image(systemName: isMemoryGamePlayable ? "brain.head.profile" : "lock.fill")
+                                        .font(.title2)
+                                    Text(isMemoryGamePlayable ? "Play Memory Game" : "Need 6+ Words")
+                                        .font(.title3)
+                                        .fontWeight(.bold)
+                                }
+                                .foregroundColor(.white)
+                                .padding()
+                                .background(
+                                    LinearGradient(
+                                        gradient: Gradient(colors: [Color.blue, Color.cyan]),
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
                                 )
-                            )
-                            .cornerRadius(15)
-                            .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 3)
-                        }
-                        .padding(.vertical, 20)
+                                .cornerRadius(15)
+                                .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 3)
+                                .opacity(isMemoryGamePlayable ? 1.0 : 0.6)
+                            }
+                            .padding(.vertical, 20)
                         
                         
                         CircularProgressView(
