@@ -13,13 +13,13 @@ struct HomeView: View {
     
     // Level data with level ID and associated level name, icon, and view
     private let levels: [(name: String, icon: String, view: AnyView, words: [Vocabulary])] = [
-            ("Bathroom", "shower.fill", AnyView(HomeGame(levelData: BathroomData, ML_model: "Home_School").navigationBarBackButtonHidden(true)),BathroomData.game_vocabulary),
+            ("Bathroom", "shower.fill", AnyView(TGame(levelData: BathroomData, ML_model: "Home_School").navigationBarBackButtonHidden(true)),BathroomData.game_vocabulary),
             
-            ("Kitchen", "fork.knife", AnyView(HomeGame(levelData: KitchenData, ML_model: "Home_School").navigationBarBackButtonHidden(true)), KitchenData.game_vocabulary),
+            ("Kitchen", "fork.knife", AnyView(TGame(levelData: KitchenData, ML_model: "Home_School").navigationBarBackButtonHidden(true)), KitchenData.game_vocabulary),
             
-            ("Living Room", "sofa.fill", AnyView(HomeGame(levelData: Living_RoomData, ML_model: "Home_School").navigationBarBackButtonHidden(true)),Living_RoomData.game_vocabulary),
+            ("Living Room", "sofa.fill", AnyView(TGame(levelData: Living_RoomData, ML_model: "Home_School").navigationBarBackButtonHidden(true)),Living_RoomData.game_vocabulary),
             
-            ("Garage", "car.fill", AnyView(HomeGame(levelData: GarageData, ML_model: "Home_School").navigationBarBackButtonHidden(true)), GarageData.game_vocabulary)
+            ("Garage", "car.fill", AnyView(TGame(levelData: GarageData, ML_model: "Home_School").navigationBarBackButtonHidden(true)), GarageData.game_vocabulary)
         ]
     
     var body: some View {

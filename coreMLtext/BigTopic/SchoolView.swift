@@ -25,11 +25,11 @@ struct SchoolView: View {
     
     // Level data with level ID and associated level name, icon, and view
     private let levels: [(name: String, icon: String, view: AnyView, words: [Vocabulary])] = [
-            ("Classroom1", "book.fill", AnyView(HomeGame(levelData: Classroom1Data, ML_model: "Home_School").navigationBarBackButtonHidden(true)), Classroom1Data.game_vocabulary),
-            ("Classroom2", "pencil", AnyView(HomeGame(levelData: Classroom2Data, ML_model: "Home_School").navigationBarBackButtonHidden(true)), Classroom2Data.game_vocabulary),
-            ("Music", "music.note", AnyView(HomeGame(levelData: MusicData, ML_model: "Home_School").navigationBarBackButtonHidden(true)), MusicData.game_vocabulary),
-            ("Playground", "sportscourt.fill", AnyView(HomeGame(levelData: PlaygroundData, ML_model: "Home_School").navigationBarBackButtonHidden(true)), PlaygroundData.game_vocabulary),
-            ("Sports", "sportscourt.fill", AnyView(HomeGame(levelData: SportsData, ML_model: "Home_School").navigationBarBackButtonHidden(true)), SportsData.game_vocabulary),
+            ("Classroom1", "book.fill", AnyView(TGame(levelData: Classroom1Data, ML_model: "Home_School").navigationBarBackButtonHidden(true)), Classroom1Data.game_vocabulary),
+            ("Classroom2", "pencil", AnyView(TGame(levelData: Classroom2Data, ML_model: "Home_School").navigationBarBackButtonHidden(true)), Classroom2Data.game_vocabulary),
+            ("Music", "music.note", AnyView(TGame(levelData: MusicData, ML_model: "Home_School").navigationBarBackButtonHidden(true)), MusicData.game_vocabulary),
+            ("Playground", "sportscourt.fill", AnyView(TGame(levelData: PlaygroundData, ML_model: "Home_School").navigationBarBackButtonHidden(true)), PlaygroundData.game_vocabulary),
+            ("Sports", "sportscourt.fill", AnyView(TGame(levelData: SportsData, ML_model: "Home_School").navigationBarBackButtonHidden(true)), SportsData.game_vocabulary),
         ]
     
     var body: some View {

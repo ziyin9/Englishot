@@ -40,6 +40,8 @@ struct TabContentView: View {
         case .backpack:
             BackpackView()
                 .environmentObject(gameState)
+        case .minigame:
+            MiniGameView()
         case .setting:
             SettingView()
         }
@@ -64,7 +66,7 @@ struct TopNavBarView: View {
             
             HStack(spacing: 0) {
 //                .data
-                ForEach([Tab.map, .backpack, .setting], id: \.self) { tab in
+                ForEach([Tab.map, .backpack, .minigame , .setting], id: \.self) { tab in
                     TopNavBarItem(
                         tab: tab,
                         isSelected: selectedTab == tab,
@@ -133,6 +135,7 @@ struct TopNavBarItem: View {
         switch tab {
         case .map: return "Map"
         case .backpack: return "Backpack"
+        case .minigame: return "Minigames"
         case .setting: return "Settings"
         }
     }
@@ -141,6 +144,7 @@ struct TopNavBarItem: View {
         switch tab {
         case .map: return "mapicon"
         case .backpack: return "bbpicon"
+        case .minigame:return "minigame"
         case .setting: return "nutsetting"
         }
     }
@@ -153,6 +157,7 @@ struct NamespaceWrapper {
 enum Tab: Int {
     case map
     case backpack
+    case minigame
     case setting
 //    case data
     

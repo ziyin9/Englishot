@@ -21,9 +21,9 @@ struct MarketView: View {
     
     // Level data
     private let levels: [(name: String, icon: String, view: AnyView, words: [Vocabulary])] = [
-            ("Food", "cart.fill", AnyView(HomeGame(levelData: FoodData, ML_model: "Mall_Market").navigationBarBackButtonHidden(true)), FoodData.game_vocabulary),
-            ("Electronics Store", "desktopcomputer", AnyView(HomeGame(levelData: Electronics_StoreData, ML_model: "Mall_Market").navigationBarBackButtonHidden(true)), Electronics_StoreData.game_vocabulary),
-            ("Clothing Store", "tshirt.fill", AnyView(HomeGame(levelData: Clothing_StoreData, ML_model: "Mall_Market").navigationBarBackButtonHidden(true)), Clothing_StoreData.game_vocabulary)
+            ("Food", "cart.fill", AnyView(TGame(levelData: FoodData, ML_model: "Mall_Market").navigationBarBackButtonHidden(true)), FoodData.game_vocabulary),
+            ("Electronics Store", "desktopcomputer", AnyView(TGame(levelData: Electronics_StoreData, ML_model: "Mall_Market").navigationBarBackButtonHidden(true)), Electronics_StoreData.game_vocabulary),
+            ("Clothing Store", "tshirt.fill", AnyView(TGame(levelData: Clothing_StoreData, ML_model: "Mall_Market").navigationBarBackButtonHidden(true)), Clothing_StoreData.game_vocabulary)
             
         ]
     
