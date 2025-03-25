@@ -11,6 +11,9 @@ import AVFoundation
 //}
 
 struct AudioImageMatchingGame: View {
+    @Environment(\.dismiss) var dismiss
+
+    
     @State private var selectedWords: [Word] = []
     @State private var currentWord: Word?
     @State private var currentVocabulary: Vocabulary?
@@ -23,53 +26,63 @@ struct AudioImageMatchingGame: View {
     @State private var totalRounds = 5
     
     var body: some View {
-        VStack {
-            Text("Audio-Image Matching Game")
-                .font(.title)
-                .padding()
-            
-            Text("Round \(currentRound) of \(totalRounds)")
-                .font(.headline)
-                .padding(.bottom)
-            
-            if let currentWord = currentWord {
-                Text("Listen to the word and select the correct image")
-                    .font(.headline)
+        NavigationView{
+            VStack {
+                Text("Audio-Image Matching Game")
+                    .font(.title)
                     .padding()
                 
-                Button(action: {
-                    playAudio()
-                }) {
-                    Image(systemName: "speaker.wave.2.fill")
-                        .font(.system(size: 40))
-                        .foregroundColor(.blue)
-                }
-                .padding()
+                Text("Round \(currentRound) of \(totalRounds)")
+                    .font(.headline)
+                    .padding(.bottom)
                 
-                LazyVGrid(columns: [
-                    GridItem(.flexible()),
-                    GridItem(.flexible()),
-                    GridItem(.flexible())
-                ], spacing: 20) {
-                    ForEach(shuffledImages, id: \.self) { word in
-                        if let imageData = word.itemimage,
-                           let uiImage = UIImage(data: imageData) {
-                            Image(uiImage: uiImage)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 150)
-                                .onTapGesture {
-                                    checkAnswer(selectedWord: word)
-                                }
+                if let currentWord = currentWord {
+                    Text("Listen to the word and select the correct image")
+                        .font(.headline)
+                        .padding()
+                    
+                    Button(action: {
+                        playAudio()
+                    }) {
+                        Image(systemName: "speaker.wave.2.fill")
+                            .font(.system(size: 40))
+                            .foregroundColor(.blue)
+                    }
+                    .padding()
+                    
+                    LazyVGrid(columns: [
+                        GridItem(.flexible()),
+                        GridItem(.flexible()),
+                        GridItem(.flexible())
+                    ], spacing: 20) {
+                        ForEach(shuffledImages, id: \.self) { word in
+                            if let imageData = word.itemimage,
+                               let uiImage = UIImage(data: imageData) {
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 150)
+                                    .onTapGesture {
+                                        checkAnswer(selectedWord: word)
+                                    }
+                            }
                         }
                     }
+                    .padding()
                 }
-                .padding()
+                
+                Text("Score: \(score)")
+                    .font(.headline)
+                    .padding()
             }
-            
-            Text("Score: \(score)")
-                .font(.headline)
-                .padding()
+            .navigationBarBackButtonHidden()
+            .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                BackButton {
+                    dismiss()
+                }
+            }
+        }
         }
         .onAppear {
             setupGame()
@@ -131,7 +144,9 @@ struct AudioImageMatchingGame: View {
     
     private func checkAnswer(selectedWord: Word) {
         isCorrect = selectedWord == currentWord
-        showResult = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            showResult = true
+        }
     }
     
     private func showGameCompleted() {
