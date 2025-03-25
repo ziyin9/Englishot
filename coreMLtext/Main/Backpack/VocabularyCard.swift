@@ -4,7 +4,7 @@ struct VocabularyCard: View {
     var vocabulary: Vocabulary
     var showimage: Data?
     
-    @State private var isFavorite: Bool = false
+//    @State private var isFavorite: Bool = false
     @State private var isHovered: Bool = false
     @State private var rotationAngle: Double = 0
     
@@ -77,20 +77,20 @@ struct VocabularyCard: View {
                                 .padding(.leading, 5)
                                 .cornerRadius(10, corners: [.bottomLeft, .bottomRight])
                             
-                            Button(action: {
-                                withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
-                                    isFavorite.toggle()
-                                    if isFavorite {
-                                        rotationAngle += 360
-                                    }
-                                }
-                            }) {
-                                Image(systemName: isFavorite ? "star.fill" : "star")
-                                    .foregroundColor(isFavorite ? .yellow : .white)
-                                    .padding(2)
-                                    .background(Color.clear)
-                                    .clipShape(Circle())
-                            }
+//                            Button(action: {
+//                                withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+//                                    isFavorite.toggle()
+//                                    if isFavorite {
+//                                        rotationAngle += 360
+//                                    }
+//                                }
+//                            }) {
+//                                Image(systemName: isFavorite ? "star.fill" : "star")
+//                                    .foregroundColor(isFavorite ? .yellow : .white)
+//                                    .padding(2)
+//                                    .background(Color.clear)
+//                                    .clipShape(Circle())
+//                            }
                         }
                     }
                     .padding(.horizontal, 10)

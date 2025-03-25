@@ -33,6 +33,8 @@ struct BackpackView: View {
     @Namespace private var animation
     @State private var selectedWordIndex: Int = 0
     
+    @State private var showDeleteWordView = false
+    @State private var wordEntitiesArray: [Word] = []
     
     var body: some View {
         NavigationView {
@@ -87,10 +89,37 @@ struct BackpackView: View {
                         CircularProgressView(
                             totalWords: totalWordsForCategory(selectedCategory),
                             currentWords: collectedWordsForCategory(selectedCategory),
-                            circlewidth: 150 ,
+                            circlewidth: 150,
                             circleheight: 150
-                            
                         )
+                        .background(
+                            Circle()
+                                .fill(
+                                    LinearGradient(
+                                        colors: [
+                                            .white.opacity(0.8),
+                                            .blue.opacity(0.1)
+                                        ],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                                .shadow(color: .white.opacity(0.5), radius: 2, x: -2, y: -2)
+                                .shadow(color: .blue.opacity(0.3), radius: 4, x: 3, y: 3)
+                        )
+                        .overlay(
+                            Circle()
+                                .stroke(
+                                    LinearGradient(
+                                        colors: [.white.opacity(0.6), .blue.opacity(0.2)],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    ),
+                                    lineWidth: 1
+                                )
+                        )
+                        .scaleEffect(uiState.showDataView ? 0.95 : 1.0)
+                        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: uiState.showDataView)
                         .transition(.scale.combined(with: .opacity))
                         .onTapGesture {
                             withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
@@ -144,152 +173,139 @@ struct BackpackView: View {
                         }
                         
                         LazyVGrid(columns: columns, spacing: 15) {
-                            ForEach(Array(filteredWords().enumerated()), id: \.element) { index, wordEntity in
-                                if let vocabIndex = vocabularyList.firstIndex(where: { $0.E_word == wordEntity.word }) {
-                                    let itemImage = wordEntity.itemimage
-                                    VocabularyCard(vocabulary: vocabularyList[vocabIndex], showimage: itemImage)
-                                        .scaleEffect(cardScale)
-                                        .onTapGesture {
-                                            selectedWordIndex = index  // Update to use the filtered list index
-                                        }
-                                        .overlay(
-                                            NavigationLink(destination: WordDetailView(
-                                                collectedWords: filteredCollectedWords(),
-                                                showImages: getShowImages(for: filteredCollectedWords()),
-                                                initialIndex: index  // Pass the correct index from filtered list
-                                            )) {
-                                                Rectangle()
-                                                    .foregroundColor(.clear)
+                                                    ForEach(Array(filteredWords().enumerated()), id: \.element) { index, wordEntity in
+                                                        if let vocabIndex = vocabularyList.firstIndex(where: { $0.E_word == wordEntity.word }) {
+                                                            let itemImage = wordEntity.itemimage
+                                                            VocabularyCard(vocabulary: vocabularyList[vocabIndex], showimage: itemImage)
+                                                                .scaleEffect(cardScale)
+                                                                .onTapGesture {
+                                                                    selectedWordIndex = index  // Update to use the filtered list index
+                                                                }
+                                                                .overlay(
+                                                                    NavigationLink(destination: WordDetailView(
+                                                                        collectedWords: filteredCollectedWords(),
+                                                                        showImages: getShowImages(for: filteredCollectedWords()),
+                                                                        initialIndex: index  // Pass the correct index from filtered list
+                                                                    )) {
+                                                                        Rectangle()
+                                                                            .foregroundColor(.clear)
+                                                                    }
+                                                                        .frame(width: 80, height: 100)
+                                                                )
+                                                        }
+                                                    }
+                                                }
+                                                .animation(.spring(response: 0.4, dampingFraction: 0.7), value: selectedCategory)
+                                                Spacer()
+                                                Spacer()
+                                                Spacer()
+                                                
                                             }
-                                                .frame(width: 80, height: 100)
-                                        )
+                                        }
+                                        //                .onAppear {
+                                        //                        uiState.isNavBarVisible = false // 隱藏
+                                        //                            }
+                                        Button(action: {
+                                            wordEntitiesArray = Array(wordEntities)
+                                            showDeleteWordView.toggle() // 切換視圖顯示
+                                        }) {
+                                            Image(systemName: "trash.fill")
+                                                .font(.system(size: 20))
+                                                .foregroundColor(.white)
+                                                .padding()
+                                                .background(
+                                                    Circle()
+                                                        .fill(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.cyan]), startPoint: .top, endPoint: .bottom))
+                                                        .shadow(radius: 10)
+                                                )
+                                        }
+                                        .sheet(isPresented: $showDeleteWordView) {
+                                            DeleteWordView(wordEntities: $wordEntitiesArray) // 傳遞綁定的 wordEntities
+                                        }
+
+                                        if uiState.showDataView{
+                                            PopupDataView()
+                                        }
+                                        
+                                        
+                                    }
+                                    .sheet(isPresented: $showMemoryGame) {
+                                        MemoryGameView()
+                                            .edgesIgnoringSafeArea(.all)
+                                        //            .overlay {
+                                        //                if showingDataView {
+                                        //                    PopupDataView(
+                                        //                        isPresented: $showingDataView
+                                        //                    )
+                                        ////                    .padding(20)
+                                        //                    .edgesIgnoringSafeArea(.all)
+                                        //
+                                        ////                    .ignoresSafeArea()
+                                        //                    .transition(.scale.combined(with: .opacity))
+                                        //                }
+                                        //            }
+                                        
+                                    }
+                                    .sheet(isPresented: $showAudioImageGame) {
+                                        AudioImageMatchingGame()
+                                            .edgesIgnoringSafeArea(.all)
+                                    }
+                                    
+                                    
+                                    
                                 }
                             }
-                        }
-                        .animation(.spring(response: 0.4, dampingFraction: 0.7), value: selectedCategory)
-                        Spacer()
-                        Spacer()
-                        Spacer()
-                        
-                    }
-                }
-                //                .onAppear {
-                //                        uiState.isNavBarVisible = false // 隱藏
-                //                            }
-                Button(action: {
-                    //                            deleteWord(wordString:"fork")
-                    //                            deleteWord(wordString:"soap")
-                    //                            deleteWord(wordString:"fan")
-                    //                            deleteWord(wordString:"sock")
-                    //                            deleteWord(wordString:"comb")
-                    //                            deleteWord(wordString:"television")
-                    //                            deleteWord(wordString:"plug")
-                    //                            deleteWord(wordString:"knife")
-                    //                            deleteWord(wordString:"spoon")
-                    //                            deleteWord(wordString:"toothbrush")
-                    //                            deleteWord(wordString:"towel")
-                    //                            deleteWord(wordString:"lamp")
-                    //                            deleteWord(wordString:"cup")
-                    //                            deleteWord(wordString:"bicycle")
-                    //                            deleteWord(wordString:"key")
-                    deleteWord(wordString:"box")
-                    deleteWord(wordString:"fork")
-                    
-                    //                            deleteWord(wordString:"toilet")
-                }) {
-                    Image(systemName: "trash.fill")
-                        .font(.system(size: 20))
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(
-                            Circle()
-                                .fill(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.cyan]), startPoint: .top, endPoint: .bottom))
-                                .shadow(radius: 10)
-                        )
-                }
-                if uiState.showDataView{
-                    PopupDataView()
-                }
-                
-                
-            }
-            .sheet(isPresented: $showMemoryGame) {
-                MemoryGameView()
-                    .edgesIgnoringSafeArea(.all)
-                //            .overlay {
-                //                if showingDataView {
-                //                    PopupDataView(
-                //                        isPresented: $showingDataView
-                //                    )
-                ////                    .padding(20)
-                //                    .edgesIgnoringSafeArea(.all)
-                //
-                ////                    .ignoresSafeArea()
-                //                    .transition(.scale.combined(with: .opacity))
-                //                }
-                //            }
-                
-            }
-            .sheet(isPresented: $showAudioImageGame) {
-                AudioImageMatchingGame()
-                    .edgesIgnoringSafeArea(.all)
-            }
-            
-            
-            
-        }
-    }
-        // Calculate total words for a specific category
-        private func totalWordsForCategory(_ bigtopic: String) -> Int {
-            if selectedCategory == "All" {
-                return vocabularyList.count
-            } else{
-                return vocabularyList.filter { $0.bigtopic.hasPrefix(bigtopic) }.count
-            }
-        }
-        
-        // Calculate collected words for a specific category
-        private func collectedWordsForCategory(_ bigtopic: String) -> Int {
-            if selectedCategory == "All" {
-                return wordEntities.count
-            }else {
-                return wordEntities.filter { word in
-                    vocabularyList.contains {
-                        $0.E_word == word.word && $0.bigtopic.hasPrefix(bigtopic)
-                    }
-                }.count
-            }
-        }
-        
-        private func filteredWords() -> [Word] {
-            if selectedCategory == "All" {
-                return Array(wordEntities)
-            } else {
-                return wordEntities.filter { word in
-                    vocabularyList.contains { $0.E_word == word.word && $0.bigtopic == selectedCategory }
-                }
-            }
-        }
-        
-        private func filteredCollectedWords() -> [Vocabulary] {
-            let collectedWords = wordEntities.compactMap { entity -> Vocabulary? in
-                vocabularyList.first { vocab in
-                    vocab.E_word == entity.word &&
-                    (selectedCategory == "All" || vocab.bigtopic == selectedCategory)
-                }
-            }
-            return collectedWords
-        }
-        
-        private func getShowImages(for vocabularies: [Vocabulary]) -> [Data?] {
-            return vocabularies.map { vocabulary in
-                wordEntities.first { $0.word == vocabulary.E_word }?.itemimage
-            }
-        }
-        
-    }
+                                // Calculate total words for a specific category
+                                private func totalWordsForCategory(_ bigtopic: String) -> Int {
+                                    if selectedCategory == "All" {
+                                        return vocabularyList.count
+                                    } else{
+                                        return vocabularyList.filter { $0.bigtopic.hasPrefix(bigtopic) }.count
+                                    }
+                                }
+                                
+                                // Calculate collected words for a specific category
+                                private func collectedWordsForCategory(_ bigtopic: String) -> Int {
+                                    if selectedCategory == "All" {
+                                        return wordEntities.count
+                                    }else {
+                                        return wordEntities.filter { word in
+                                            vocabularyList.contains {
+                                                $0.E_word == word.word && $0.bigtopic.hasPrefix(bigtopic)
+                                            }
+                                        }.count
+                                    }
+                                }
+                                
+                                private func filteredWords() -> [Word] {
+                                    if selectedCategory == "All" {
+                                        return Array(wordEntities)
+                                    } else {
+                                        return wordEntities.filter { word in
+                                            vocabularyList.contains { $0.E_word == word.word && $0.bigtopic == selectedCategory }
+                                        }
+                                    }
+                                }
+                                
+                                private func filteredCollectedWords() -> [Vocabulary] {
+                                    let collectedWords = wordEntities.compactMap { entity -> Vocabulary? in
+                                        vocabularyList.first { vocab in
+                                            vocab.E_word == entity.word &&
+                                            (selectedCategory == "All" || vocab.bigtopic == selectedCategory)
+                                        }
+                                    }
+                                    return collectedWords
+                                }
+                                
+                                private func getShowImages(for vocabularies: [Vocabulary]) -> [Data?] {
+                                    return vocabularies.map { vocabulary in
+                                        wordEntities.first { $0.word == vocabulary.E_word }?.itemimage
+                                    }
+                                }
+                                
+                            }
 
 
-    #Preview {
-        BackpackView()
-    }
+                            #Preview {
+                                BackpackView()
+                            }
