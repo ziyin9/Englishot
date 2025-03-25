@@ -55,6 +55,7 @@ var vocabularyList: [Vocabulary] = [
         exSentence: "I use a spoon to eat my cereal.",
         audioURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/s/spo/spoon/spoon.mp3"
     ),
+    
     Vocabulary(
         //1
         bigtopic: "Home",
@@ -62,6 +63,7 @@ var vocabularyList: [Vocabulary] = [
         exSentence: "She eats pasta with a fork.",
         audioURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/f/for/fork_/fork.mp3"
     ),
+    
     Vocabulary(
         //2
         bigtopic: "Home",
@@ -69,6 +71,7 @@ var vocabularyList: [Vocabulary] = [
         exSentence: "Put the cake on the plate.",
         audioURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/p/pla/plate/plate.mp3"
     ),
+    
     Vocabulary(
         //3
         bigtopic: "Home",
@@ -740,4 +743,3 @@ var vocabularyList: [Vocabulary] = [
     
     
 ]
-
