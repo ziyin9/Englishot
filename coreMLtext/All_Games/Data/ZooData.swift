@@ -89,9 +89,9 @@ let Mammals2Data = GameLevelData(
     ],
     wordPositions: [
             "koala": (0...4).map {GridPosition(row: $0, col: 3)},
-            "squirrel": (2...9).map {GridPosition(row: 6, col: $0)},
-            "sloth": (4...8).map {GridPosition(row: 8, col: $0)},
-            "bear": (1...4).map {GridPosition(row: 4, col: $0)},
+            "squirrel": (2...9).map {GridPosition(row: 6, col: $0)}, ////////////
+            "sloth": (4...8).map {GridPosition(row: 8, col: $0)}, /////////
+            "bear": (1...4).map {GridPosition(row: 4, col: $0)}, ///////////
             "panda": (2...6).map {GridPosition(row: 2, col: $0)},
             "kangaroo": (1...8).map {GridPosition(row: $0, col: 6)},
     ]
@@ -131,9 +131,9 @@ let Mammals3Data = GameLevelData(
         vocabularyList[79]
     ],
     wordPositions: [
-            "camel": (3...7).map {GridPosition(row: $0, col: 6)},
+            "camel": (3...7).map {GridPosition(row: $0, col: 6)}, /////////
             "buffalo": (2...8).map {GridPosition(row: 4, col: $0)},
-            "deer": (5...8).map {GridPosition(row: 6, col: $0)},
+            "deer": (5...8).map {GridPosition(row: 6, col: $0)}, /////////////
             "wolf": (1...4).map {GridPosition(row: $0, col: 4)},
             "fox": (3...5).map {GridPosition(row: 2, col: $0)},
     ]

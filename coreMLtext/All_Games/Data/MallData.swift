@@ -29,13 +29,17 @@ let FoodData = GameLevelData(
         ((5, 1), 4),
     ],
     acrossHints: [
-        "1. The t__e of my bike is flat, so I need to pump it up. It helps the bike roll.",
-        "3.I use my b__e to go to the park with my friends. It has two wheels and you pedal it."
+        "1. Tom loves p___a with lots of ",
+        "cheese and mushrooms.",
+        "4. If you bite into the d______g ",
+        "with the coin, you’ll have a ",
+        "lucky year!"
     ],
     downHints: [
-        "2. I use my t________h to clean my teeth.",
-        "3. Bob ran to the t____t because he had to pee.",
-        "5. My dad drives a cr to work. It has four wheels and you need a key to start it."
+        "2. I like to eat hamburgers from ",
+        "McDonald's（麥當勞）.",
+        "3. Emily had p___a for lunch at an ",
+        "Italian restaurant.",
     ],
     game_vocabulary: [
         vocabularyList[34],
@@ -74,13 +78,15 @@ let Electronics_StoreData = GameLevelData(
         ((9, 1), 5),
     ],
     acrossHints: [
-        "1. The t__e of my bike is flat, so I need to pump it up. It helps the bike roll.",
-        "3.I use my b__e to go to the park with my friends. It has two wheels and you pedal it."
+        "3. Ben took a photo with a c____a.",
+        "4. He types on the k______d.",
+        "5. She clicked the m___e.",
     ],
     downHints: [
-        "2. I use my t________h to clean my teeth.",
-        "3. Bob ran to the t____t because he had to pee.",
-        "5. My dad drives a cr to work. It has four wheels and you need a key to start it."
+        "1. Tom looked at her w___h to ",
+        "check the time.",
+        "2. We can send messages on a ",
+        "s________e."
     ],
     game_vocabulary: [
         vocabularyList[38],
@@ -122,13 +128,15 @@ let Clothing_StoreData = GameLevelData(
         ((9, 1), 6)
     ],
     acrossHints: [
-        "1. The t__e of my bike is flat, so I need to pump it up. It helps the bike roll.",
-        "3.I use my b__e to go to the park with my friends. It has two wheels and you pedal it."
+        "2. Tom wore a c_p to block the sun.",
+        "3. He wears g____es to read books",
+        "6. I wear s___ts in summer."
     ],
     downHints: [
-        "2. I use my t________h to clean my teeth.",
-        "3. Bob ran to the t____t because he had to pee.",
-        "5. My dad drives a cr to work. It has four wheels and you need a key to start it."
+        "1. Grace opened his b______k.",
+        "4. Noah got new running s__e(s). ",
+        "5. Jason’s s___t has long sleeves ",
+        "and buttons."
     ],
     game_vocabulary: [
         vocabularyList[43],

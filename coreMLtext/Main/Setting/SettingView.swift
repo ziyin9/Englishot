@@ -169,13 +169,13 @@ struct SettingView: View {
                                                     .monospacedDigit()
                                             }
                                             
-                                            Slider(value: $snowIntensity, in: 0.1...1, step: 0.05)
-                                                .tint(.blue)
-                                                .overlay(
-                                                    RoundedRectangle(cornerRadius: 10)
-                                                        .stroke(Color.blue.opacity(0.2), lineWidth: 1)
-                                                        .padding(-2)
-                                                )
+//                                            Slider(value: $snowIntensity, in: 0.1...1, step: 0.05)
+//                                                .tint(.blue)
+//                                                .overlay(
+//                                                    RoundedRectangle(cornerRadius: 10)
+//                                                        .stroke(Color.blue.opacity(0.2), lineWidth: 1)
+//                                                        .padding(-2)
+//                                                )
                                         }
                                     }
                                 }

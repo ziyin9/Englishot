@@ -85,7 +85,7 @@ struct TGame: View {
             }
 
             
-            .onChange(of: highestConfidenceWord) { newValue in
+            .onChange(of: highestConfidenceWord) { oldValue,newValue in
                             processRecognizedWord(newValue)
                         }
             

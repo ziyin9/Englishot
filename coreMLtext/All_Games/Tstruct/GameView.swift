@@ -169,39 +169,55 @@ struct GameView: View {
                                         .fill(Color.blue.opacity(0.0))
                                         .frame(width: frameWidth, height: frameHeight)
                                         .overlay(
-                                            VStack(alignment: .leading) {
-                                                Text("Across")
-                                                    .font(Font.custom("Kalam-Regular", size: 25))
-                                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                                
-                                                Group {
-                                                    ForEach(levelData.acrossHints, id: \.self) { hint in
-                                                    Text(hint)
+                                            VStack{
+                                                VStack(alignment: .leading) {
+                                                    Text("Across")
+                                                        .font(Font.custom("Kalam-Regular", size: 25))
+                                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                                    
+                                                    Group {
+                                                        ForEach(levelData.acrossHints, id: \.self) { hint in
+                                                            Text(hint)
+                                                        }
                                                     }
+                                                    .font(Font.custom("Kalam-Regular", size: 20))
+                                                    
                                                 }
-                                                .font(Font.custom("Kalam-Regular", size: 20))
                                                 
+                                                VStack(alignment: .leading) {
+                                                    Text("Down")
+                                                        .font(Font.custom("Kalam-Regular", size: 25))
+                                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                                    
+                                                    Group {
+                                                        ForEach(levelData.downHints, id: \.self) { hint in
+                                                            Text(hint)
+                                                        }
+                                                    }
+                                                    .font(Font.custom("Kalam-Regular", size: 20))
+                                                }
                                             }
                                         )
                                     
                                     
-                                    Rectangle()
-                                        .fill(Color.blue.opacity(0.0))
-                                        .frame(width: frameWidth, height: frameHeight)
-                                        .overlay(
-                                            VStack(alignment: .leading) {
-                                                Text("Down")
-                                                    .font(Font.custom("Kalam-Regular", size: 25))
-                                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                                
-                                                Group {
-                                                    ForEach(levelData.downHints, id: \.self) { hint in
-                                                        Text(hint)
-                                                    }
-                                                }
-                                                .font(Font.custom("Kalam-Regular", size: 20))
-                                            }
-                                        )
+//                                    Rectangle()
+//                                        .fill(Color.blue.opacity(0.0))
+//                                        .frame(width: frameWidth, height: frameHeight)
+//                                        .overlay(
+//                                            VStack(alignment: .leading) {
+//                                                Text("Down")
+//                                                    .font(Font.custom("Kalam-Regular", size: 25))
+//                                                    .frame(maxWidth: .infinity, alignment: .leading)
+//                                                
+//                                                Group {
+//                                                    ForEach(levelData.downHints, id: \.self) { hint in
+//                                                        Text(hint)
+//                                                    }
+//                                                }
+//                                                .font(Font.custom("Kalam-Regular", size: 20))
+//                                            }
+//                                        )
+                                    
                                 }
                             }
                             .frame(maxWidth: .infinity, maxHeight: .infinity) // 限制 Vstack 在可用空間內**

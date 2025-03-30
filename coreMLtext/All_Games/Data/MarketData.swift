@@ -30,13 +30,16 @@ let FruitData = GameLevelData(
         ((7, 4), 5)
     ],
     acrossHints: [
-        "1. The t__e of my bike is flat, so I need to pump it up. It helps the bike roll.",
-        "3.I use my b__e to go to the park with my friends. It has two wheels and you pedal it."
+        "2. K__i looks brown and fuzzy on ",
+        "the outside.",
+        "3. I ate a b____a.",
+        "5. The a___e is red."
     ],
     downHints: [
-        "2. I use my t________h to clean my teeth.",
-        "3. Bob ran to the t____t because he had to pee.",
-        "5. My dad drives a cr to work. It has four wheels and you need a key to start it."
+        "1. D____n is soft and creamy ",
+        "inside, even though it smells ",
+        "strong.",
+        "4. I like purple g___e(s).",
     ],
     game_vocabulary: [
         vocabularyList[49],
@@ -50,7 +53,7 @@ let FruitData = GameLevelData(
             "kiwi": (2...5).map {GridPosition(row: 3, col: $0)},
             "grape": (3...7).map {GridPosition(row: $0, col: 8)},
             "banana": (3...8).map {GridPosition(row: 5, col: $0)},
-            "apple": (1...5).map {GridPosition(row: 7, col: $0)},
+            "apple": (4...8).map {GridPosition(row: 7, col: $0)},
     ]
 )
 
@@ -76,10 +79,17 @@ let VegetableData = GameLevelData(
         ((2, 4), 4),
     ],
     acrossHints: [
-        
+        "3. Jason cut the c______r into ",
+        "thin, round pieces.",
     ],
     downHints: [
-        
+        "1. He grows p_____n(s) in his ",
+        "yard.",
+        "2. B______i looks like tiny ",
+        "green trees.",
+        "3. The c_____e is green.",
+        "4. Sophie’s rabbit loves fresh ",
+        "c____t(s) from the garden.",
     ],
     game_vocabulary: [
         vocabularyList[54],
@@ -107,7 +117,7 @@ let SpicesData = GameLevelData(
         [nil, nil, nil, "h", nil, nil, nil, "a", nil, nil, nil],
         [nil, nil, "g", "i", "n", "g", "e", "r", nil, nil, nil],
         [nil, nil, nil, "l", nil, nil, nil, "l", nil, nil, nil],
-        [nil, nil, nil, "l", nil, "o", "n", "i", "o", "n", nil],
+        [nil, nil, nil, "i", nil, "o", "n", "i", "o", "n", nil],
         [nil, nil, nil, nil, nil, nil, nil, "c", nil, nil, nil],
         [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
         [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
@@ -119,10 +129,14 @@ let SpicesData = GameLevelData(
         ((6, 5), 4),
     ],
     acrossHints: [
-        
+        "3. She added g____r to the soup. ",
+        "4. When you cut an o___n, it can ",
+        "make your eyes water.",
     ],
     downHints: [
-        
+        "1. C___i can be spicy.",
+        "2. G____c is small and white with ",
+        "a strong smell.",
     ],
     game_vocabulary: [
         vocabularyList[59],

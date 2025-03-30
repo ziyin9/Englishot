@@ -122,7 +122,8 @@ struct CircularProgressView: View {
                 }
             }
         }
-        .onChange(of: progress) { newProgress in
+        // 修改后的 onChange 实现方式，兼容 iOS 17+
+        .onChange(of: progress) { oldProgress, newProgress in
             // Animate progress changes when switching categories
             withAnimation(.easeInOut(duration: 0.6)) {
                 animatedProgress = newProgress

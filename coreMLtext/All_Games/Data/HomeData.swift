@@ -33,11 +33,14 @@ let BathroomData = GameLevelData(
     ],
     acrossHints: [
         "2. I dry my hands with a t___l.",
-        "4. I drank a hot chocolate from my favorite c_p."
+        "4. I drank a hot chocolate from my ",
+        "c_p."
     ],
     downHints: [
-        "1. I use my t________h to clean my teeth.",
-        "3. After drinking too much water, I quickly ran to the t____t."
+        "1. I use my t________h to clean ",
+        "my teeth.",
+        "3. After drinking too much water, ",
+        "I quickly ran to the t____t."
     ],
     game_vocabulary: [
             vocabularyList[4],
@@ -81,11 +84,11 @@ let KitchenData = GameLevelData(
         ((4, 5), 4),
     ],
     acrossHints: [
-        "1. She eats pasta with a f__k.",
-        "4. I used a k___e to cut the vegetable."
+        "1. She eats noodles with a f__k.",
+        "4. The k___e is sharp."
     ],
     downHints: [
-        "2. I use a s___n to eat my cereal.",
+        "2. I drink soup with a s___n.",
         "3. Put the cake on the p___e."
     ],
     game_vocabulary: [
@@ -130,12 +133,15 @@ let Living_RoomData = GameLevelData(
         ((7, 7), 4),
     ],
     acrossHints: [
-        "1. I can’t open the door without my k_y.",
-        "2. I sit on the s__a when I watch TV in the living room."
+        "1. I can’t open the door without my ",
+        "k_y.",
+        "2. She sits on the s__a."
     ],
     downHints: [
-        "3. I like to watch cartoons on t________n after school.",
-        "4. I turned on the f_n because it was too hot."
+        "3. I like to watch cartoons on ",
+        "t________n after school.",
+        "4. I turned on the f_n because it ",
+        "was too hot."
         
     ],
     game_vocabulary: [
@@ -182,12 +188,14 @@ let GarageData = GameLevelData(
         ((4, 3), 4)
     ],
     acrossHints: [
-        "3.I use my b__e to go to the park with my friends. It has two wheels and you pedal it."
+        "3. He rides his s_____r to the mall."
     ],
     downHints: [
-        "1. The delivery man carried a heavy c____n to the front door.",
-        "2. My bike has a flat t__e, so I can't ride it today.",
-        "4. She learned how to drive a c_r last year."
+        "1. The delivery man carried a heavy ",
+        "c____n to the front door.",
+        "2. The taxi has four t__e(s).",
+        "4. She learned how to drive a c_r ",
+        " last year."
     ],
     game_vocabulary: [
             vocabularyList[12],
