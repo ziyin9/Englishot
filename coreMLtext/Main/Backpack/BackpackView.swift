@@ -54,7 +54,7 @@ struct BackpackView: View {
                 .edgesIgnoringSafeArea(.all)
                 
                 // Snow particles effect
-                SnowfallView()
+                SSnowfallView(intensity: 0.6)
                     .opacity(0.6)
                 
                 ScrollView {

@@ -21,7 +21,8 @@ struct MemoryGameView: View {
     @State private var isProcessing = false
     @State private var matchedPairs = 0
     @State private var showGameOver = false
-    
+    @State private var showLeaveGameView = false // 控制顯示離開遊戲視圖
+
     private let columns = [
         GridItem(.flexible(), spacing: 10),
         GridItem(.flexible(), spacing: 10),
@@ -71,19 +72,39 @@ struct MemoryGameView: View {
                         }
                     }
                     .padding()
+                    
                 }//vs
-                
-            }
-            .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                BackButton {
-                    dismiss()
+                if showLeaveGameView {
+                    LeaveGameView(
+                        showLeaveGameView: $showLeaveGameView,
+                        message: "不會保留遊戲紀錄確定要離開嗎？",
+                        button1Title: "離開遊戲",
+                        button1Action: {
+                            print("離開遊戲被點擊")
+                            dismiss() // 離開遊戲的動作
+                        },
+                        button2Title: "繼續遊戲",
+                        button2Action: {
+                            showLeaveGameView = false
+                            print("繼續遊戲被點擊")
+                        }
+                    )
+                    .transition(.opacity)
+                    .zIndex(1)
                 }
             }
-        }
+            
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    BackButton {
+                        showLeaveGameView = true
+                    }
+                }
+            }
             .onAppear {
                 setupGame()
             }
+//
             .alert("Game Over!", isPresented: $showGameOver) {
                 Button("Play Again") {
                     setupGame()
@@ -94,6 +115,7 @@ struct MemoryGameView: View {
             } message: {
                 Text("Congratulations! You've matched all the pairs!")
             }
+            
         }
     }
     

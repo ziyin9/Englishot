@@ -36,7 +36,7 @@ struct DataView: View {
                 .edgesIgnoringSafeArea(.all)
                 
                 // Snow effect
-                SnowfallView()
+                SSnowfallView(intensity: 0.6)
                     .opacity(0.6)
                 
                 ScrollView {
@@ -58,7 +58,7 @@ struct DataView: View {
                         }
 
                         // Total Progress Card
-                        SettingsCard {
+                        SettingsCard (){
                             VStack(spacing: 15) {
                                 Text("Total Words")
                                     .font(.title2)

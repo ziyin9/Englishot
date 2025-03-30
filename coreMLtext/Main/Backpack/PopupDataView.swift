@@ -75,7 +75,7 @@ struct PopupDataView: View {
                                     .edgesIgnoringSafeArea(.all)
                                     
                                     // Snow effect
-                                    SnowfallView()
+                                    SSnowfallView(intensity: 0.6)
                                         .opacity(0.6)
                                     
                                     ScrollView {
