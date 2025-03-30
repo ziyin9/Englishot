@@ -33,11 +33,11 @@ let BathroomData = GameLevelData(
     ],
     acrossHints: [
         "2. I dry my hands with a t___l.",
-        "4. cup"
+        "4. I drank a hot chocolate from my favorite c_p."
     ],
     downHints: [
         "1. I use my t________h to clean my teeth.",
-        "3. Bob ran to the t____t because he had to pee."
+        "3. After drinking too much water, I quickly ran to the t____t."
     ],
     game_vocabulary: [
             vocabularyList[4],
@@ -81,12 +81,12 @@ let KitchenData = GameLevelData(
         ((4, 5), 4),
     ],
     acrossHints: [
-        "1. I use a c__b to style my hair.",
-        "4. I dry my hands with a t___l."
+        "1. She eats pasta with a f__k.",
+        "4. I used a k___e to cut the vegetable."
     ],
     downHints: [
-        "2. I use my t________h to clean my teeth.",
-        "3. Bob ran to the t____t because he had to pee."
+        "2. I use a s___n to eat my cereal.",
+        "3. Put the cake on the p___e."
     ],
     game_vocabulary: [
             vocabularyList[0],
@@ -130,12 +130,13 @@ let Living_RoomData = GameLevelData(
         ((7, 7), 4),
     ],
     acrossHints: [
-        "3. Let’s watch cartoons on the t________n.",
-        "4. He's keeping himself cool with a f_n."
+        "1. I can’t open the door without my k_y.",
+        "2. I sit on the s__a when I watch TV in the living room."
     ],
     downHints: [
-        "1. I lost my house k_y and couldn’t open the door.",
-        "2. We bought a new s__a that is soft and very comfortable."
+        "3. I like to watch cartoons on t________n after school.",
+        "4. I turned on the f_n because it was too hot."
+        
     ],
     game_vocabulary: [
             vocabularyList[8],
@@ -184,9 +185,9 @@ let GarageData = GameLevelData(
         "3.I use my b__e to go to the park with my friends. It has two wheels and you pedal it."
     ],
     downHints: [
-        "1. carton",
-        "2. tire",
-        "4. car"
+        "1. The delivery man carried a heavy c____n to the front door.",
+        "2. My bike has a flat t__e, so I can't ride it today.",
+        "4. She learned how to drive a c_r last year."
     ],
     game_vocabulary: [
             vocabularyList[12],

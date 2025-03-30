@@ -74,9 +74,13 @@ struct MemoryGameView: View {
                 }//vs
                 
             }
-            .navigationBarItems(leading: Button("Back") {
-                dismiss()
-            })
+            .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                BackButton {
+                    dismiss()
+                }
+            }
+        }
             .onAppear {
                 setupGame()
             }
@@ -178,6 +182,10 @@ struct CardView: View {
                 .font(.system(size: 8))
                 .foregroundColor(.white.opacity(0.2))
                 .position(x: 90, y: 100)
+            Image("penguinnn")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 70 ,height: 70)
         }
     }
     

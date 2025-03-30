@@ -28,13 +28,11 @@ let Classroom1Data = GameLevelData(
         ((1, 5), 2),
     ],
     acrossHints: [
-        "1. The t__e of my bike is flat, so I need to pump it up. It helps the bike roll.",
-        "3.I use my b__e to go to the park with my friends. It has two wheels and you pedal it."
+        "1. I used the s_____r to attach the papers together."
     ],
     downHints: [
-        "2. I use my t________h to clean my teeth.",
-        "3. Bob ran to the t____t because he had to pee.",
-        "5. My dad drives a cr to work. It has four wheels and you need a key to start it."
+        "1. I used the s______s to cut the paper.",
+        "2. I write my homework with a p____l."
     ],
     game_vocabulary: [
         vocabularyList[16],
@@ -73,13 +71,12 @@ let Classroom2Data = GameLevelData(
         ((8, 1), 4),
     ],
     acrossHints: [
-        "1. The t__e of my bike is flat, so I need to pump it up. It helps the bike roll.",
-        "3.I use my b__e to go to the park with my friends. It has two wheels and you pedal it."
+        "4. Witches in stories fly on a b___m.",
+        "3. There is a big round c___k on the classroom wall."
     ],
     downHints: [
-        "2. I use my t________h to clean my teeth.",
-        "3. Bob ran to the t____t because he had to pee.",
-        "5. My dad drives a cr to work. It has four wheels and you need a key to start it."
+        "1. I use a c________r to solve math problems.",
+        "2. She used a m_p to clean the wet floor.",
     ],
     game_vocabulary: [
         vocabularyList[19],
