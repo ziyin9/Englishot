@@ -85,6 +85,10 @@ struct CameraView: UIViewControllerRepresentable {
 
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             if let uiImage = info[.originalImage] as? UIImage {
+                // Reset previous results before processing new image
+                self.recognizedObjects = []
+                self.highestConfidenceWord = ""
+                
                 image = uiImage
                 recognizeObjectsInImage(image: uiImage)
             }

@@ -79,8 +79,10 @@ let Classroom2Data = GameLevelData(
     ],
     
     downHints: [
-        "1. I use a c________r to solve math problems.",
-        "2. She used a m_p to clean the wet floor.",
+        "1. I use a c________r to solve math",
+        "problems.",
+        "2. She used a m_p to clean the wet",
+        "floor.",
         
     ],
     game_vocabulary: [

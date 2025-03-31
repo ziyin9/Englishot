@@ -195,15 +195,15 @@ struct SettingView: View {
                                                     action: privacyManager.requestCameraPermission
                                                 )
                                                 
-                                                Divider()
-                                                    .background(Color.blue.opacity(0.2))
-                                                
-                                                EnhancedPrivacySettingRow(
-                                                    icon: "mic.fill",
-                                                    title: "Microphone Access",
-                                                    status: privacyManager.permissionStatusText(for: privacyManager.microphonePermissionStatus),
-                                                    action: privacyManager.requestMicrophonePermission
-                                                )
+//                                                Divider()
+//                                                    .background(Color.blue.opacity(0.2))
+//                                                
+//                                                EnhancedPrivacySettingRow(
+//                                                    icon: "mic.fill",
+//                                                    title: "Microphone Access",
+//                                                    status: privacyManager.permissionStatusText(for: privacyManager.microphonePermissionStatus),
+//                                                    action: privacyManager.requestMicrophonePermission
+//                                                )
                                                 
                                                 Divider()
                                                     .background(Color.blue.opacity(0.2))

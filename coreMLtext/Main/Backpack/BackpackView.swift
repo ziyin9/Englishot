@@ -81,9 +81,7 @@ struct BackpackView: View {
                             
                         }
                         
-                        
-    let isMemoryGamePlayable = wordEntities.count >= 6
-                        
+                                                
                         
                         
                         CircularProgressView(

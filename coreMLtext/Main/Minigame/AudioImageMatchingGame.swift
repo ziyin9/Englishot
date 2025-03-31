@@ -104,10 +104,6 @@ struct AudioImageMatchingGame: View {
                 }
                 
                 VStack(spacing: 16) {
-                  
-                    
-                    if let currentWord = currentWord {
-                        
                         // Image grid
                         LazyVGrid(columns: [
                             GridItem(.flexible()),
@@ -186,7 +182,7 @@ struct AudioImageMatchingGame: View {
 //                        }
 
                         
-                    }
+                    
                 }
                 .padding(.bottom, 20)
                 .navigationBarBackButtonHidden()

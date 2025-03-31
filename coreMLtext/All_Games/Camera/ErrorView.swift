@@ -48,8 +48,8 @@ struct ErrorView: View {
                     }
 
                     Button(action: {
-                        showRecognitionErrorView = false
                         showingCamera = true // 再試一次，打開相機
+                        showRecognitionErrorView = false
                     }) {
                         Text("Try Again")
                             .frame(width: 100, height: 40)

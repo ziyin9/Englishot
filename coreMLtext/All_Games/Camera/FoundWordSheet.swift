@@ -4,7 +4,8 @@ struct FoundWordPopup: View {
     let image: UIImage?
     var foundWord: String?
     @Binding var showimagePop: Bool
-    
+    var onDismiss: () -> Void // Add this
+
 
     @State private var isAnimating = false
     @State private var snowflakes: [FoundWordSnowflake] = (0..<30).map { _ in FoundWordSnowflake() }
@@ -104,6 +105,8 @@ struct FoundWordPopup: View {
                     }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                         showimagePop = false
+                        onDismiss() // Call this
+
                     }
                 }) {
                     Text("Close")

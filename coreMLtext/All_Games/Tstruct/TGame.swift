@@ -59,7 +59,11 @@ struct TGame: View {
                         
                         if showimagePop {
                             ZStack {
-                                FoundWordPopup(image: image, foundWord: passToFoundWordSeetWord, showimagePop: $showimagePop)
+                                FoundWordPopup(image: image, foundWord: passToFoundWordSeetWord, showimagePop: $showimagePop,onDismiss: {
+                                    // Reset state
+                                    highestConfidenceWord = ""
+                                    passToFoundWordSeetWord = nil
+                                })
                             }
                         }
                         else if showRecognitionErrorView {
@@ -89,15 +93,25 @@ struct TGame: View {
                             processRecognizedWord(newValue)
                         }
             
-            .sheet(isPresented: $gameState.showingCamera) {
-                CameraView(image: $image, recognizedObjects: $recognizedObjects, highestConfidenceWord: $highestConfidenceWord,showRecognitionErrorView: $showRecognitionErrorView,MLModel: ML_model)
+            // In TGame.swift
+            .sheet(isPresented: $gameState.showingCamera, onDismiss: {
+                // Reset relevant state when closing camera
+//                highestConfidenceWord = ""
+            }) {
+                CameraView(image: $image, recognizedObjects: $recognizedObjects, highestConfidenceWord: $highestConfidenceWord, showRecognitionErrorView: $showRecognitionErrorView, MLModel: ML_model)
             }
-            
         }
         
         
     }
     private func processRecognizedWord(_ word: String) {
+        // 檢查辨識到的單字是否為空
+        guard !word.isEmpty else {
+//            showRecognitionErrorView = true
+//            print("⚠️ 辨識到的單字為空")
+            return
+        }
+
         let lowercasedWord = word.components(separatedBy: " - ").first?.lowercased() ?? word.lowercased()
         print("🔍 辨識到單字: \(lowercasedWord)")
 
@@ -113,6 +127,7 @@ struct TGame: View {
             
             passToFoundWordSeetWord = lowercasedWord
             showimagePop = true
+            showRecognitionErrorView = false // 確保在正確辨識時不顯示錯誤視圖
             print("✅ showimagePop 設為 true，應該顯示 FoundWordPopup")
         } else {
             showRecognitionErrorView = true

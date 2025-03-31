@@ -1,4 +1,3 @@
-//
 //  PrivacySet.swift
 //  coreMLtext
 //
@@ -10,7 +9,7 @@ import CoreLocation
 
 class PrivacyManager: ObservableObject {
     @Published var cameraPermissionStatus: AVAuthorizationStatus = .notDetermined
-    @Published var microphonePermissionStatus: AVAudioSession.RecordPermission = .undetermined
+//    @Published var microphonePermissionStatus: AVAudioSession.RecordPermission = .undetermined
     @Published var locationPermissionStatus: CLAuthorizationStatus = .notDetermined
     
     private let locationManager = CLLocationManager()
@@ -18,8 +17,8 @@ class PrivacyManager: ObservableObject {
     // 更新許可權狀態
     func updatePermissionsStatus() {
         cameraPermissionStatus = AVCaptureDevice.authorizationStatus(for: .video)
-        microphonePermissionStatus = AVAudioSession.sharedInstance().recordPermission
-        locationPermissionStatus = CLLocationManager.authorizationStatus()
+//        microphonePermissionStatus = AVAudioSession.sharedInstance().recordPermission
+        locationPermissionStatus = locationManager.authorizationStatus
     }
 
     // 相機許可權請求
@@ -34,19 +33,19 @@ class PrivacyManager: ObservableObject {
     //  .authorized（表示已授權）
     //  .denied（表示被拒絕
     // 麥克風許可權請求
-    func requestMicrophonePermission() {
-        AVAudioSession.sharedInstance().requestRecordPermission { granted in
-            DispatchQueue.main.async {
-                self.microphonePermissionStatus = granted ? .granted : .denied
-            }
-        }
-    }
+//    func requestMicrophonePermission() {
+//        AVAudioSession.sharedInstance().requestRecordPermission { granted in
+//            DispatchQueue.main.async {
+//                self.microphonePermissionStatus = granted ? .granted : .denied
+//            }
+//        }
+//    }
 
     // 位置許可權請求
     func requestLocationPermission() {
         locationManager.requestWhenInUseAuthorization()
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.locationPermissionStatus = CLLocationManager.authorizationStatus()
+            self.locationPermissionStatus = self.locationManager.authorizationStatus
         }
     }
 
