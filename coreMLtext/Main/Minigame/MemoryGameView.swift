@@ -92,6 +92,10 @@ struct MemoryGameView: View {
                     .transition(.opacity)
                     .zIndex(1)
                 }
+                if showGameOver {
+                    
+                    LeaveGameView(showLeaveGameView: $showGameOver, message: "Good Job!", button1Title: "離開遊戲", button1Action: { dismiss() }, button2Title: "再玩一次", button2Action: {setupGame() })
+                }
             }
             
             .toolbar {
@@ -105,16 +109,16 @@ struct MemoryGameView: View {
                 setupGame()
             }
 //
-            .alert("Game Over!", isPresented: $showGameOver) {
-                Button("Play Again") {
-                    setupGame()
-                }
-                Button("Back to Menu") {
-                    dismiss()
-                }
-            } message: {
-                Text("Congratulations! You've matched all the pairs!")
-            }
+//            .alert("Game Over!", isPresented: $showGameOver) {
+//                Button("Play Again") {
+//                    setupGame()
+//                }
+//                Button("Back to Menu") {
+//                    dismiss()
+//                }
+//            } message: {
+//                Text("Congratulations! You've matched all the pairs!")
+//            }
             
         }
     }
@@ -135,6 +139,7 @@ struct MemoryGameView: View {
         matchedPairs = 0
         selectedCards = []
         isProcessing = false
+        showGameOver = false
     }
     
     // 處理卡片點擊
@@ -163,12 +168,17 @@ struct MemoryGameView: View {
             // 配對成功
             if let index1 = cards.firstIndex(where: { $0.id == card1.id }),
                let index2 = cards.firstIndex(where: { $0.id == card2.id }) {
+                let generator = UINotificationFeedbackGenerator()
+                generator.notificationOccurred(.success)
                 cards[index1].isMatched = true
                 cards[index2].isMatched = true
                 matchedPairs += 1
                 
                 if matchedPairs == 6 {
-                    showGameOver = true
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        showGameOver = true
+                    }
                 }
             }
         } else {
@@ -176,6 +186,8 @@ struct MemoryGameView: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 if let index1 = cards.firstIndex(where: { $0.id == card1.id }),
                    let index2 = cards.firstIndex(where: { $0.id == card2.id }) {
+                    let generator = UINotificationFeedbackGenerator()
+                    generator.notificationOccurred(.error) 
                     cards[index1].isFaceUp = false
                     cards[index2].isFaceUp = false
                 }

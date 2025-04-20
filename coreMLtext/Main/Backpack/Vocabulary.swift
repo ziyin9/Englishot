@@ -52,7 +52,7 @@ var vocabularyList: [Vocabulary] = [
         //0
         bigtopic: "Home",
         category: "Kitchen",E_word: "spoon",C_word: "湯匙",
-        exSentence: "I use a spoon to eat my cereal.",
+        exSentence: "I drink soup with a spoon",
         audioURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/s/spo/spoon/spoon.mp3"
     ),
     
@@ -60,7 +60,7 @@ var vocabularyList: [Vocabulary] = [
         //1
         bigtopic: "Home",
         category: "Kitchen",E_word: "fork",C_word: "叉子",
-        exSentence: "She eats pasta with a fork.",
+        exSentence: "She eats noodles with a fork.",
         audioURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/f/for/fork_/fork.mp3"
     ),
     
@@ -76,7 +76,7 @@ var vocabularyList: [Vocabulary] = [
         //3
         bigtopic: "Home",
         category: "Kitchen",E_word: "knife",C_word: "刀",
-        exSentence: "I used a knife to cut the vegetable.",
+        exSentence: "The knife is sharp.",
         audioURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/k/kni/knife/knife.mp3"
     ),
     
@@ -131,7 +131,7 @@ var vocabularyList: [Vocabulary] = [
         //10
         bigtopic: "Home",
         category: "Livingroom",E_word: "sofa",C_word: "沙發",
-        exSentence: "I sit on the sofa when I watch TV in the living room.",
+        exSentence: "She sits on the s__a.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/s/sof/sofa_/sofa.mp3"
     ),
     Vocabulary(
@@ -149,14 +149,14 @@ var vocabularyList: [Vocabulary] = [
         //12
         bigtopic: "Home",
         category: "Garage",E_word: "tire",C_word: "輪胎",
-        exSentence: "My bike has a flat tire, so I can't ride it today.",
+        exSentence: "The taxi has four tire(s)..",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/t/tir/tire_/tire.mp3"
     ),
     Vocabulary(
         //13
         bigtopic: "Home",
         category: "Garage",E_word: "scooter",C_word: "機車",
-        exSentence: "Wearing a helmet is important when riding a scooter.",
+        exSentence: "He rides his scooter to the mall.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/e/eus/eus74/eus74105.mp3"
     ),
     Vocabulary(
@@ -215,7 +215,7 @@ var vocabularyList: [Vocabulary] = [
         //20
         bigtopic: "School",
         category: "Classroom2",E_word: "broom",C_word: "掃把",
-        exSentence: "Witches in stories fly on a broom.",
+        exSentence: "I sweep the floor with a broom.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/b/bro/broom/broom.mp3"
     ),
     Vocabulary(
@@ -229,7 +229,7 @@ var vocabularyList: [Vocabulary] = [
         //22
         bigtopic: "School",
         category: "Classroom2",E_word: "clock",C_word: "時鐘",
-        exSentence: "There is a big round clock on the classroom wall.",
+        exSentence: "There is a clock on the wall.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/c/clo/clock/clock.mp3"
     ),
     
@@ -239,7 +239,7 @@ var vocabularyList: [Vocabulary] = [
         //23
         bigtopic: "School",
         category: "Music",E_word: "drum",C_word: "鼓",
-        exSentence: "Alex uses two sticks to hit the drum.",
+        exSentence: "I use two sticks to hit the drum.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/d/dru/drum_/drum.mp3"
     ),
     Vocabulary(
@@ -253,14 +253,14 @@ var vocabularyList: [Vocabulary] = [
         //25
         bigtopic: "School",
         category: "Music",E_word: "recorder",C_word: "直笛",
-        exSentence: "A recorder is a kind of instrument with a part you blow on at the top and eight little holes—seven in the front and one in the back.",
+        exSentence: "He blew into the recorder.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/r/rec/recor/recorder.mp3"
     ),
     Vocabulary(
         //26
         bigtopic: "School",
         category: "Music",E_word: "note",C_word: "音符",
-        exSentence: "Music notes are written on five lines called a staff.",
+        exSentence: "Music note(s) are written on five lines called a staff.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/n/not/note_/note.mp3"
     ),
     
@@ -270,7 +270,7 @@ var vocabularyList: [Vocabulary] = [
         //27
         bigtopic: "School",
         category: "Playground",E_word: "slide",C_word: "溜滑梯",
-        exSentence: "The slide was very fast, and Ava screamed with joy.",
+        exSentence: "He slides down the slide.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/s/sli/slide/slide.mp3"
     ),
     Vocabulary(
@@ -300,7 +300,7 @@ var vocabularyList: [Vocabulary] = [
         //31
         bigtopic: "School",
         category: "Sports",E_word: "soccer",C_word: "足球",
-        exSentence: "Lily kicked the soccer ball into the goal.",
+        exSentence: "She kicked the soccer ball.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/s/soc/socce/soccer.mp3"
     ),
     Vocabulary(
@@ -340,13 +340,13 @@ var vocabularyList: [Vocabulary] = [
         bigtopic: "Mall",
         category: "Food",E_word: "dumpling",C_word: "水餃",
         exSentence: "If you bite into the dumpling with the coin, you’ll have a lucky year!",
-        audioURL: "dumpling: https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/d/dum/dumpl/dumpling.mp3"
+        audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/d/dum/dumpl/dumpling.mp3"
     ),
     Vocabulary(
         //37
         bigtopic: "Mall",
         category: "Food",E_word: "hamburger",C_word: "漢堡",
-        exSentence: "A hamburger has lettuce, tomato, cheese, ketchup, and a meat patty inside a bun.",
+        exSentence: "I like to eat hamburger from McDonald's（麥當勞）.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/h/ham/hambu/hamburger.mp3"
     ),
     
@@ -362,29 +362,29 @@ var vocabularyList: [Vocabulary] = [
         //39
         bigtopic: "Mall",
         category: "ElectronicsStore",E_word: "camera",C_word: "相機",
-        exSentence: "Ben took a photo of the sunset with his camera.",
+        exSentence: "Ben took a photo with a camera.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/c/cam/camer/camera.mp3"
     ),
     Vocabulary(
         //40
         bigtopic: "Mall",
         category: "ElectronicsStore",E_word: "keyboard",C_word: "鍵盤",
-        exSentence: "Jason uses a keyboard to type on his computer.",
+        exSentence: "He types on the keyboard.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/u/usk/uskee/uskeepn014.mp3"
     ),
     Vocabulary(
         //41
         bigtopic: "Mall",
         category: "ElectronicsStore",E_word: "smartphone",C_word: "智慧型手機",
-        exSentence: "We can send messages and use apps on a smartphone.",
+        exSentence: "We can send messages on a smartphone.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/c/ca2/ca2us/ca2us093.mp3"
     ),
     Vocabulary(
         //42
         bigtopic: "Mall",
         category: "ElectronicsStore",E_word: "mouse",C_word: "滑鼠",
-        exSentence: "Amy uses a mouse to move the pointer on his computer.",
-        audioURL: "mouse: https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/m/mou/mouse/mouse.mp3"
+        exSentence: "She clicked the mouse.",
+        audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/m/mou/mouse/mouse.mp3"
     ),
     
     //ClothingStore
@@ -393,13 +393,13 @@ var vocabularyList: [Vocabulary] = [
         bigtopic: "Mall",
         category: "ClothingStore",E_word: "shirt",C_word: "襯衫",
         exSentence: "Jason’s shirt has long sleeves and buttons.",
-        audioURL: "shirt: https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/s/shi/shirt/shirt.mp3"
+        audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/s/shi/shirt/shirt.mp3"
     ),
     Vocabulary(
         //44
         bigtopic: "Mall",
         category: "ClothingStore",E_word: "shorts",C_word: "短褲",
-        exSentence: "Leo’s shorts are striped and go down to his knees.",
+        exSentence: "I wear shorts in summer.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/s/sho/short/shorts.mp3"
     ),
     Vocabulary(
@@ -413,14 +413,14 @@ var vocabularyList: [Vocabulary] = [
         //46
         bigtopic: "Mall",
         category: "ClothingStore",E_word: "backpack",C_word: "背包",
-        exSentence: "Grace opened his backpack and took out his homework.",
+        exSentence: "Grace opened his backpack.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/b/bac/backp/backpack.mp3"
     ),
     Vocabulary(
         //47
         bigtopic: "Mall",
         category: "ClothingStore",E_word: "glasses",C_word: "眼鏡",
-        exSentence: "Emily wears glasses to help her see better.",
+        exSentence: "He wears glasses to read books.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E/us_pron/b/buz/buzz_/buzz.mp3"
     ),
     ////////////////////////////////////////////////////////////////////////先跳過找不到
@@ -431,7 +431,7 @@ var vocabularyList: [Vocabulary] = [
         //48
         bigtopic: "Mall",
         category: "ClothingStore",E_word: "shoes",C_word: "鞋子",
-        exSentence: "Noah got new running shoes for P.E. class.",
+        exSentence: "Noah got new running shoes(s).",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/s/sho/shoe_/shoe.mp3"
     ),
     
@@ -442,28 +442,28 @@ var vocabularyList: [Vocabulary] = [
         //49
         bigtopic: "Market",
         category: "Fruit",E_word: "durian",C_word: "榴蓮",
-        exSentence: "Durian is soft and creamy inside, even though it smells strong.",
+        exSentence: "Durian is soft and creamy inside, and it smells strong.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/e/eus/eus09/eus09138.mp3"
     ),
     Vocabulary(
         //50
         bigtopic: "Market",
         category: "Fruit",E_word: "kiwi",C_word: "奇異果",
-        exSentence: "kiwi looks brown and fuzzy on the outside.",
+        exSentence: "The green kiwi is sour.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/u/usk/uskil/uskillj030.mp3"
     ),
     Vocabulary(
         //51
         bigtopic: "Market",
         category: "Fruit",E_word: "grape",C_word: "葡萄",
-        exSentence: "Lily picked one grape at a time and ate it slowly.",
+        exSentence: "I like purple grapes.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/g/gra/grape/grape.mp3"
     ),
     Vocabulary(
         //52
         bigtopic: "Market",
         category: "Fruit",E_word: "banana",C_word: "香蕉",
-        exSentence: "Lily peeled the banana and took a big bite.",
+        exSentence: "The monkey eats a yellow banana.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/b/ban/banan/banana.mp3"
     ),
     Vocabulary(
@@ -480,7 +480,7 @@ var vocabularyList: [Vocabulary] = [
         //54
         bigtopic: "Market",
         category: "Vegetable",E_word: "pumpkin",C_word: "南瓜",
-        exSentence: "Tom carved a funny face on his Halloween pumpkin.",
+        exSentence: "He grows p_____n(s) in his yard.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/p/pum/pumpk/pumpkin.mp3"
     ),
     Vocabulary(
@@ -494,7 +494,7 @@ var vocabularyList: [Vocabulary] = [
         //56
         bigtopic: "Market",
         category: "Vegetable",E_word: "cabbage",C_word: "高麗菜",
-        exSentence: "Grace made a cabbage salad with carrots and corn.",
+        exSentence: "The cabbage is green.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/c/cab/cabba/cabbage.mp3"
     ),
     Vocabulary(
@@ -519,7 +519,7 @@ var vocabularyList: [Vocabulary] = [
         //59
         bigtopic: "Market",
         category: "Spice",E_word: "chili",C_word: "辣椒",
-        exSentence: "Tom added chili to his soup for extra spice.",
+        exSentence: "Chili can be spicy.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/c/chi/chill/chilly.mp3"
     ),
     Vocabulary(
@@ -533,7 +533,7 @@ var vocabularyList: [Vocabulary] = [
         //61
         bigtopic: "Market",
         category: "Spice",E_word: "ginger",C_word: "薑",
-        exSentence: "Ginger is a root that is brown on the outside and yellow inside.",
+        exSentence: "She added ginger to the soup.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/g/gin/ginge/ginger.mp3"
     ),
     Vocabulary(

@@ -11,6 +11,7 @@ struct MiniGameView: View {
     @State private var snowflakes: [Snowflake] = (0..<50).map { _ in Snowflake() }
     @State private var isHoveringMemory = false
     @State private var isHoveringAudio = false
+    @State private var isHoveringSpelling = false
     
     private var isMemoryGamePlayable: Bool {
         wordEntities.count >= 6
@@ -18,6 +19,10 @@ struct MiniGameView: View {
     
     private var isAudioGamePlayable: Bool {
         wordEntities.count >= 6
+    }
+    
+    private var isSpellingGamePlayable: Bool {
+        wordEntities.count >= 1
     }
     
     var body: some View {
@@ -41,9 +46,9 @@ struct MiniGameView: View {
                 }
                 
                 // Content
-                VStack(spacing: 30) {
+                VStack {
                     // Enhanced header
-                    VStack(spacing: 10) {
+                    VStack {
                         Text("Winter Games")
                             .font(.system(size: 42, weight: .bold, design: .rounded))
                             .foregroundStyle(
@@ -69,56 +74,90 @@ struct MiniGameView: View {
                     Spacer()
                     
                     // Game cards container with spring animation
-                    VStack(spacing: 70) {
-                        // Memory Game Card
-                        NavigationLink(destination: MemoryGameView()
-                            .navigationBarBackButtonHidden()
-                        ) {
-                            EnhancedGameCard(
-                                title: "Memory Match",
-                                subtitle: "Test your word recall skills",
-                                mainIcon: "brain.head.profile",
-                                decorativeIcons: ["sparkles", "star.fill", "lightbulb.fill"],
-                                colors: [Color(#colorLiteral(red: 0.3, green: 0.4, blue: 0.9, alpha: 1)), Color(#colorLiteral(red: 0.5, green: 0.6, blue: 0.95, alpha: 1))],
-                                isHovering: $isHoveringMemory,
-                                isEnabled: isMemoryGamePlayable,
-                                lockedMessage: "Collect 6+ Words to Unlock"
-                            )
-                            .scaleEffect(isHoveringMemory ? 1.03 : 1.0)
-                            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHoveringMemory)
-                            .onHover { hovering in
-                                isHoveringMemory = hovering
+                    ScrollView {
+                        // Spelling Game Card
+                        VStack{
+                            VStack{
+                                Spacer()
+                            NavigationLink(destination: SpellingGameView()
+                                .navigationBarBackButtonHidden()
+                            ) {
+                                EnhancedGameCard(
+                                    title: "Spelling Fun",
+                                    subtitle: "Tap letters to spell the word",
+                                    mainIcon: "textformat.abc",
+                                    decorativeIcons: ["character", "character.book.closed", "pencil"],
+                                    colors: [Color(#colorLiteral(red: 0.5, green: 0.8, blue: 0.3, alpha: 1)), Color(#colorLiteral(red: 0.3, green: 0.65, blue: 0.5, alpha: 1))],
+                                    isHovering: $isHoveringSpelling,
+                                    isEnabled: isSpellingGamePlayable,
+                                    lockedMessage: "Collect At Least 1 Word"
+                                )
+                                .scaleEffect(isHoveringSpelling ? 1.03 : 1.0)
+                                .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHoveringSpelling)
+                                .onHover { hovering in
+                                    isHoveringSpelling = hovering
+                                }
                             }
+                            .buttonStyle(PlainButtonStyle())
+                            .disabled(!isSpellingGamePlayable)
+                            .offset(y: isLoaded ? 0 : 300)
+                            .opacity(isLoaded ? 1 : 0)
                         }
-                        .buttonStyle(PlainButtonStyle())
-                        .disabled(!isMemoryGamePlayable)
-                        .offset(x: isLoaded ? 0 : -300)
-                        .opacity(isLoaded ? 1 : 0)
+                            // Memory Game Card
+                            VStack{
+                                NavigationLink(destination: MemoryGameView()
+                                    .navigationBarBackButtonHidden()
+                                ) {
+                                    EnhancedGameCard(
+                                        title: "Memory Match",
+                                        subtitle: "Test your word recall skills",
+                                        mainIcon: "brain.head.profile",
+                                        decorativeIcons: ["sparkles", "star.fill", "lightbulb.fill"],
+                                        colors: [Color(#colorLiteral(red: 0.3, green: 0.4, blue: 0.9, alpha: 1)), Color(#colorLiteral(red: 0.5, green: 0.6, blue: 0.95, alpha: 1))],
+                                        isHovering: $isHoveringMemory,
+                                        isEnabled: isMemoryGamePlayable,
+                                        lockedMessage: "Collect 6+ Words to Unlock"
+                                    )
+                                    .scaleEffect(isHoveringMemory ? 1.03 : 1.0)
+                                    .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHoveringMemory)
+                                    .onHover { hovering in
+                                        isHoveringMemory = hovering
+                                    }
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                                .disabled(!isMemoryGamePlayable)
+                                .offset(x: isLoaded ? 0 : -300)
+                                .opacity(isLoaded ? 1 : 0)
+                            }
+                            VStack{
+                                // Audio-Image Game Card
+                                NavigationLink(destination: AudioImageMatchingGame()
+                                    .navigationBarBackButtonHidden()
+                                ) {
+                                    EnhancedGameCard(
+                                        title: "Sound & Image",
+                                        subtitle: "Match the words you hear",
+                                        mainIcon: "speaker.wave.2.fill",
+                                        decorativeIcons: ["ear.fill", "photo.fill", "waveform"],
+                                        colors: [Color(#colorLiteral(red: 0.2, green: 0.7, blue: 0.9, alpha: 1)), Color(#colorLiteral(red: 0.4, green: 0.8, blue: 0.95, alpha: 1))],
+                                        isHovering: $isHoveringAudio,
+                                        isEnabled: isAudioGamePlayable,
+                                        lockedMessage: "Collect 6+ Words to Unlock"
+                                    )
+                                    .scaleEffect(isHoveringAudio ? 1.03 : 1.0)
+                                    .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHoveringAudio)
+                                    .onHover { hovering in
+                                        isHoveringAudio = hovering
+                                    }
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                                .disabled(!isAudioGamePlayable)
+                                .offset(x: isLoaded ? 0 : 300)
+                                .opacity(isLoaded ? 1 : 0)
+                            }
+                            Spacer()
+                        }
                         
-                        // Audio-Image Game Card
-                        NavigationLink(destination: AudioImageMatchingGame()
-                            .navigationBarBackButtonHidden()
-                        ) {
-                            EnhancedGameCard(
-                                title: "Sound & Image",
-                                subtitle: "Match the words you hear",
-                                mainIcon: "speaker.wave.2.fill",
-                                decorativeIcons: ["ear.fill", "photo.fill", "waveform"],
-                                colors: [Color(#colorLiteral(red: 0.2, green: 0.7, blue: 0.9, alpha: 1)), Color(#colorLiteral(red: 0.4, green: 0.8, blue: 0.95, alpha: 1))],
-                                isHovering: $isHoveringAudio,
-                                isEnabled: isAudioGamePlayable,
-                                lockedMessage: "Collect 6+ Words to Unlock"
-                            )
-                            .scaleEffect(isHoveringAudio ? 1.03 : 1.0)
-                            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHoveringAudio)
-                            .onHover { hovering in
-                                isHoveringAudio = hovering
-                            }
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                        .disabled(!isAudioGamePlayable)
-                        .offset(x: isLoaded ? 0 : 300)
-                        .opacity(isLoaded ? 1 : 0)
                     }
                     .padding(.horizontal, 25)
                     
@@ -273,7 +312,7 @@ struct EnhancedGameCard: View {
                 }
             }
         }
-        .frame(height: 220)
+        .frame(height: 200)
         .opacity(isEnabled ? 1.0 : 0.7)
         .onAppear {
             // Start animations

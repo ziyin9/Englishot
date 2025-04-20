@@ -47,12 +47,12 @@ struct GameMapView: View {
                             }
                     )
                 
-                MapButton(iconName: "Homeimage", label: "Home", position: CGPoint(x: 370, y: 1010), mapOffset: $mapOffset, currentDragOffset: $currentDragOffset,floatOffset: $floatOffset) {
+                MapButton(iconName: "Homeimage", label: "Home", position: CGPoint(x: 370, y: 990), mapOffset: $mapOffset, currentDragOffset: $currentDragOffset,floatOffset: $floatOffset) {
                         selectedLocation = "Home"
                         triggerImpactFeedback(style: .light)
                     }
                     
-                MapButton(iconName: "Schoolimage", label: "School", position: CGPoint(x: 270, y: 1220), mapOffset: $mapOffset, currentDragOffset: $currentDragOffset,floatOffset: $floatOffset) {
+                MapButton(iconName: "Schoolimage", label: "School", position: CGPoint(x: 270, y: 1200), mapOffset: $mapOffset, currentDragOffset: $currentDragOffset,floatOffset: $floatOffset) {
                     selectedLocation = "School"
                     triggerImpactFeedback(style: .light)
                 }
@@ -61,12 +61,10 @@ struct GameMapView: View {
                     selectedLocation = "Mall"
                     triggerImpactFeedback(style: .light)
                 }
-                MapButton(iconName: "Marketimage", label: "Market", position: CGPoint(x: 420, y: 730), mapOffset: $mapOffset, currentDragOffset: $currentDragOffset,floatOffset: $floatOffset) {
+                MapButton(iconName: "Marketimage", label: "Market", position: CGPoint(x: 420, y: 710), mapOffset: $mapOffset, currentDragOffset: $currentDragOffset,floatOffset: $floatOffset) {
                     selectedLocation = "Market"
                     triggerImpactFeedback(style: .light)
                 }
-
-                
                 MapButton(iconName: "Zooimage", label: "Zoo", position: CGPoint(x: 200, y: 860), mapOffset: $mapOffset, currentDragOffset: $currentDragOffset,floatOffset: $floatOffset) {
                     selectedLocation = "Zoo"
                     triggerImpactFeedback(style: .light)
@@ -91,7 +89,8 @@ struct GameMapView: View {
                 
    
                 // NavigationLink for location
-                NavigationLink(destination: destinationView().transition(.move(edge: .bottom)), tag: "Home", selection: $selectedLocation) { EmptyView() }
+                //transition(.move(edge: .bottom))
+                NavigationLink(destination: destinationView(), tag: "Home", selection: $selectedLocation) { EmptyView() }
                 NavigationLink(destination: destinationView(), tag: "School", selection: $selectedLocation) { EmptyView() }
                 NavigationLink(destination: destinationView(), tag: "Mall", selection: $selectedLocation) { EmptyView() }
                 NavigationLink(destination: destinationView(), tag: "Market", selection: $selectedLocation) { EmptyView() }
