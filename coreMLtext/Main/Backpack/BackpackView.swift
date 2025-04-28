@@ -60,7 +60,7 @@ struct BackpackView: View {
                 ScrollView {
                     VStack(spacing: 20) {
                         VStack{
-                            Text("Vocabulary List")
+                            Text("Backpack")
                                 .font(.system(size: 40, weight: .bold, design: .rounded))
                                 .foregroundStyle(
                                     LinearGradient(

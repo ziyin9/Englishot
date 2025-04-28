@@ -49,7 +49,7 @@ struct MiniGameView: View {
                 VStack {
                     // Enhanced header
                     VStack {
-                        Text("Winter Games")
+                        Text("MiniGames")
                             .font(.system(size: 42, weight: .bold, design: .rounded))
                             .foregroundStyle(
                                 LinearGradient(
@@ -67,18 +67,17 @@ struct MiniGameView: View {
                             .foregroundColor(Color(#colorLiteral(red: 0.4, green: 0.5, blue: 0.8, alpha: 1)))
                     }
                     .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 2)
-                    .padding(.top, 30)
+                    .padding(.top, 20)
                     .offset(y: isLoaded ? 0 : -50)
                     .opacity(isLoaded ? 1 : 0)
                     
-                    Spacer()
+                    Spacer().frame(height: 15)
                     
                     // Game cards container with spring animation
                     ScrollView {
-                        // Spelling Game Card
-                        VStack{
-                            VStack{
-                                Spacer()
+                        VStack(spacing: 20) { // Reduced spacing between cards
+                            // Spelling Game Card
+                            Spacer()
                             NavigationLink(destination: SpellingGameView()
                                 .navigationBarBackButtonHidden()
                             ) {
@@ -102,68 +101,62 @@ struct MiniGameView: View {
                             .disabled(!isSpellingGamePlayable)
                             .offset(y: isLoaded ? 0 : 300)
                             .opacity(isLoaded ? 1 : 0)
-                        }
+                            
                             // Memory Game Card
-                            VStack{
-                                NavigationLink(destination: MemoryGameView()
-                                    .navigationBarBackButtonHidden()
-                                ) {
-                                    EnhancedGameCard(
-                                        title: "Memory Match",
-                                        subtitle: "Test your word recall skills",
-                                        mainIcon: "brain.head.profile",
-                                        decorativeIcons: ["sparkles", "star.fill", "lightbulb.fill"],
-                                        colors: [Color(#colorLiteral(red: 0.3, green: 0.4, blue: 0.9, alpha: 1)), Color(#colorLiteral(red: 0.5, green: 0.6, blue: 0.95, alpha: 1))],
-                                        isHovering: $isHoveringMemory,
-                                        isEnabled: isMemoryGamePlayable,
-                                        lockedMessage: "Collect 6+ Words to Unlock"
-                                    )
-                                    .scaleEffect(isHoveringMemory ? 1.03 : 1.0)
-                                    .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHoveringMemory)
-                                    .onHover { hovering in
-                                        isHoveringMemory = hovering
-                                    }
+                            NavigationLink(destination: MemoryGameView()
+                                .navigationBarBackButtonHidden()
+                            ) {
+                                EnhancedGameCard(
+                                    title: "Memory Match",
+                                    subtitle: "Test your word recall skills",
+                                    mainIcon: "brain.head.profile",
+                                    decorativeIcons: ["sparkles", "star.fill", "lightbulb.fill"],
+                                    colors: [Color(#colorLiteral(red: 0.3, green: 0.4, blue: 0.9, alpha: 1)), Color(#colorLiteral(red: 0.5, green: 0.6, blue: 0.95, alpha: 1))],
+                                    isHovering: $isHoveringMemory,
+                                    isEnabled: isMemoryGamePlayable,
+                                    lockedMessage: "Collect 6+ Words to Unlock"
+                                )
+                                .scaleEffect(isHoveringMemory ? 1.03 : 1.0)
+                                .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHoveringMemory)
+                                .onHover { hovering in
+                                    isHoveringMemory = hovering
                                 }
-                                .buttonStyle(PlainButtonStyle())
-                                .disabled(!isMemoryGamePlayable)
-                                .offset(x: isLoaded ? 0 : -300)
-                                .opacity(isLoaded ? 1 : 0)
                             }
-                            VStack{
-                                // Audio-Image Game Card
-                                NavigationLink(destination: AudioImageMatchingGame()
-                                    .navigationBarBackButtonHidden()
-                                ) {
-                                    EnhancedGameCard(
-                                        title: "Sound & Image",
-                                        subtitle: "Match the words you hear",
-                                        mainIcon: "speaker.wave.2.fill",
-                                        decorativeIcons: ["ear.fill", "photo.fill", "waveform"],
-                                        colors: [Color(#colorLiteral(red: 0.2, green: 0.7, blue: 0.9, alpha: 1)), Color(#colorLiteral(red: 0.4, green: 0.8, blue: 0.95, alpha: 1))],
-                                        isHovering: $isHoveringAudio,
-                                        isEnabled: isAudioGamePlayable,
-                                        lockedMessage: "Collect 6+ Words to Unlock"
-                                    )
-                                    .scaleEffect(isHoveringAudio ? 1.03 : 1.0)
-                                    .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHoveringAudio)
-                                    .onHover { hovering in
-                                        isHoveringAudio = hovering
-                                    }
+                            .buttonStyle(PlainButtonStyle())
+                            .disabled(!isMemoryGamePlayable)
+                            .offset(x: isLoaded ? 0 : -300)
+                            .opacity(isLoaded ? 1 : 0)
+                            
+                            // Audio-Image Game Card
+                            NavigationLink(destination: AudioImageMatchingGame()
+                                .navigationBarBackButtonHidden()
+                            ) {
+                                EnhancedGameCard(
+                                    title: "Sound & Image",
+                                    subtitle: "Match the words you hear",
+                                    mainIcon: "speaker.wave.2.fill",
+                                    decorativeIcons: ["ear.fill", "photo.fill", "waveform"],
+                                    colors: [Color(#colorLiteral(red: 0.2, green: 0.7, blue: 0.9, alpha: 1)), Color(#colorLiteral(red: 0.4, green: 0.8, blue: 0.95, alpha: 1))],
+                                    isHovering: $isHoveringAudio,
+                                    isEnabled: isAudioGamePlayable,
+                                    lockedMessage: "Collect 6+ Words to Unlock"
+                                )
+                                .scaleEffect(isHoveringAudio ? 1.03 : 1.0)
+                                .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHoveringAudio)
+                                .onHover { hovering in
+                                    isHoveringAudio = hovering
                                 }
-                                .buttonStyle(PlainButtonStyle())
-                                .disabled(!isAudioGamePlayable)
-                                .offset(x: isLoaded ? 0 : 300)
-                                .opacity(isLoaded ? 1 : 0)
                             }
-                            Spacer()
+                            .buttonStyle(PlainButtonStyle())
+                            .disabled(!isAudioGamePlayable)
+                            .offset(x: isLoaded ? 0 : 300)
+                            .opacity(isLoaded ? 1 : 0)
                         }
-                        
+                        .padding(.horizontal, 25)
+                        .padding(.bottom, 15)
                     }
-                    .padding(.horizontal, 25)
                     
                     Spacer()
-                    
-                    
                 }
                 .padding()
             }
@@ -217,31 +210,31 @@ struct EnhancedGameCard: View {
             }
             
             // Content
-            VStack(spacing: 12) {
+            VStack(spacing: 6) { // Reduced spacing
                 // Main icon with glow
                 ZStack {
                     // Glow effect
                     Circle()
                         .fill(Color.white.opacity(0.3))
-                        .frame(width: 100, height: 100)
-                        .blur(radius: 10)
+                        .frame(width: 70, height: 70) // Reduced size
+                        .blur(radius: 8)
                     
                     // Icon background
                     Circle()
                         .fill(Color.white.opacity(0.7))
-                        .frame(width: 80, height: 80)
+                        .frame(width: 60, height: 60) // Reduced size
                     
                     if isEnabled {
                         // Main icon
                         Image(systemName: mainIcon)
-                            .font(.system(size: 40))
+                            .font(.system(size: 30)) // Reduced size
                             .foregroundColor(colors[0])
                             .offset(y: animateIcons ? -2 : 2)
                             .animation(Animation.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: animateIcons)
                     } else {
                         // Locked icon
                         Image(systemName: "lock.fill")
-                            .font(.system(size: 30))
+                            .font(.system(size: 24)) // Reduced size
                             .foregroundColor(Color.gray)
                     }
                     
@@ -249,11 +242,11 @@ struct EnhancedGameCard: View {
                     if isEnabled {
                         ForEach(0..<decorativeIcons.count, id: \.self) { index in
                             Image(systemName: decorativeIcons[index])
-                                .font(.system(size: 14))
+                                .font(.system(size: 12)) // Reduced size
                                 .foregroundColor(colors[0])
                                 .offset(
-                                    x: CGFloat([-35, 35, 0][index]) + (animateIcons ? CGFloat([-5, 5, 0][index]) : 0),
-                                    y: CGFloat([20, 20, -35][index]) + (animateIcons ? CGFloat([5, -5, -5][index]) : 0)
+                                    x: CGFloat([-25, 25, 0][index]) + (animateIcons ? CGFloat([-5, 5, 0][index]) : 0),
+                                    y: CGFloat([15, 15, -25][index]) + (animateIcons ? CGFloat([5, -5, -5][index]) : 0)
                                 )
                                 .opacity(animateIcons ? 0.8 : 0.4)
                                 .animation(
@@ -265,55 +258,64 @@ struct EnhancedGameCard: View {
                         }
                     }
                 }
-                .padding(.top, 20)
+                .padding(.top, 12) // Reduced padding
                 
-                Spacer()
+                Spacer().frame(height: 0) // Minimal spacer
                 
                 // Title and subtitle
-                VStack(spacing: 6) {
+                VStack(spacing: 2) { // Reduced spacing
                     Text(isEnabled ? title : lockedMessage)
-                        .font(.system(size: 24, weight: .bold, design: .rounded))
+                        .font(.system(size: 20, weight: .bold, design: .rounded)) // Reduced size
                         .foregroundColor(.white)
                         .shadow(color: Color.black.opacity(0.2), radius: 1, x: 0, y: 1)
                     
                     if isEnabled {
                         Text(subtitle)
-                            .font(.system(size: 16, weight: .medium, design: .rounded))
+                            .font(.system(size: 14, weight: .medium, design: .rounded)) // Reduced size
                             .foregroundColor(Color.white.opacity(0.9))
                             .multilineTextAlignment(.center)
                             .padding(.horizontal)
+                    } else {
+                        // Add a smaller empty Text view for locked state
+                        Text("")
+                            .font(.system(size: 12))
+                            .padding(.bottom, 4)
                     }
                 }
                 
-                Spacer()
+                Spacer().frame(height: 2) // Minimal spacer
                 
-                // Play button
-                if isEnabled {
-                    HStack {
-                        Spacer()
-                        
+                // Play button - consistent height whether enabled or not
+                HStack {
+                    Spacer()
+                    
+                    if isEnabled {
                         Text("Play Now")
-                            .font(.system(size: 16, weight: .bold, design: .rounded))
+                            .font(.system(size: 14, weight: .bold, design: .rounded)) // Reduced size
                             .foregroundColor(colors[0])
                         
                         Image(systemName: "play.fill")
-                            .font(.system(size: 14, weight: .bold))
+                            .font(.system(size: 12, weight: .bold)) // Reduced size
                             .foregroundColor(colors[0])
-                        
-                        Spacer()
+                    } else {
+                        Text(" ")
+                            .font(.system(size: 12))
                     }
-                    .padding(.vertical, 10)
-                    .background(
-                        Capsule()
-                            .fill(Color.white.opacity(0.9))
-                    )
-                    .padding(.horizontal, 40)
-                    .padding(.bottom, 15)
+                    
+                    Spacer()
                 }
+                .padding(.vertical, 6) // Reduced padding
+                .background(
+                    Capsule()
+                        .fill(isEnabled ? Color.white.opacity(0.9) : Color.clear)
+                        .opacity(isEnabled ? 1.0 : 0.0)
+                )
+                .padding(.horizontal, 30) // Reduced padding
+                .padding(.bottom, 10) // Reduced padding
             }
         }
-        .frame(height: 200)
-        .opacity(isEnabled ? 1.0 : 0.7)
+        .frame(height: 160) // Reduced height for all cards
+        .opacity(isEnabled ? 1.0 : 0.8)
         .onAppear {
             // Start animations
             withAnimation(Animation.easeInOut(duration: 0.3).delay(0.5)) {

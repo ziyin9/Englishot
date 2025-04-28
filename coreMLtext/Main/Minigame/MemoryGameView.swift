@@ -30,96 +30,114 @@ struct MemoryGameView: View {
     ]
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        Color.white.opacity(0.3),
-                        Color.blue.opacity(0.1),
-                        Color.blue.opacity(0.2),
-                        Color.purple.opacity(0.1),
-                        Color.blue.opacity(0.2)
-                    ]),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
+        ZStack {
+            // Background gradient
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color(#colorLiteral(red: 0.3, green: 0.4, blue: 0.9, alpha: 1)).opacity(0.1),
+                    Color(#colorLiteral(red: 0.5, green: 0.6, blue: 0.95, alpha: 1)).opacity(0.1)
+                ]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
+            VStack{
+                GameHeaderView(
+                    title: "Memory Match",
+                    subtitle: "Find matching pairs of words",
+                    colors: [Color(#colorLiteral(red: 0.3, green: 0.4, blue: 0.9, alpha: 1)), Color(#colorLiteral(red: 0.5, green: 0.6, blue: 0.95, alpha: 1))],
+                    showLeaveGameView: $showLeaveGameView
                 )
-                .edgesIgnoringSafeArea(.all)
+                Spacer()
+                Spacer()
+
+            }
+            VStack(spacing: 20) {
                 
-                VStack(spacing: 15) {
-                    Text("Memory Game")
-                        .font(.system(size: 32, weight: .bold, design: .rounded))
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [.blue.opacity(0.7), .blue.opacity(0.5)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
+                // Enhanced matched pairs counter
+                HStack(spacing: 8) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(Color(#colorLiteral(red: 0.3, green: 0.4, blue: 0.9, alpha: 1)))
+                        .font(.system(size: 20))
+                    
+                    Text("Matched Pairs")
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundColor(Color(#colorLiteral(red: 0.3, green: 0.4, blue: 0.9, alpha: 1)))
+                    
+                    Text("\(matchedPairs)/6")
+                        .font(.system(size: 20, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(
+                            RoundedRectangle(cornerRadius: 15)
+                                .fill(
+                                    LinearGradient(
+                                        colors: [
+                                            Color(#colorLiteral(red: 0.3, green: 0.4, blue: 0.9, alpha: 1)),
+                                            Color(#colorLiteral(red: 0.5, green: 0.6, blue: 0.95, alpha: 1))
+                                        ],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                                .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
                         )
-                        .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 2)
-                        .padding(.top, 20)
-                    
-                    Text("Matched Pairs: \(matchedPairs)/6")
-                        .font(.title3)
-                        .foregroundColor(.blue)
-                        .padding(.bottom, 5)
-                    
-                    LazyVGrid(columns: columns, spacing: 10) {
-                        ForEach(cards) { card in
-                            CardView(card: card)
-                                .onTapGesture {
-                                    handleCardTap(card)
-                                }
-                        }
-                    }
-                    .padding()
-                    
-                }//vs
-                if showLeaveGameView {
-                    LeaveGameView(
-                        showLeaveGameView: $showLeaveGameView,
-                        message: "不會保留遊戲紀錄確定要離開嗎？",
-                        button1Title: "離開遊戲",
-                        button1Action: {
-                            print("離開遊戲被點擊")
-                            dismiss() // 離開遊戲的動作
-                        },
-                        button2Title: "繼續遊戲",
-                        button2Action: {
-                            showLeaveGameView = false
-                            print("繼續遊戲被點擊")
-                        }
-                    )
-                    .transition(.opacity)
-                    .zIndex(1)
                 }
-                if showGameOver {
-                    
-                    LeaveGameView(showLeaveGameView: $showGameOver, message: "Good Job!", button1Title: "離開遊戲", button1Action: { dismiss() }, button2Title: "再玩一次", button2Action: {setupGame() })
-                }
-            }
-            
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    BackButton {
-                        showLeaveGameView = true
+                .padding(.vertical, 8)
+                .padding(.horizontal, 16)
+                .background(
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Color.white)
+                        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+                )
+                .padding(.bottom, 5)
+                
+                LazyVGrid(columns: columns, spacing: 10) {
+                    ForEach(cards) { card in
+                        CardView(card: card)
+                            .onTapGesture {
+                                handleCardTap(card)
+                            }
                     }
                 }
+                .padding()
+                
+            }//vs
+            if showLeaveGameView {
+                Color.black.opacity(0.5)
+                    .edgesIgnoringSafeArea(.all)
+                
+                LeaveGameView(
+                    showLeaveGameView: $showLeaveGameView,
+                    message: "不會保留遊戲紀錄確定要離開嗎？",
+                    button1Title: "離開遊戲",
+                    button1Action: {
+                        print("離開遊戲被點擊")
+                        dismiss()
+                    },
+                    button2Title: "繼續遊戲",
+                    button2Action: {
+                        showLeaveGameView = false
+                        print("繼續遊戲被點擊")
+                    }
+                )
+                .zIndex(1)
             }
-            .onAppear {
-                setupGame()
+            if showGameOver {
+                
+                LeaveGameView(showLeaveGameView: $showGameOver, message: "Good Job!", button1Title: "離開遊戲", button1Action: { dismiss() }, button2Title: "再玩一次", button2Action: {setupGame() })
             }
-//
-//            .alert("Game Over!", isPresented: $showGameOver) {
-//                Button("Play Again") {
-//                    setupGame()
-//                }
-//                Button("Back to Menu") {
-//                    dismiss()
-//                }
-//            } message: {
-//                Text("Congratulations! You've matched all the pairs!")
-//            }
-            
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                BackButton {
+                    showLeaveGameView = true
+                }
+            }
+        }
+        .onAppear {
+            setupGame()
         }
     }
     

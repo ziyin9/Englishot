@@ -24,6 +24,8 @@ struct GameCardView: View {
         ZStack {
             // Semi-transparent background overlay
 //            if isCardVisible {
+            
+
             if uiState.showGameCardView {
                 Color.black.opacity(0.3)
                     .ignoresSafeArea()
@@ -115,6 +117,7 @@ struct GameCardView: View {
     private func findMatchingWordEntity(for item: Vocabulary) -> Word? {
         return wordEntities.first { $0.word == item.E_word }
     }
+    
 }
 //
 //#Preview {

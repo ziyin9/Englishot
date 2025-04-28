@@ -35,21 +35,42 @@ struct TGame: View {
             
             
             ZStack {
-                GameView(showAnswer: $showAnswer, showingCamera: $gameState.showingCamera, title: levelData.title)
-                    .onAppear {
-                        uiState.isNavBarVisible = false
-                        checkAllWordsFound()
-                        
+                ZStack {
+                    GameView(showAnswer: $showAnswer, showingCamera: $gameState.showingCamera, title: levelData.title)
+                        .onAppear {
+                            uiState.isNavBarVisible = false
+                            checkAllWordsFound()
+                        }
+
+                    if allWordsFound {
+                        Image("finish")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .opacity(0.2)
+                            .offset(y: -180)
+                            .zIndex(0)
+                            .allowsHitTesting(false)
                     }
-                if allWordsFound {
-                    Image("finish")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .opacity(0.2)
-                        .offset(y: -180)
+                }
+                ZStack {
+                    if showimagePop {
+                        FoundWordPopup(image: image, foundWord: passToFoundWordSeetWord, showimagePop: $showimagePop, onDismiss: {
+                            highestConfidenceWord = ""
+                            passToFoundWordSeetWord = nil
+                        })
+                    } else if showRecognitionErrorView {
+                        ErrorView(showRecognitionErrorView: $showRecognitionErrorView, showingCamera: $gameState.showingCamera)
+                    }
+
+                    if uiState.showGameCardView {
+                        GameCardView(vocabulary: levelData.game_vocabulary)
+                            .environmentObject(uiState)
+                            .zIndex(1)
+                    }
                 }
             }
+
 
             
             

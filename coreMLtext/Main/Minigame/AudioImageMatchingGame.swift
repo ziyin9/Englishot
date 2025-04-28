@@ -24,196 +24,179 @@ struct AudioImageMatchingGame: View {
     let cardColor = Color.white
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                // Background
-                backgroundColor.edgesIgnoringSafeArea(.all)
-                // Game header
-                VStack{
-                    Text("Audio-Image Matching Game")
-                        .font(.system(size: 28, weight: .bold))
-                        .foregroundColor(Color(#colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1)))
-                        .padding(.top, 20)
-                    // Game instructions
-                    Text("Listen to the word and select the correct image")
-                        .font(.system(size: 18, weight: .medium))
-                        .multilineTextAlignment(.center)
-                        .foregroundColor(Color(#colorLiteral(red: 0.4, green: 0.4, blue: 0.4, alpha: 1)))
-                        .padding(.horizontal)
-                    // Audio button
-                    Button(action: {
-                        playAudio()
-                        isAudioPlaying = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                            isAudioPlaying = false
-                        }
-                    }) {
-                        ZStack {
-                            Circle()
-                                .fill(accentColor)
-                                .frame(width: 80, height: 80)
-                                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
-                            
-                            if isAudioPlaying {
-                                // Animated sound waves when playing
-                                ZStack {
-                                    ForEach(0..<3) { i in
-                                        Circle()
-                                            .stroke(Color.white.opacity(0.8 - Double(i) * 0.2), lineWidth: 2)
-                                            .frame(width: 80 + CGFloat(i * 20), height: 80 + CGFloat(i * 20))
-                                            .scaleEffect(isAudioPlaying ? 1.2 : 1)
-                                            .animation(Animation.easeInOut(duration: 1).repeatForever(autoreverses: true).delay(Double(i) * 0.2), value: isAudioPlaying)
-                                    }
-                                }
-                            }
-                            
-                            Image(systemName: "speaker.wave.2.fill")
-                                .font(.system(size: 32))
-                                .foregroundColor(.white)
-                        }
-                    }
-                    .padding(.vertical, 20)
-                    Spacer()
-                    if showNextButton {
-                        Button(action: {
-                            // Generate new question
-                            setupGame()
-                            // Reset states
-                            selectedImageIndex = nil
-                            isCorrect = nil
-                            showNextButton = false
-                            incorrectSelections.removeAll()
-                        }) {
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 25)
-                                    .fill(accentColor)
-                                    .frame(height: 50)
-                                    .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
-                                
-                                HStack {
-                                    Image(systemName: "arrow.right.circle.fill")
-                                    Text("Next Question")
-                                        .fontWeight(.bold)
-                                }
-                                .foregroundColor(.white)
-                            }
-                        }
-                        .padding(.bottom,50)
-                    }
+        ZStack {
+            // Background gradient
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color(#colorLiteral(red: 0.2, green: 0.7, blue: 0.9, alpha: 1)).opacity(0.1),
+                    Color(#colorLiteral(red: 0.4, green: 0.8, blue: 0.95, alpha: 1)).opacity(0.1)
+                ]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
+            VStack{
+                GameHeaderView(
+                    title: "Sound & Image",
+                    subtitle: "Match the words you hear",
+                    colors: [Color(#colorLiteral(red: 0.2, green: 0.7, blue: 0.9, alpha: 1)), Color(#colorLiteral(red: 0.4, green: 0.8, blue: 0.95, alpha: 1))],
+                    showLeaveGameView: $showLeaveGameView
+                )
+                Spacer()
+                Spacer()
 
-                }
                 
-                VStack(spacing: 16) {
-                        // Image grid
-                        LazyVGrid(columns: [
-                            GridItem(.flexible()),
-                            GridItem(.flexible()),
-                            GridItem(.flexible())
-                        ], spacing: 16) {
-                            ForEach(Array(shuffledImages.enumerated()), id: \.element) { index, word in
-                                if let imageData = word.itemimage,
-                                   let uiImage = UIImage(data: imageData) {
-                                    ZStack {
-                                        // Background changes color based on answer
-                                        RoundedRectangle(cornerRadius: 16)
-                                            .fill(backgroundColor(for: index, word: word))
-                                            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
-                                        
-                                        // Image
-                                        VStack {
-                                            Image(uiImage: uiImage)
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(height: 110)
-                                                .padding(8)
-                                        }
-                                        
-                                        // Selection indicator border
-                                        if selectedImageIndex == index || incorrectSelections.contains(index) {
-                                            RoundedRectangle(cornerRadius: 16)
-                                                .stroke(borderColor(for: index, word: word), lineWidth: 3)
-                                        }
-                                    }
-                                    .frame(height: 150)
-                                    .onTapGesture {
-                                        // Only allow selection if not already marked as incorrect
-                                        // and not showing the next button yet
-                                        if !showNextButton && !incorrectSelections.contains(index) {
-                                            selectedImageIndex = index
-                                            // Add haptic feedback
-                                            let impactMed = UIImpactFeedbackGenerator(style: .medium)
-                                            impactMed.impactOccurred()
-                                            
-                                            // Check answer immediately
-                                            checkAnswer(selectedWord: word, at: index)
-                                        }
-                                    }
-                                    .opacity(incorrectSelections.contains(index) ? 0.7 : 1.0)
-                                }
+            }
+
+            VStack(spacing: 20) {
+                VStack{
+                    
+                    // Play audio button
+                    Button(action: {
+                        // Add haptic feedback
+                        let impactMed = UIImpactFeedbackGenerator(style: .medium)
+                        impactMed.impactOccurred()
+                        
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                            isAudioPlaying = true
+                        }
+                        playAudio()
+                    }) {
+                        HStack(spacing: 12) {
+                            // Animated speaker icon
+                            Image(systemName: isAudioPlaying ? "speaker.wave.2.fill" : "speaker.wave.2")
+                                .font(.system(size: 24))
+                                .symbolEffect(.bounce, value: isAudioPlaying)
+                                .scaleEffect(isAudioPlaying ? 1.1 : 1.0)
+                            
+                        }
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 12)
+                        .background(
+                            RoundedRectangle(cornerRadius: 50)
+                                .fill(accentColor)
+                                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+                        )
+                        .scaleEffect(isAudioPlaying ? 1.02 : 1.0)
+                    }
+                    .buttonStyle(ScaleButtonStyle())
+                    .padding(.bottom, 10)
+                    .onChange(of: isAudioPlaying) { newValue in
+                        if !newValue {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                                isAudioPlaying = false
                             }
                         }
-                        .padding(.horizontal)
-                        // Next question button - shows only after correct answer
-//                        if showNextButton {
-//                            Button(action: {
-//                                // Generate new question
-//                                setupGame()
-//                                // Reset states
-//                                selectedImageIndex = nil
-//                                isCorrect = nil
-//                                showNextButton = false
-//                                incorrectSelections.removeAll()
-//                            }) {
-//                                ZStack {
-//                                    RoundedRectangle(cornerRadius: 25)
-//                                        .fill(accentColor)
-//                                        .frame(height: 50)
-//                                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
-//                                    
-//                                    HStack {
-//                                        Image(systemName: "arrow.right.circle.fill")
-//                                        Text("Next Question")
-//                                            .fontWeight(.bold)
-//                                    }
-//                                    .foregroundColor(.white)
-//                                }
-//                            }
-//                            .padding()
-//                        }
-
-                        
-                    
+                    }
+                }
+                VStack(spacing: 16) {
+                    // Image grid
+                    LazyVGrid(columns: [
+                        GridItem(.flexible()),
+                        GridItem(.flexible())
+                    ], spacing: 16) {
+                        ForEach(Array(shuffledImages.enumerated()), id: \.element) { index, word in
+                            if let imageData = word.itemimage,
+                               let uiImage = UIImage(data: imageData) {
+                                ZStack {
+                                    // Background changes color based on answer
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .fill(backgroundColor(for: index, word: word))
+                                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+                                    
+                                    // Image
+                                    VStack {
+                                        Image(uiImage: uiImage)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(height: 150)
+                                            .padding(8)
+                                    }
+                                    
+                                    // Selection indicator border
+                                    if selectedImageIndex == index || incorrectSelections.contains(index) {
+                                        RoundedRectangle(cornerRadius: 16)
+                                            .stroke(borderColor(for: index, word: word), lineWidth: 3)
+                                    }
+                                }
+                                .frame(height: 150)
+                                .onTapGesture {
+                                    // Only allow selection if not already marked as incorrect
+                                    // and not showing the next button yet
+                                    if !showNextButton && !incorrectSelections.contains(index) {
+                                        selectedImageIndex = index
+                                        // Add haptic feedback
+                                        let impactMed = UIImpactFeedbackGenerator(style: .medium)
+                                        impactMed.impactOccurred()
+                                        
+                                        // Check answer immediately
+                                        checkAnswer(selectedWord: word, at: index)
+                                    }
+                                }
+                                .opacity(incorrectSelections.contains(index) ? 0.7 : 1.0)
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
                 }
                 .padding(.bottom, 20)
-                .navigationBarBackButtonHidden()
-                .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
-                        BackButton {
-                            showLeaveGameView = true
+                
+                if showNextButton {
+                    Button(action: {
+                        // Generate new question
+                        setupGame()
+                        // Reset states
+                        selectedImageIndex = nil
+                        isCorrect = nil
+                        showNextButton = false
+                        incorrectSelections.removeAll()
+                    }) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 25)
+                                .fill(accentColor)
+                                .frame(height: 50)
+                                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+                            
+                            HStack {
+                                Image(systemName: "arrow.right.circle.fill")
+                                Text("Next Question")
+                                    .fontWeight(.bold)
+                            }
+                            .foregroundColor(.white)
                         }
                     }
+                    .padding(.bottom,50)
                 }
+            }
+            .padding()
+            
+            // Leave game overlay
+            if showLeaveGameView {
+                Color.black.opacity(0.5)
+                    .edgesIgnoringSafeArea(.all)
                 
-                // Leave game overlay
-                if showLeaveGameView {
-                    Color.black.opacity(0.5)
-                        .edgesIgnoringSafeArea(.all)
-                    
-                    LeaveGameView(
-                        showLeaveGameView: $showLeaveGameView,
-                        message: "不會保留遊戲紀錄確定要離開嗎？",
-                        button1Title: "離開遊戲",
-                        button1Action: {
-                            print("離開遊戲被點擊")
-                            dismiss()
-                        },
-                        button2Title: "繼續遊戲",
-                        button2Action: {
-                            showLeaveGameView = false
-                            print("繼續遊戲被點擊")
-                        }
-                    )
-                    .zIndex(1)
+                LeaveGameView(
+                    showLeaveGameView: $showLeaveGameView,
+                    message: "不會保留遊戲紀錄確定要離開嗎？",
+                    button1Title: "離開遊戲",
+                    button1Action: {
+                        print("離開遊戲被點擊")
+                        dismiss()
+                    },
+                    button2Title: "繼續遊戲",
+                    button2Action: {
+                        showLeaveGameView = false
+                        print("繼續遊戲被點擊")
+                    }
+                )
+                .zIndex(1)
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                BackButton {
+                    showLeaveGameView = true
                 }
             }
         }
@@ -313,4 +296,12 @@ struct AudioImageMatchingGame: View {
 
 #Preview {
     AudioImageMatchingGame()
+}
+
+struct ScaleButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.95 : 1.0)
+            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: configuration.isPressed)
+    }
 }
