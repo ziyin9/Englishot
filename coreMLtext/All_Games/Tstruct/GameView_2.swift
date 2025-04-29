@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct GameView: View {
+struct GameView_2: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var gameState: GameState
     @EnvironmentObject var uiState: UIState
@@ -26,47 +26,8 @@ struct GameView: View {
     
     var title: String
     
-    private var levelData: GameLevelData {
+    private var levelData_2: GameLevelData_2 {
         switch title {
-            
-            //Home
-        case "Bathroom":
-            return BathroomData
-        case "Kitchen":
-            return KitchenData
-        case "Living Room":
-            return Living_RoomData
-        case "Garage":
-            return GarageData
-            
-            //Mall
-        case "Food":
-            return FoodData
-        case "Electronics Store":
-            return Electronics_StoreData
-        case "Clothing Store":
-            return Clothing_StoreData
-            
-            //Market
-        case "Fruit":
-            return FruitData
-        case "Vegetable":
-            return VegetableData
-        case "Spices":
-            return SpicesData
-            
-            //school
-        case "Classroom1":
-            return Classroom1Data
-        case "Classroom2":
-            return Classroom2Data
-        case "Music":
-            return MusicData
-        case "Playground":
-            return PlaygroundData
-        case "Sports":
-            return SportsData
-            
             
             //Zoo
         case "Mammals1":
@@ -81,68 +42,33 @@ struct GameView: View {
             return BirdsData
             
         default:
-            return BathroomData // 預設使用第一關//之後要改
+            return BirdsData // 預設使用第一關//之後要改
         }
     }
-    private var levelData_2: GameLevelData_2 {
-        
-    }
-        switch title {
     var body: some View {
         ZStack {
-            Image(levelData.backgroundImage)
+            Image(levelData_2.backgroundImage)
                 .resizable()
                 .scaledToFill()
                 .opacity(0.3)
                 .ignoresSafeArea()
-            //            VStack{
-            //                HStack {
-            //                    Spacer()
-            //
-            //                    Button(action: { uiState.showGameCardView = true }) {
-            //                        Image("A")
-            //                            .resizable()
-            //                            .scaledToFit()
-            //                            .frame(width: 40, height: 40)
-            //                            .font(.title)
-            //                            .padding(6)
-            //                            .background(Color.blue.opacity(0.3))
-            //                            .clipShape(Circle())
-            //                    }
-            //                    .padding(.trailing, 10)
-            //
-            //                    Button(action: { gameState.showingCamera = true }) {
-            //                        Image("camera")
-            //                            .resizable()
-            //                            .scaledToFit()
-            //                            .frame(width: 40, height: 40)
-            //                            .font(.title)
-            //                            .padding(6)
-            //                            .background(Color.blue.opacity(0.3))
-            //                            .clipShape(Circle())
-            //                    }
-            //                    .padding(.trailing, 30)
-            //                }
-            //                .padding(.top, 35)
-            //                Spacer()
-            //            }
             
-            GeometryReader { geometry in
+            GeometryReader{geometry in
                 VStack(alignment: .center) {
-                    if ("\(levelData.title)" == "Electronics Store"){
+                    if ("\(levelData_2.title)" == "Electronics Store"){
                         Text("Electronics")
                             .font(.system(size: 60, weight: .bold, design: .serif))
                             .foregroundColor(.black)
                             .padding(.top, 40)
                         
-                    }else if ("\(levelData.title)" == "Clothing Store"){
+                    }else if ("\(levelData_2.title)" == "Clothing Store"){
                         Text("Clothing")
                             .font(.system(size: 60, weight: .bold, design: .serif))
                             .foregroundColor(.black)
                             .padding(.top, 40)
                         
                     }else{
-                        Text(levelData.title)
+                        Text(levelData_2.title)
                             .font(.system(size: 60, weight: .bold, design: .serif))
                             .foregroundColor(.black)
                             .padding(.top, 60)
@@ -150,74 +76,32 @@ struct GameView: View {
                     
                     GridView(
                         guessedLetters: $guessedLetters,
-                        answers: levelData.answers,
-                        numberHints: levelData.numberHints,
+                        answers: levelData_2.answers,
+                        numberHints: levelData_2.numberHints,
                         wordEntities: Array(wordEntities),
                         showAnswer: $showAnswer
                     )
-                    
-                    
-                    VStack {
-                        
+                    VStack{
+
                         GeometryReader { geometry in
                             let screenWidth = geometry.size.width
-                            //                            let screenheight = geometry.size.height
+                            let screenheight = geometry.size.height
                             
-                            let frameWidth = screenWidth * 0.8
-                            let frameHeight = frameWidth * 0.4
+                            let frameWidth = screenWidth * 1
+                            let frameHeight = screenheight * 0.9
                             ScrollView{
-                                
-                                VStack(spacing: 10) {
-                                    Rectangle()
-                                        .fill(Color.blue.opacity(0.0))
-                                        .frame(width: frameWidth, height: frameHeight)
-                                        .overlay(
-                                            VStack(alignment: .leading) {
-                                                Text("Across")
-                                                    .font(Font.custom("Kalam-Regular", size: 25))
-                                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                                
-                                                Group {
-                                                    ForEach(levelData.acrossHints, id: \.self) { hint in
-                                                        Text(hint)
-                                                    }
-                                                }
-                                                .font(Font.custom("Kalam-Regular", size: 20))
-                                                
-                                            }
-                                            
-                                        )
-                                    
-
-                                    Rectangle()
-                                        .fill(Color.blue.opacity(0.0))
-                                        .frame(width: frameWidth, height: frameHeight)
-                                        .overlay(
-                                            VStack(alignment: .leading) {
-                                                Text("Down")
-                                                    .font(Font.custom("Kalam-Regular", size: 25))
-                                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                                
-                                                Group {
-                                                    ForEach(levelData.downHints, id: \.self) { hint in
-                                                        Text(hint)
-                                                    }
-                                                }
-                                                .font(Font.custom("Kalam-Regular", size: 20))
-                                            }
-                                        )
-                                    
-                                    
+                                VStack{
+                                    Image("\(levelData_2.imageHint)")
+                                        .resizable()
+                                        .frame(width:frameWidth,height:frameHeight)
                                 }
-                                
                                 .frame(maxWidth: .infinity, maxHeight: .infinity) // 限制 Vstack 在可用空間內**
                             }
                         }
-                        
                     }
                 }
                 
-                GameCardView(vocabulary: levelData.game_vocabulary)
+                GameCardView(vocabulary: levelData_2.game_vocabulary)
                     .environmentObject(uiState)
             }
             .onAppear {
@@ -267,7 +151,7 @@ struct GameView: View {
     }
 }
 #Preview {
-    GameView(
+    GameView_2(
         showAnswer: .constant(Array(repeating: Array(repeating: false, count: 11), count: 10)),
         showingCamera: .constant(false),
         title: "bathroom"

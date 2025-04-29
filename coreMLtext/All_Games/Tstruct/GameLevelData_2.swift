@@ -7,17 +7,16 @@
 
 import SwiftUI
 
-struct GameLevelData {
+struct GameLevelData_2 {
     let title: String
     let backgroundImage: String
+    let imageHint : String
     let answers: [[String?]]
     let numberHints: [((Int, Int), Int)]
-    let acrossHints: [String]
-    let downHints: [String]
     let game_vocabulary: [Vocabulary]
     let wordPositions: [String: [GridPosition]]
 }
-struct GridPosition {
+struct GridPosition_2 {
     let row: Int
     let col: Int
 }

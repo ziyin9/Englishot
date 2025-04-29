@@ -7,9 +7,11 @@
 
 import SwiftUI
 
-let Mammals1Data = GameLevelData(
+let Mammals1Data = GameLevelData_2(
     title: "Mammals1",
     backgroundImage: "Mammals1",
+    imageHint: "Mammals1_Hint",
+
     answers: [
         [nil, nil, nil, "m", nil, nil, nil, nil, nil, nil, nil],
         [nil, nil, nil, "o", nil, nil, "g", nil, nil, nil, nil],
@@ -30,10 +32,7 @@ let Mammals1Data = GameLevelData(
         ((6, 4), 5),
         ((7, 3), 6),
     ],
-    acrossHints: [
-    ],
-    downHints: [
-    ],
+    
     game_vocabulary: [
         vocabularyList[63],
         vocabularyList[64],
@@ -52,9 +51,11 @@ let Mammals1Data = GameLevelData(
     ]
 )
 
-let Mammals2Data = GameLevelData(
+let Mammals2Data = GameLevelData_2(
     title: "Mammals2",
     backgroundImage: "Mammals2",
+    imageHint: "Mammals2_Hint",
+
     answers: [
         [nil, nil, nil, "k", nil, nil, nil, nil, nil, nil, nil],
         [nil, nil, nil, "o", nil, nil, "k", nil, nil, nil, nil],
@@ -75,10 +76,7 @@ let Mammals2Data = GameLevelData(
         ((6, 2), 5),
         ((8, 4), 6),
     ],
-    acrossHints: [
-    ],
-    downHints: [
-    ],
+    
     game_vocabulary: [
         vocabularyList[69],
         vocabularyList[70],
@@ -97,9 +95,11 @@ let Mammals2Data = GameLevelData(
     ]
 )
 
-let Mammals3Data = GameLevelData(
+let Mammals3Data = GameLevelData_2(
     title: "Mammals3",
     backgroundImage: "Mammals3",
+    imageHint: "Mammals3_Hint",
+
     answers: [
         [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil],
         [nil, nil, nil, nil, "w", nil, nil, nil, nil, nil, nil],
@@ -119,10 +119,7 @@ let Mammals3Data = GameLevelData(
         ((4, 2), 4),
         ((6, 5), 5),
     ],
-    acrossHints: [
-    ],
-    downHints: [
-    ],
+    
     game_vocabulary: [
         vocabularyList[75],
         vocabularyList[76],
@@ -139,9 +136,10 @@ let Mammals3Data = GameLevelData(
     ]
 )
 
-let Marine_AnimalsData = GameLevelData(
+let Marine_AnimalsData = GameLevelData_2(
     title: "Marine Animals",
     backgroundImage: "Marineanimals",
+    imageHint: "Marine Animals_Hint",
     answers: [
         [nil, nil, nil, nil, nil, nil, nil, nil, nil, "w", nil],
         [nil, "j", "e", "l", "l", "y", "f", "i", "s", "h", nil],
@@ -162,10 +160,7 @@ let Marine_AnimalsData = GameLevelData(
         ((4, 2), 4),
         ((4, 8), 5),
     ],
-    acrossHints: [
-    ],
-    downHints: [
-    ],
+    
     game_vocabulary: [
         vocabularyList[80],
         vocabularyList[81],
@@ -181,9 +176,11 @@ let Marine_AnimalsData = GameLevelData(
     ]
 )
 
-let BirdsData = GameLevelData(
+let BirdsData = GameLevelData_2(
     title: "Birds",
     backgroundImage: "Birds",
+    imageHint: "Birds_Hint",
+//錯了
     answers: [
         [nil, nil, nil, nil, nil, nil, nil, "o", "w", "l", nil],
         [nil, nil, nil, nil, nil, nil, nil, "s", nil, nil, nil],
@@ -202,10 +199,7 @@ let BirdsData = GameLevelData(
         ((4, 2), 3),
         ((4, 3), 4),
     ],
-    acrossHints: [
-    ],
-    downHints: [
-    ],
+    
     game_vocabulary: [
         vocabularyList[84],
         vocabularyList[85],

@@ -68,18 +68,6 @@ struct GameView: View {
             return SportsData
             
             
-            //Zoo
-        case "Mammals1":
-            return Mammals1Data
-        case "Mammals2":
-            return Mammals2Data
-        case "Mammals3":
-            return Mammals3Data
-        case "Marine Animals":
-            return Marine_AnimalsData
-        case "Birds":
-            return BirdsData
-            
         default:
             return BathroomData // 預設使用第一關//之後要改
         }
@@ -92,37 +80,6 @@ struct GameView: View {
                 .scaledToFill()
                 .opacity(0.3)
                 .ignoresSafeArea()
-            //            VStack{
-            //                HStack {
-            //                    Spacer()
-            //
-            //                    Button(action: { uiState.showGameCardView = true }) {
-            //                        Image("A")
-            //                            .resizable()
-            //                            .scaledToFit()
-            //                            .frame(width: 40, height: 40)
-            //                            .font(.title)
-            //                            .padding(6)
-            //                            .background(Color.blue.opacity(0.3))
-            //                            .clipShape(Circle())
-            //                    }
-            //                    .padding(.trailing, 10)
-            //
-            //                    Button(action: { gameState.showingCamera = true }) {
-            //                        Image("camera")
-            //                            .resizable()
-            //                            .scaledToFit()
-            //                            .frame(width: 40, height: 40)
-            //                            .font(.title)
-            //                            .padding(6)
-            //                            .background(Color.blue.opacity(0.3))
-            //                            .clipShape(Circle())
-            //                    }
-            //                    .padding(.trailing, 30)
-            //                }
-            //                .padding(.top, 35)
-            //                Spacer()
-            //            }
             
             GeometryReader { geometry in
                 VStack(alignment: .center) {
@@ -158,12 +115,11 @@ struct GameView: View {
                         
                         GeometryReader { geometry in
                             let screenWidth = geometry.size.width
-                            //                            let screenheight = geometry.size.height
+                            // let screenheight = geometry.size.height
                             
                             let frameWidth = screenWidth * 0.8
                             let frameHeight = frameWidth * 0.4
                             ScrollView{
-                                
                                 VStack(spacing: 10) {
                                     Rectangle()
                                         .fill(Color.blue.opacity(0.0))
@@ -180,12 +136,8 @@ struct GameView: View {
                                                     }
                                                 }
                                                 .font(Font.custom("Kalam-Regular", size: 20))
-                                                
                                             }
-                                            
                                         )
-                                    
-
                                     Rectangle()
                                         .fill(Color.blue.opacity(0.0))
                                         .frame(width: frameWidth, height: frameHeight)
@@ -203,10 +155,7 @@ struct GameView: View {
                                                 .font(Font.custom("Kalam-Regular", size: 20))
                                             }
                                         )
-                                    
-                                    
                                 }
-                                
                                 .frame(maxWidth: .infinity, maxHeight: .infinity) // 限制 Vstack 在可用空間內**
                             }
                         }

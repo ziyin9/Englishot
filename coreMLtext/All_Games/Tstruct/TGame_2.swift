@@ -18,7 +18,7 @@ import AVFoundation
 import UIKit
 import Vision
 
-struct TGame: View {
+struct TGame_2: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var uiState: UIState
     @EnvironmentObject var gameState: GameState
@@ -35,7 +35,7 @@ struct TGame: View {
     
     @State private var showRecognitionErrorView: Bool = false
     
-    var levelData: GameLevelData
+    var levelData: GameLevelData_2
     var ML_model: String?
     
     var body: some View {
@@ -44,7 +44,7 @@ struct TGame: View {
             
             ZStack {
                 ZStack {
-                    GameView(showAnswer: $showAnswer, showingCamera: $gameState.showingCamera, title: levelData.title)
+                    GameView_2(showAnswer: $showAnswer, showingCamera: $gameState.showingCamera, title: levelData.title)
                         .onAppear {
                             uiState.isNavBarVisible = false
                             checkAllWordsFound()
@@ -102,13 +102,6 @@ struct TGame: View {
                 }
             )
             
-//            .onAppear {
-//                for word in levelData.wordsToCheck {
-//                    if let wordEntity = wordEntities.first(where: { $0.word == word }) {
-//                        checkAndReveal(wordEntity: wordEntity)
-//                    }
-//                }
-//            }
             .onAppear {
                 for vocabulary in levelData.game_vocabulary {
                     if let wordEntity = wordEntities.first(where: { $0.word == vocabulary.E_word }) {
@@ -124,8 +117,6 @@ struct TGame: View {
             
             // In TGame.swift
             .sheet(isPresented: $gameState.showingCamera, onDismiss: {
-                // Reset relevant state when closing camera
-//                highestConfidenceWord = ""
             }) {
                 CameraView(image: $image, recognizedObjects: $recognizedObjects, highestConfidenceWord: $highestConfidenceWord, showRecognitionErrorView: $showRecognitionErrorView, MLModel: ML_model)
             }
@@ -185,11 +176,11 @@ struct TGame: View {
         }
     }
 }
-#Preview {
-    let gameState = GameState()
-    let uiState = UIState()
-    
-    return TGame(levelData: BathroomData, ML_model:"daf") // 這裡改成適用於所有關卡
-            .environmentObject(gameState)
-            .environmentObject(uiState)
-}
+//#Preview {
+//    let gameState = GameState()
+//    let uiState = UIState()
+//    
+//    return TGame_2(levelData_2: BirdsData, ML_model:"daf") // 這裡改成適用於所有關卡
+//            .environmentObject(gameState)
+//            .environmentObject(uiState)
+//}

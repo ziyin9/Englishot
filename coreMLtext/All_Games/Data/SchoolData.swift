@@ -136,7 +136,7 @@ let MusicData = GameLevelData(
         
         "3. He blew into the r_____r."
         
-        
+
     ],
     game_vocabulary: [
         vocabularyList[23],
@@ -145,10 +145,10 @@ let MusicData = GameLevelData(
         vocabularyList[26]
         ],
     wordPositions: [
-            "drum": (5...8).map {GridPosition(row: 2, col: $0)},
-            "piano": (4...8).map {GridPosition(row: $0, col: 4)},
-            "recorder": (2...9).map {GridPosition(row: $0, col: 6)},
-            "note": (3...6).map {GridPosition(row: 8, col: $0)},
+            "drum": (4...7).map {GridPosition(row: 1, col: $0)},
+            "piano": (3...7).map {GridPosition(row: $0, col: 3)},
+            "recorder": (1...8).map {GridPosition(row: $0, col: 5)},
+            "note": (2...5).map {GridPosition(row: 7, col: $0)},
     ]
     
     
