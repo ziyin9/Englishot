@@ -5,7 +5,9 @@ struct GameMapView: View {
     @State private var currentDragOffset: CGSize = .zero
     @State private var selectedLocation: String? = nil
     @State private var floatOffset: CGSize = .zero
-
+    @State private var showTutorial: Bool = false
+    @State private var angle: Double = 0
+    @State private var rotateForward = true
     @EnvironmentObject var uiState: UIState
     
     let mapSize = CGSize(width: 640, height: 1904)
@@ -87,15 +89,61 @@ struct GameMapView: View {
                 }
                 .position(x: 470, y: 1250)
                 
-   
+                Button(action: {
+                    withAnimation {
+                        showTutorial = true
+                        uiState.isNavBarVisible = false
+                    }
+                    triggerImpactFeedback(style: .light)
+                }) {
+                    Image("QQ")
+                        .resizable()
+                        .frame(width: 60, height: 60)
+                        .foregroundColor(.blue)
+                        .padding(3)
+                }
+                .rotationEffect(.degrees(angle))
+                .position(x: 470, y: 1150)
+                .onAppear {
+                           startSwinging()
+                       }
+                
                 // NavigationLink for location
-                //transition(.move(edge: .bottom))
                 NavigationLink(destination: destinationView(), tag: "Home", selection: $selectedLocation) { EmptyView() }
                 NavigationLink(destination: destinationView(), tag: "School", selection: $selectedLocation) { EmptyView() }
                 NavigationLink(destination: destinationView(), tag: "Mall", selection: $selectedLocation) { EmptyView() }
                 NavigationLink(destination: destinationView(), tag: "Market", selection: $selectedLocation) { EmptyView() }
                 NavigationLink(destination: destinationView(), tag: "Zoo", selection: $selectedLocation) { EmptyView() }
-
+                
+                // Tutorial overlay (always present, conditionally visible)
+//                ZStack {
+//                    if showTutorial {
+//                        TutorialOverlayView(isShowing: $showTutorial)
+//                            .transition(.opacity)
+////                            .zIndex(100) // Ensure it's above all other elements
+//                            .onAppear {
+//                                triggerImpactFeedback(style: .medium)
+//                            }
+//                            .onDisappear {
+//                                uiState.isNavBarVisible = true
+//                            }
+//                    }
+//                }
+//                .animation(.spring(response: 0.4, dampingFraction: 0.75), value: showTutorial)
+                ZStack {
+                    if showTutorial {
+                        TutorialOverlayView(isShowing: $showTutorial)
+                            .transition(.opacity)
+                            .zIndex(1)
+                            .onAppear {
+                                triggerImpactFeedback(style: .medium)
+                            }
+                            .onDisappear {
+                                uiState.isNavBarVisible = true
+                            }
+                    }
+                }
+                .animation(.spring(response: 0.4, dampingFraction: 0.75), value: showTutorial)
             }
             .onAppear(){
                 uiState.isNavBarVisible = true
@@ -154,6 +202,14 @@ struct GameMapView: View {
     private func maxOffsetY() -> CGFloat {
         return max(0, (mapSize.height - UIScreen.main.bounds.height) * constrainFactor) / 2
     }
+    func startSwinging() {
+            Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
+                withAnimation(.easeInOut(duration: 0.5)) {
+                    angle = rotateForward ? 45 : -45
+                    rotateForward.toggle()
+                }
+            }
+        }
 //    private func startFloatingAnimation() {
 //            withAnimation(
 //                Animation.easeInOut(duration: 2.5)

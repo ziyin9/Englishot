@@ -100,9 +100,6 @@ struct GameView_2: View {
                         }
                     }
                 }
-                
-                GameCardView(vocabulary: levelData_2.game_vocabulary)
-                    .environmentObject(uiState)
             }
             .onAppear {
                 uiState.isNavBarVisible = false
