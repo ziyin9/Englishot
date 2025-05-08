@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct LowConfidenceView: View {
     let image: UIImage?
@@ -12,6 +13,9 @@ struct LowConfidenceView: View {
     @State private var snowflakesOpacity: Double = 0
     @State private var contentOpacity: Double = 0
     
+    // Haptic feedback
+    let feedbackGenerator = UINotificationFeedbackGenerator()
+    
     // Snowflake positions - randomized for visual effect
     let snowflakePositions = (0..<12).map { _ in
         (x: CGFloat.random(in: -150...150), y: CGFloat.random(in: -200...200), size: CGFloat.random(in: 10...25))
@@ -19,6 +23,13 @@ struct LowConfidenceView: View {
     
     var body: some View {
         ZStack {
+            // Semi-transparent background to handle taps
+            Color.black.opacity(0.3)
+                .edgesIgnoringSafeArea(.all)
+                .onTapGesture {
+                    dismissView()
+                }
+                
             // Background blur effect
             Color(red: 0.85, green: 0.9, blue: 0.98)
                 .opacity(0.7)
@@ -149,14 +160,7 @@ struct LowConfidenceView: View {
                 // Buttons
                 HStack(spacing: 20) {
                     Button(action: {
-                        withAnimation(.spring(response: 0.4, dampingFraction: 0.75)) {
-                            scale = 0.8
-                            contentOpacity = 0
-                        }
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                            showLowConfidenceView = false
-                        }
+                        dismissView()
                     }) {
                         Text("關閉")
                             .frame(width: 100, height: 40)
@@ -170,15 +174,10 @@ struct LowConfidenceView: View {
                     }
                     
                     Button(action: {
-                        withAnimation(.spring(response: 0.4, dampingFraction: 0.75)) {
-                            scale = 0.8
-                            contentOpacity = 0
-                        }
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                            showingCamera = true
-                            showLowConfidenceView = false
-                        }
+                        feedbackGenerator.notificationOccurred(.success)
+                        // Immediately dismiss without animation
+                        showingCamera = true
+                        showLowConfidenceView = false
                     }) {
                         Text("再試一次")
                             .frame(width: 100, height: 40)
@@ -213,6 +212,12 @@ struct LowConfidenceView: View {
             .opacity(contentOpacity)
             .frame(maxWidth: 320)
             .onAppear {
+                // Prepare haptic feedback
+                feedbackGenerator.prepare()
+                
+                // Trigger error haptic feedback
+                feedbackGenerator.notificationOccurred(.error)
+                
                 // Staggered animations for a frosty appearance
                 withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {
                     scale = 1.0
@@ -232,5 +237,13 @@ struct LowConfidenceView: View {
                 }
             }
         }
+        .allowsHitTesting(true)
+    }
+    
+    // Unified dismiss function for better consistency
+    private func dismissView() {
+        feedbackGenerator.notificationOccurred(.success)
+        // Immediately dismiss without animation
+        showLowConfidenceView = false
     }
 }

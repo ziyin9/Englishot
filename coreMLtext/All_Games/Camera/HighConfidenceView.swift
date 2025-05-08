@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct HighConfidenceView: View {
     let image: UIImage?
@@ -16,6 +17,9 @@ struct HighConfidenceView: View {
     @State private var snowflakesOpacity: Double = 0
     @State private var contentOpacity: Double = 0
     
+    // Haptic feedback
+    let feedbackGenerator = UINotificationFeedbackGenerator()
+    
     // Snowflake positions - randomized for visual effect
     let snowflakePositions = (0..<12).map { _ in
         (x: CGFloat.random(in: -150...150), y: CGFloat.random(in: -200...200), size: CGFloat.random(in: 10...25))
@@ -23,6 +27,13 @@ struct HighConfidenceView: View {
     
     var body: some View {
         ZStack {
+            // Semi-transparent background to handle taps
+            Color.black.opacity(0.3)
+                .edgesIgnoringSafeArea(.all)
+                .onTapGesture {
+                    dismissView()
+                }
+            
             // Background blur effect
             Color(red: 0.85, green: 0.9, blue: 0.98)
                 .opacity(0.7)
@@ -155,14 +166,7 @@ struct HighConfidenceView: View {
                 
                 // Buttons
                 Button(action: {
-                    withAnimation(.spring(response: 0.4, dampingFraction: 0.75)) {
-                        scale = 0.8
-                        contentOpacity = 0
-                    }
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                        showHighConfidenceView = false
-                    }
+                    dismissView()
                 }) {
                     Text("關閉")
                         .frame(width: 180, height: 40)
@@ -196,6 +200,12 @@ struct HighConfidenceView: View {
             .opacity(contentOpacity)
             .frame(maxWidth: 320)
             .onAppear {
+                // Prepare haptic feedback
+                feedbackGenerator.prepare()
+                
+                // Trigger success haptic feedback
+                feedbackGenerator.notificationOccurred(.success)
+                
                 // Staggered animations for a frosty appearance
                 withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {
                     scale = 1.0
@@ -221,9 +231,22 @@ struct HighConfidenceView: View {
                     // 顯示儲存成功訊息
                     withAnimation {
                         isSaved = true
+                        // Add haptic feedback when word is saved
+                        feedbackGenerator.notificationOccurred(.success)
                     }
                 }
             }
         }
+        .allowsHitTesting(true)
+    }
+    
+    // Unified dismiss function for better consistency
+    private func dismissView() {
+        feedbackGenerator.notificationOccurred(.success)
+        // Immediately dismiss without animation
+        showHighConfidenceView = false
     }
 }
+
+
+
