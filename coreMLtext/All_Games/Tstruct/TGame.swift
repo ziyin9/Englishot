@@ -27,6 +27,12 @@ struct TGame: View {
     
     @State private var showRecognitionErrorView: Bool = false
     
+    // Add new state variables for confidence views
+    @State private var showHighConfidenceView: Bool = false
+    @State private var showMediumConfidenceView: Bool = false
+    @State private var showLowConfidenceView: Bool = false
+    @State private var confidenceLevel: Double = 0.0
+    
     var levelData: GameLevelData
     var ML_model: String?
     
@@ -59,8 +65,45 @@ struct TGame: View {
                             highestConfidenceWord = ""
                             passToFoundWordSeetWord = nil
                         })
+                    } else if showHighConfidenceView {
+                        HighConfidenceView(
+                            image: image,
+                            recognizedWord: highestConfidenceWord,
+                            confidenceLevel: confidenceLevel,
+                            showHighConfidenceView: $showHighConfidenceView,
+                            showingCamera: $gameState.showingCamera,
+                            onSave: {
+                                saveRecognizedWord()
+                            }
+                        )
+                    } else if showMediumConfidenceView {
+                        MediumConfidenceView(
+                            image: image,
+                            recognizedWord: highestConfidenceWord,
+                            confidenceLevel: confidenceLevel,
+                            showMediumConfidenceView: $showMediumConfidenceView,
+                            showingCamera: $gameState.showingCamera,
+                            onSaveAnyway: {
+                                // 不再需要儲存功能，保留空實現
+                            }
+                        )
+                    } else if showLowConfidenceView {
+                        LowConfidenceView(
+                            image: image,
+                            confidenceLevel: confidenceLevel,
+                            showLowConfidenceView: $showLowConfidenceView,
+                            showingCamera: $gameState.showingCamera
+                        )
                     } else if showRecognitionErrorView {
-                        ErrorView(showRecognitionErrorView: $showRecognitionErrorView, showingCamera: $gameState.showingCamera)
+                        ErrorView(
+                            showRecognitionErrorView: $showRecognitionErrorView, 
+                            showingCamera: $gameState.showingCamera,
+                            errorMessage: highestConfidenceWord.contains("不在當前關卡中") ? 
+                                "您拍攝的物品不屬於當前關卡，請嘗試找尋與關卡相關的物品" : 
+                                "未能成功辨識物品，請再試一次",
+                            recognizedWord: highestConfidenceWord,
+                            isWrongLevel: highestConfidenceWord.contains("不在當前關卡中")
+                        )
                     }
 
                     if uiState.showGameCardView {
@@ -70,14 +113,10 @@ struct TGame: View {
                     }
                 }
             }
-
-
-            
             
             .overlay(
                 GeometryReader { geometry in
                     ZStack {
-                        
                         if showimagePop {
                             ZStack {
                                 FoundWordPopup(image: image, foundWord: passToFoundWordSeetWord, showimagePop: $showimagePop,onDismiss: {
@@ -87,20 +126,50 @@ struct TGame: View {
                                 })
                             }
                         }
-                        else if showRecognitionErrorView {
-                                                    ErrorView(showRecognitionErrorView: $showRecognitionErrorView, showingCamera: $gameState.showingCamera)
-                                                    }
+                        else if showHighConfidenceView {
+                            HighConfidenceView(
+                                image: image,
+                                recognizedWord: highestConfidenceWord,
+                                confidenceLevel: confidenceLevel,
+                                showHighConfidenceView: $showHighConfidenceView,
+                                showingCamera: $gameState.showingCamera,
+                                onSave: {
+                                    saveRecognizedWord()
+                                }
+                            )
+                        } else if showMediumConfidenceView {
+                            MediumConfidenceView(
+                                image: image,
+                                recognizedWord: highestConfidenceWord,
+                                confidenceLevel: confidenceLevel,
+                                showMediumConfidenceView: $showMediumConfidenceView,
+                                showingCamera: $gameState.showingCamera,
+                                onSaveAnyway: {
+                                    // 不再需要儲存功能，保留空實現
+                                }
+                            )
+                        } else if showLowConfidenceView {
+                            LowConfidenceView(
+                                image: image,
+                                confidenceLevel: confidenceLevel,
+                                showLowConfidenceView: $showLowConfidenceView,
+                                showingCamera: $gameState.showingCamera
+                            )
+                        } else if showRecognitionErrorView {
+                            ErrorView(
+                                showRecognitionErrorView: $showRecognitionErrorView, 
+                                showingCamera: $gameState.showingCamera,
+                                errorMessage: highestConfidenceWord.contains("不在當前關卡中") ? 
+                                    "您拍攝的物品不屬於當前關卡，請嘗試找尋與關卡相關的物品" : 
+                                    "未能成功辨識物品，請再試一次",
+                                recognizedWord: highestConfidenceWord,
+                                isWrongLevel: highestConfidenceWord.contains("不在當前關卡中")
+                            )
+                        }
                     }
                 }
             )
             
-//            .onAppear {
-//                for word in levelData.wordsToCheck {
-//                    if let wordEntity = wordEntities.first(where: { $0.word == word }) {
-//                        checkAndReveal(wordEntity: wordEntity)
-//                    }
-//                }
-//            }
             .onAppear {
                 for vocabulary in levelData.game_vocabulary {
                     if let wordEntity = wordEntities.first(where: { $0.word == vocabulary.E_word }) {
@@ -110,49 +179,71 @@ struct TGame: View {
             }
 
             
-            .onChange(of: highestConfidenceWord) { oldValue,newValue in
-                            processRecognizedWord(newValue)
-                        }
+            .onChange(of: highestConfidenceWord) { oldValue, newValue in
+                processRecognizedWord(newValue)
+            }
             
             // In TGame.swift
             .sheet(isPresented: $gameState.showingCamera, onDismiss: {
                 // Reset relevant state when closing camera
 //                highestConfidenceWord = ""
             }) {
-                CameraView(image: $image, recognizedObjects: $recognizedObjects, highestConfidenceWord: $highestConfidenceWord, showRecognitionErrorView: $showRecognitionErrorView, MLModel: ML_model)
+                CameraView(
+                    image: $image,
+                    recognizedObjects: $recognizedObjects,
+                    highestConfidenceWord: $highestConfidenceWord,
+                    showRecognitionErrorView: $showRecognitionErrorView,
+                    showHighConfidenceView: $showHighConfidenceView,
+                    showMediumConfidenceView: $showMediumConfidenceView,
+                    showLowConfidenceView: $showLowConfidenceView,
+                    confidenceLevel: $confidenceLevel,
+                    MLModel: ML_model,
+                    levelWords: levelData.game_vocabulary.map { $0.E_word } // 傳遞當前關卡的單字列表
+                )
             }
         }
         
         
     }
-    private func processRecognizedWord(_ word: String) {
-        // 檢查辨識到的單字是否為空
-        guard !word.isEmpty else {
-//            showRecognitionErrorView = true
-//            print("⚠️ 辨識到的單字為空")
-            return
-        }
-
-        let lowercasedWord = word.components(separatedBy: " - ").first?.lowercased() ?? word.lowercased()
-        print("🔍 辨識到單字: \(lowercasedWord)")
-
-        // 檢查 game_vocabulary 是否包含該單字
+    
+    // Helper function to save recognized word and show success animation
+    private func saveRecognizedWord() {
+        guard !highestConfidenceWord.isEmpty else { return }
+        
+        let lowercasedWord = highestConfidenceWord.components(separatedBy: " - ").first?.lowercased() ?? highestConfidenceWord.lowercased()
+        
+        // Check if this word is in our game vocabulary
         if levelData.game_vocabulary.contains(where: { $0.E_word.lowercased() == lowercasedWord }) {
-            print("✅ '\(lowercasedWord)' 在 game_vocabulary 裡")
             addNewWord(wordString: lowercasedWord, image: image!)
             
-            // 根據 lowercasedWord 查找對應的 wordEntity
+            // Find and reveal the word in the game
             if let wordEntity = wordEntities.first(where: { $0.word == lowercasedWord }) {
                 revealWord(wordEntity: wordEntity)
             }
             
+            // 準備單字資料但暫時不顯示FoundWordPopup
             passToFoundWordSeetWord = lowercasedWord
-            showimagePop = true
-            showRecognitionErrorView = false // 確保在正確辨識時不顯示錯誤視圖
-            print("✅ showimagePop 設為 true，應該顯示 FoundWordPopup")
-        } else {
-            showRecognitionErrorView = true
-            print("⚠️ '\(lowercasedWord)' 不在 game_vocabulary 裡") // ❌ 單字不在 game_vocabulary，問題可能出在這裡！
+            // showimagePop = true  // 暫時註解掉，不顯示FoundWordPopup
+        }
+    }
+    
+    private func processRecognizedWord(_ word: String) {
+        // Words are now being handled by the confidence views
+        // This method is now mostly for legacy compatibility
+        guard !word.isEmpty else { return }
+        
+        // Extract word without confidence number
+        let lowercasedWord = word.components(separatedBy: " - ").first?.lowercased() ?? word.lowercased()
+        print("🔍 辨識到單字: \(lowercasedWord)")
+
+        // We'll let the confidence views handle the actual word processing
+        // No need to show any of these if our confidence views are active
+        if !showHighConfidenceView && !showMediumConfidenceView && !showLowConfidenceView {
+            // Check if the word is in our vocabulary for error cases
+            if !levelData.game_vocabulary.contains(where: { $0.E_word.lowercased() == lowercasedWord }) {
+                showRecognitionErrorView = true
+                print("⚠️ '\(lowercasedWord)' 不在 game_vocabulary 裡")
+            }
         }
     }
 

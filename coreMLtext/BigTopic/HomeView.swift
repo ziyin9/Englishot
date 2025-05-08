@@ -91,6 +91,7 @@ struct HomeView: View {
                 ToolbarItem(placement: .topBarLeading) {
                     BackButton {
                         dismiss()
+                        uiState.isNavBarVisible = true
                     }
                 }
             })

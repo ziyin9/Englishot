@@ -17,10 +17,27 @@ struct CameraView: UIViewControllerRepresentable {
     @Binding var highestConfidenceWord: String // 傳遞最高辨識率單字的綁定變數
     
     @Binding var showRecognitionErrorView: Bool
+    
+    // Add new bindings for different confidence level views
+    @Binding var showHighConfidenceView: Bool
+    @Binding var showMediumConfidenceView: Bool
+    @Binding var showLowConfidenceView: Bool
+    @Binding var confidenceLevel: Double
+    
     var MLModel: String?
+    var levelWords: [String]? // 當前關卡的單字列表
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(image: $image, recognizedObjects: $recognizedObjects, highestConfidenceWord: $highestConfidenceWord, showRecognitionErrorView: $showRecognitionErrorView, Coordinator_MLModel: MLModel)
+        Coordinator(image: $image, 
+                   recognizedObjects: $recognizedObjects, 
+                   highestConfidenceWord: $highestConfidenceWord, 
+                   showRecognitionErrorView: $showRecognitionErrorView,
+                   showHighConfidenceView: $showHighConfidenceView,
+                   showMediumConfidenceView: $showMediumConfidenceView,
+                   showLowConfidenceView: $showLowConfidenceView,
+                   confidenceLevel: $confidenceLevel,
+                   currentLevelWords: levelWords,
+                   Coordinator_MLModel: MLModel)
     }
     
     func makeUIViewController(context: Context) -> UIImagePickerController {
@@ -39,15 +56,27 @@ struct CameraView: UIViewControllerRepresentable {
         @Binding var highestConfidenceWord: String
         @Binding var showRecognitionErrorView: Bool
         
+        // Add new bindings for different confidence level views
+        @Binding var showHighConfidenceView: Bool
+        @Binding var showMediumConfidenceView: Bool
+        @Binding var showLowConfidenceView: Bool
+        @Binding var confidenceLevel: Double
+        
         var Coordinator_MLModel: String?
+        var currentLevelWords: [String]? // 存儲當前關卡的單字列表
         
         var model: VNCoreMLModel?
 
-        init(image: Binding<UIImage?>, recognizedObjects: Binding<[String]>, highestConfidenceWord: Binding<String>, showRecognitionErrorView: Binding<Bool>, Coordinator_MLModel: String?) {
+        init(image: Binding<UIImage?>, recognizedObjects: Binding<[String]>, highestConfidenceWord: Binding<String>, showRecognitionErrorView: Binding<Bool>, showHighConfidenceView: Binding<Bool>, showMediumConfidenceView: Binding<Bool>, showLowConfidenceView: Binding<Bool>, confidenceLevel: Binding<Double>, currentLevelWords: [String]? = nil, Coordinator_MLModel: String?) {
             _image = image
             _recognizedObjects = recognizedObjects
             _highestConfidenceWord = highestConfidenceWord
             _showRecognitionErrorView = showRecognitionErrorView
+            _showHighConfidenceView = showHighConfidenceView
+            _showMediumConfidenceView = showMediumConfidenceView
+            _showLowConfidenceView = showLowConfidenceView
+            _confidenceLevel = confidenceLevel
+            self.currentLevelWords = currentLevelWords
 
             // Handle model initialization based on the provided model name
             do {
@@ -112,24 +141,77 @@ struct CameraView: UIViewControllerRepresentable {
                     return
                 }
                 
-                let recognizedObjects = results.map { observation in
+                // 過濾結果，只保留當前關卡中包含的單字
+                var filteredResults = results
+                
+                // 如果有提供當前關卡單字列表，則過濾結果
+                if let levelWords = self.currentLevelWords, !levelWords.isEmpty {
+                    filteredResults = results.filter { observation in
+                        let wordIdentifier = observation.identifier.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+                        return levelWords.contains { $0.lowercased() == wordIdentifier }
+                    }
+                    
+                    if filteredResults.isEmpty && !results.isEmpty {
+                        // 如果過濾後沒有任何匹配的單字，但原始結果不為空
+                        // 顯示錯誤：單字不在當前關卡中
+                        DispatchQueue.main.async {
+                            self.showHighConfidenceView = false
+                            self.showMediumConfidenceView = false
+                            self.showLowConfidenceView = false
+                            self.showRecognitionErrorView = true
+                            
+                            // 儲存最高辨識的詞以便記錄
+                            if let highestObservation = results.first {
+                                self.recognizedObjects = results.map { observation in
+                                    "\(observation.identifier) - \(String(format: "%.2f", observation.confidence * 100))%"
+                                }
+                                self.highestConfidenceWord = "\(highestObservation.identifier) - \(String(format: "%.2f", highestObservation.confidence * 100))% (不在當前關卡中)"
+                            }
+                        }
+                        return
+                    }
+                }
+                
+                let recognizedObjects = filteredResults.map { observation in
                     "\(observation.identifier) - \(String(format: "%.2f", observation.confidence * 100))%"
                 }
                 
                 // 找出辨識率最高的單字
-                if let highestConfidenceObservation = results.first {
+                if let highestConfidenceObservation = filteredResults.first {
+                    let confidence = highestConfidenceObservation.confidence
+                    
                     DispatchQueue.main.async {
-                        self.highestConfidenceWord = "\(highestConfidenceObservation.identifier) - \(String(format: "%.2f", highestConfidenceObservation.confidence * 100))%"
-                    }
-                }
-                
-                DispatchQueue.main.async {
-                    self.recognizedObjects = recognizedObjects
-                        if let highestConfidenceObservation = results.first, highestConfidenceObservation.confidence >= 0.5 {
-                            self.highestConfidenceWord = highestConfidenceObservation.identifier
+                        self.recognizedObjects = recognizedObjects
+                        self.confidenceLevel = Double(confidence)
+                        
+                        // Store the highest confidence word with its confidence level
+                        self.highestConfidenceWord = "\(highestConfidenceObservation.identifier) - \(String(format: "%.2f", confidence * 100))%"
+                        
+                        // Handle different confidence levels
+                        if confidence >= 0.8 {
+                            // High confidence (80%-100%): 自動儲存，不需要用戶確認
+                            self.showHighConfidenceView = true
+                            self.showMediumConfidenceView = false
+                            self.showLowConfidenceView = false
+                            self.showRecognitionErrorView = false
+                        } else if confidence >= 0.3 {
+                            // Medium confidence (30%-80%): 顯示建議，不提供儲存選項
+                            self.showHighConfidenceView = false
+                            self.showMediumConfidenceView = true
+                            self.showLowConfidenceView = false
+                            self.showRecognitionErrorView = false
                         } else {
-                        self.showRecognitionErrorView = true // 辨識失敗，顯示錯誤視圖
+                            // Low confidence (<30%): 未識別到物品
+                            self.showHighConfidenceView = false
+                            self.showMediumConfidenceView = false
+                            self.showLowConfidenceView = true
+                            self.showRecognitionErrorView = false
                         }
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.showRecognitionErrorView = true
+                    }
                 }
             }
             

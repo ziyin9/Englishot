@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct GameMapView: View {
     @State private var mapOffset: CGSize = .zero
@@ -13,146 +14,129 @@ struct GameMapView: View {
     let mapSize = CGSize(width: 640, height: 1904)
 
     var body: some View {
-        NavigationView {
-            ZStack {
-                
-                // 地圖背景
-                Image("map99")
-                    .resizable()
-                    .frame(width: mapSize.width, height: mapSize.height)
-                    .offset(x: mapOffset.width + (currentDragOffset.width),
-                            y: mapOffset.height + (currentDragOffset.height))
-                    .gesture(
-                        
-                        DragGesture()
-                            .onChanged { value in
-                                //  靈敏
-                                let scaledTranslation = CGSize(
-                                    width: value.translation.width * 0.75,
-                                    height: value.translation.height * 0.75
-                                )
-                                
-                                let proposedOffsetX = mapOffset.width + scaledTranslation.width
-                                let proposedOffsetY = mapOffset.height + scaledTranslation.height
-                                
-                                // 限
-                                currentDragOffset.width = max(min(proposedOffsetX, maxOffsetX()), minOffsetX()) - mapOffset.width
-                                currentDragOffset.height = max(min(proposedOffsetY, maxOffsetY()), minOffsetY()) - mapOffset.height
-                            }
-                            .onEnded { _ in
-                                // 更
-                                withAnimation {
-                                    mapOffset.width += currentDragOffset.width
-                                    mapOffset.height += currentDragOffset.height
-                                    currentDragOffset = .zero
+        ZStack {
+            NavigationView {
+                ZStack {
+                    // 地圖背景
+                    Image("map99")
+                        .resizable()
+                        .frame(width: mapSize.width, height: mapSize.height)
+                        .offset(x: mapOffset.width + (currentDragOffset.width),
+                                y: mapOffset.height + (currentDragOffset.height))
+                        .gesture(
+                            
+                            DragGesture()
+                                .onChanged { value in
+                                    //  靈敏
+                                    let scaledTranslation = CGSize(
+                                        width: value.translation.width * 0.75,
+                                        height: value.translation.height * 0.75
+                                    )
+                                    
+                                    let proposedOffsetX = mapOffset.width + scaledTranslation.width
+                                    let proposedOffsetY = mapOffset.height + scaledTranslation.height
+                                    
+                                    // 限
+                                    currentDragOffset.width = max(min(proposedOffsetX, maxOffsetX()), minOffsetX()) - mapOffset.width
+                                    currentDragOffset.height = max(min(proposedOffsetY, maxOffsetY()), minOffsetY()) - mapOffset.height
                                 }
-                            }
-                    )
-                
-                MapButton(iconName: "Homeimage", label: "Home", position: CGPoint(x: 370, y: 990), mapOffset: $mapOffset, currentDragOffset: $currentDragOffset,floatOffset: $floatOffset) {
-                        selectedLocation = "Home"
+                                .onEnded { _ in
+                                    // 更
+                                    withAnimation {
+                                        mapOffset.width += currentDragOffset.width
+                                        mapOffset.height += currentDragOffset.height
+                                        currentDragOffset = .zero
+                                    }
+                                }
+                        )
+                    
+                    MapButton(iconName: "Homeimage", label: "Home", position: CGPoint(x: 370, y: 990), mapOffset: $mapOffset, currentDragOffset: $currentDragOffset,floatOffset: $floatOffset) {
+                            selectedLocation = "Home"
+                            triggerImpactFeedback(style: .light)
+                        }
+                        
+                    MapButton(iconName: "Schoolimage", label: "School", position: CGPoint(x: 270, y: 1200), mapOffset: $mapOffset, currentDragOffset: $currentDragOffset,floatOffset: $floatOffset) {
+                        selectedLocation = "School"
+                        triggerImpactFeedback(style: .light)
+                    }
+                        
+                    MapButton(iconName: "Mallimage", label: "Mall", position: CGPoint(x: 220, y: 580), mapOffset: $mapOffset, currentDragOffset: $currentDragOffset,floatOffset: $floatOffset) {
+                        selectedLocation = "Mall"
+                        triggerImpactFeedback(style: .light)
+                    }
+                    MapButton(iconName: "Marketimage", label: "Market", position: CGPoint(x: 420, y: 710), mapOffset: $mapOffset, currentDragOffset: $currentDragOffset,floatOffset: $floatOffset) {
+                        selectedLocation = "Market"
+                        triggerImpactFeedback(style: .light)
+                    }
+                    MapButton(iconName: "Zooimage", label: "Zoo", position: CGPoint(x: 200, y: 860), mapOffset: $mapOffset, currentDragOffset: $currentDragOffset,floatOffset: $floatOffset) {
+                        selectedLocation = "Zoo"
                         triggerImpactFeedback(style: .light)
                     }
                     
-                MapButton(iconName: "Schoolimage", label: "School", position: CGPoint(x: 270, y: 1200), mapOffset: $mapOffset, currentDragOffset: $currentDragOffset,floatOffset: $floatOffset) {
-                    selectedLocation = "School"
-                    triggerImpactFeedback(style: .light)
-                }
                     
-                MapButton(iconName: "Mallimage", label: "Mall", position: CGPoint(x: 220, y: 580), mapOffset: $mapOffset, currentDragOffset: $currentDragOffset,floatOffset: $floatOffset) {
-                    selectedLocation = "Mall"
-                    triggerImpactFeedback(style: .light)
-                }
-                MapButton(iconName: "Marketimage", label: "Market", position: CGPoint(x: 420, y: 710), mapOffset: $mapOffset, currentDragOffset: $currentDragOffset,floatOffset: $floatOffset) {
-                    selectedLocation = "Market"
-                    triggerImpactFeedback(style: .light)
-                }
-                MapButton(iconName: "Zooimage", label: "Zoo", position: CGPoint(x: 200, y: 860), mapOffset: $mapOffset, currentDragOffset: $currentDragOffset,floatOffset: $floatOffset) {
-                    selectedLocation = "Zoo"
-                    triggerImpactFeedback(style: .light)
-                }
-                
-                
-                // Reset button
-                Button(action: {
-                    withAnimation {
-                        mapOffset = .zero // 重置偏移量
+                    // Reset button
+                    Button(action: {
+                        withAnimation {
+                            mapOffset = .zero // 重置偏移量
+                        }
+                        triggerImpactFeedback(style: .light)
+                    }) {
+                        Image("compass2")
+                            .resizable()
+                            .frame(width: 60, height: 60)
+                            .foregroundColor(.blue)
+                            .padding(3)
+                            .background(Circle().fill(Color.white.opacity(0.9)).shadow(radius: 4))
                     }
-                    triggerImpactFeedback(style: .light)
-                }) {
-                    Image("compass2")
-                        .resizable()
-                        .frame(width: 60, height: 60)
-                        .foregroundColor(.blue)
-                        .padding(3)
-                        .background(Circle().fill(Color.white.opacity(0.9)).shadow(radius: 4))
-                }
-                .position(x: 470, y: 1250)
-                
-                Button(action: {
-                    withAnimation {
-                        showTutorial = true
-                        uiState.isNavBarVisible = false
+                    .position(x: 470, y: 1250)
+                    
+                    Button(action: {
+                        withAnimation {
+                            showTutorial = true
+                            uiState.isNavBarVisible = false
+                        }
+                        triggerImpactFeedback(style: .light)
+                    }) {
+                        Image("QQ")
+                            .resizable()
+                            .frame(width: 60, height: 60)
+                            .foregroundColor(.blue)
+                            .padding(3)
                     }
-                    triggerImpactFeedback(style: .light)
-                }) {
-                    Image("QQ")
-                        .resizable()
-                        .frame(width: 60, height: 60)
-                        .foregroundColor(.blue)
-                        .padding(3)
+                    .rotationEffect(.degrees(angle))
+                    .position(x: 470, y: 1190)
+                    .onAppear {
+                               startSwinging()
+                           }
+                    
+                    // NavigationLink for location
+                    NavigationLink(destination: destinationView(), tag: "Home", selection: $selectedLocation) { EmptyView() }
+                    NavigationLink(destination: destinationView(), tag: "School", selection: $selectedLocation) { EmptyView() }
+                    NavigationLink(destination: destinationView(), tag: "Mall", selection: $selectedLocation) { EmptyView() }
+                    NavigationLink(destination: destinationView(), tag: "Market", selection: $selectedLocation) { EmptyView() }
+                    NavigationLink(destination: destinationView(), tag: "Zoo", selection: $selectedLocation) { EmptyView() }
                 }
-                .rotationEffect(.degrees(angle))
-                .position(x: 470, y: 1150)
-                .onAppear {
-                           startSwinging()
-                       }
-                
-                // NavigationLink for location
-                NavigationLink(destination: destinationView(), tag: "Home", selection: $selectedLocation) { EmptyView() }
-                NavigationLink(destination: destinationView(), tag: "School", selection: $selectedLocation) { EmptyView() }
-                NavigationLink(destination: destinationView(), tag: "Mall", selection: $selectedLocation) { EmptyView() }
-                NavigationLink(destination: destinationView(), tag: "Market", selection: $selectedLocation) { EmptyView() }
-                NavigationLink(destination: destinationView(), tag: "Zoo", selection: $selectedLocation) { EmptyView() }
-                
-                // Tutorial overlay (always present, conditionally visible)
-//                ZStack {
-//                    if showTutorial {
-//                        TutorialOverlayView(isShowing: $showTutorial)
-//                            .transition(.opacity)
-////                            .zIndex(100) // Ensure it's above all other elements
-//                            .onAppear {
-//                                triggerImpactFeedback(style: .medium)
-//                            }
-//                            .onDisappear {
-//                                uiState.isNavBarVisible = true
-//                            }
-//                    }
-//                }
-//                .animation(.spring(response: 0.4, dampingFraction: 0.75), value: showTutorial)
-                ZStack {
-                    if showTutorial {
-                        TutorialOverlayView(isShowing: $showTutorial)
-                            .transition(.opacity)
-                            .zIndex(1)
-                            .onAppear {
-                                triggerImpactFeedback(style: .medium)
-                            }
-                            .onDisappear {
-                                uiState.isNavBarVisible = true
-                            }
-                    }
-                }
-                .animation(.spring(response: 0.4, dampingFraction: 0.75), value: showTutorial)
+                .ignoresSafeArea()
+                .navigationBarHidden(true)
             }
-            .onAppear(){
-                uiState.isNavBarVisible = true
-//                startFloatingAnimation()
+            
+            // Tutorial overlay (完全放在最外層 ZStack，不放在 NavigationView 內)
+            if showTutorial {
+                TutorialOverlayView(isShowing: $showTutorial)
+                    .transition(.opacity)
+                    .zIndex(999) // 確保在最頂層
+                    .onAppear {
+                        triggerImpactFeedback(style: .medium)
+                    }
+                    .onDisappear {
+                        uiState.isNavBarVisible = true
+                    }
             }
-            .ignoresSafeArea()
-            .navigationBarHidden(true)
         }
-        
+        .animation(.spring(response: 0.4, dampingFraction: 0.75), value: showTutorial)
+        .onAppear(){
+            uiState.isNavBarVisible = true
+        }
     }
 
     // Define the destination view based on the selected location
@@ -205,7 +189,7 @@ struct GameMapView: View {
     func startSwinging() {
             Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
                 withAnimation(.easeInOut(duration: 0.5)) {
-                    angle = rotateForward ? 45 : -45
+                    angle = rotateForward ? 5 : -5
                     rotateForward.toggle()
                 }
             }

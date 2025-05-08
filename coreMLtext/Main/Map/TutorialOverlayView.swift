@@ -6,17 +6,57 @@ struct TutorialOverlayView: View {
     
     let steps: [TeachingStep] = [
         TeachingStep(
-            imageName: "QQ",
+            imageName: "Screenshot",
             title: "Welcome to Englishot",
             description: "This is a fun way to learn English through interactive maps and games."
         ),
         TeachingStep(
-            imageName: "QQ",
+            imageName: "Screenshot",
             title: "Explore Locations",
             description: "Visit different locations on the map to discover new learning opportunities."
         ),
         TeachingStep(
-            imageName: "QQ",
+            imageName: "Screenshot",
+            title: "Complete Challenges",
+            description: "Complete challenges at each location to improve your English skills."
+        ),
+        TeachingStep(
+            imageName: "Screenshot",
+            title: "Complete Challenges",
+            description: "Complete challenges at each location to improve your English skills."
+        ),
+        TeachingStep(
+            imageName: "Screenshot",
+            title: "Complete Challenges",
+            description: "Complete challenges at each location to improve your English skills."
+        ),
+        TeachingStep(
+            imageName: "Screenshot",
+            title: "Complete Challenges",
+            description: "Complete challenges at each location to improve your English skills."
+        ),
+        TeachingStep(
+            imageName: "Screenshot",
+            title: "Complete Challenges",
+            description: "Complete challenges at each location to improve your English skills."
+        ),
+        TeachingStep(
+            imageName: "Screenshot",
+            title: "Complete Challenges",
+            description: "Complete challenges at each location to improve your English skills."
+        ),
+        TeachingStep(
+            imageName: "Screenshot",
+            title: "Complete Challenges",
+            description: "Complete challenges at each location to improve your English skills."
+        ),
+        TeachingStep(
+            imageName: "Screenshot",
+            title: "Complete Challenges",
+            description: "Complete challenges at each location to improve your English skills."
+        ),
+        TeachingStep(
+            imageName: "Screenshot",
             title: "Complete Challenges",
             description: "Complete challenges at each location to improve your English skills."
         )
@@ -24,17 +64,14 @@ struct TutorialOverlayView: View {
     
     var body: some View {
         ZStack {
-            // Dimming background
+            // 全屏漸變背景
             Color.black.opacity(0.6)
-                .ignoresSafeArea()
-                .onTapGesture {
-                    dismiss()
-                }
+                .edgesIgnoringSafeArea(.all)
             
-            // Content container
+            // 內容容器
             VStack(spacing: 0) {
-                // Header with more prominent close button
-                HStack{
+                // 關閉按鈕
+                HStack {
                     Button(action: {
                         dismiss()
                     }) {
@@ -48,31 +85,25 @@ struct TutorialOverlayView: View {
                                 .foregroundColor(.white)
                         }
                     }
-                    .padding()
+                    .padding(9)
                     .accessibilityLabel("Close tutorial")
+                    
                     Spacer()
                 }
                 
-                
-                // Tutorial content
+                // 教學內容
                 TabView(selection: $currentStep) {
                     ForEach(0..<steps.count, id: \.self) { index in
                         VStack(spacing: 20) {
-                            // Image placeholder
                             Image(steps[index].imageName)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(height: 300)
+                                .frame(height: 450)
                                 .cornerRadius(12)
-                                .padding(.horizontal)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 15)
-                                        .fill(Color.black.opacity(0.2))
-                                        .shadow(radius: 5)
-                                )
+//                                .padding(.horizontal)
                             
                             Text(steps[index].title)
-                                .font(.title3)
+                                .font(.title2)
                                 .fontWeight(.bold)
                                 .foregroundColor(.white)
                             
@@ -80,8 +111,8 @@ struct TutorialOverlayView: View {
                                 .font(.body)
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(.white.opacity(0.9))
-                                .padding(.horizontal, 40)
-                                .padding(.bottom, 20)
+                                .padding(.horizontal, 20)
+                                .padding(.bottom, 10)
                         }
                         .padding()
                         .tag(index)
@@ -89,29 +120,8 @@ struct TutorialOverlayView: View {
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
                 
-                // CUSTOM PAGE INDICATORS - LARGE VISIBLE DOTS
-//                HStack(spacing: 12) {
-//                    ForEach(0..<steps.count, id: \.self) { index in
-//                        Circle()
-//                            .fill(currentStep == index ? Color.white : Color.white.opacity(0.3))
-//                            .frame(width: 15, height: 15)
-//                            .overlay(
-//                                Circle()
-//                                    .stroke(Color.white, lineWidth: 2)
-//                                    .opacity(currentStep == index ? 1 : 0.3)
-//                            )
-//                            .onTapGesture {
-//                                withAnimation {
-//                                    currentStep = index
-//                                }
-//                            }
-//                    }
-//                }
-//                .padding(.vertical, 15)
-//                .background(Color.black.opacity(0.3))
-                
-                // Navigation buttons
-                HStack(spacing: 30) {
+                // 導航按鈕
+                HStack(spacing: 20) {
                     if currentStep > 0 {
                         Button(action: {
                             withAnimation {
@@ -120,16 +130,19 @@ struct TutorialOverlayView: View {
                         }) {
                             HStack {
                                 Image(systemName: "chevron.left")
-                                Text("Previous")
+                                Text("上一頁")
                             }
-                            .padding(.vertical, 12)
-                            .padding(.horizontal, 20)
+                            .padding(.vertical, 10)
+                            .padding(.horizontal, 16)
                             .background(
                                 Capsule()
                                     .fill(Color.white.opacity(0.2))
                             )
                             .foregroundColor(.white)
                         }
+                    } else {
+                        Spacer()
+                            .frame(height: 36)
                     }
                     
                     Spacer()
@@ -141,11 +154,11 @@ struct TutorialOverlayView: View {
                             }
                         }) {
                             HStack {
-                                Text("Next")
+                                Text("下一頁")
                                 Image(systemName: "chevron.right")
                             }
-                            .padding(.vertical, 12)
-                            .padding(.horizontal, 20)
+                            .padding(.vertical, 10)
+                            .padding(.horizontal, 16)
                             .background(
                                 Capsule()
                                     .fill(Color.white.opacity(0.2))
@@ -156,9 +169,9 @@ struct TutorialOverlayView: View {
                         Button(action: {
                             dismiss()
                         }) {
-                            Text("Get Started")
-                                .padding(.vertical, 12)
-                                .padding(.horizontal, 20)
+                            Text("開始探索")
+                                .padding(.vertical, 10)
+                                .padding(.horizontal, 16)
                                 .background(
                                     Capsule()
                                         .fill(Color.white.opacity(0.2))
@@ -167,16 +180,20 @@ struct TutorialOverlayView: View {
                         }
                     }
                 }
-                .padding(.horizontal, 30)
-                .padding(.vertical, 20)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 16)
                 .background(Color.black.opacity(0.3))
             }
-//            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .frame(width: UIScreen.main.bounds.width * 0.9, height: UIScreen.main.bounds.height * 0.9)
+            .background(Color.black.opacity(0.5))
+            .cornerRadius(20)
+            .overlay(
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(Color.white.opacity(0.3), lineWidth: 2)
+            )
         }
+        .edgesIgnoringSafeArea(.all)
     }
-    
-    
-    
     
     private func dismiss() {
         withAnimation(.easeOut(duration: 0.3)) {

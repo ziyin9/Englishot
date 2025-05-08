@@ -106,6 +106,8 @@ struct ZooView: View {
             .toolbar(content: {
                 ToolbarItem(placement: .topBarLeading) {
                     BackButton {
+                        uiState.isNavBarVisible = true
+
                         dismiss()
                     }
                 }

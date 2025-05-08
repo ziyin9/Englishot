@@ -108,11 +108,13 @@ struct TopNavBarItem: View {
                 Image(getIconName(for: tab))
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 24, height: 24)
-                
-                Text(getTabTitle(for: tab))
-                    .font(.caption2)
-                    .fontWeight(isSelected ? .bold : .regular)
+                    .frame(width: isSelected ? 40 : 24, height: isSelected ? 40 : 24)
+
+                if !isSelected{
+                    Text(getTabTitle(for: tab))
+                        .font(.caption2)
+                        .fontWeight(.regular)
+                }
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 12)

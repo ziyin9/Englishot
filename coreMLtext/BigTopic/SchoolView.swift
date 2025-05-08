@@ -101,6 +101,8 @@ struct SchoolView: View {
                 ToolbarItem(placement: .topBarLeading) {
                     BackButton {
                         dismiss()
+                        uiState.isNavBarVisible = true
+
                     }
                 }
             })
