@@ -169,45 +169,6 @@ struct GameView: View {
                 uiState.isNavBarVisible = false
                 highestConfidenceWord = recognizedObjects.first ?? ""
             }
-            .toolbar(content: {
-                ToolbarItem(placement: .topBarLeading) {
-                    BackButton{
-                        dismiss()
-                        uiState.showGameCardView = false
-                        
-                    }
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    HStack {
-                        Spacer()
-                        
-                        Button(action: { uiState.showGameCardView = true }) {
-                            Image("A")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 40, height: 40)
-                                .font(.title)
-                                .padding(6)
-                                .background(Color.blue.opacity(0.3))
-                                .clipShape(Circle())
-                        }
-                        
-                        Button(action: { gameState.showingCamera = true }) {
-                            Image("camera")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 40, height: 40)
-                                .font(.title)
-                                .padding(6)
-                                .background(Color.blue.opacity(0.3))
-                                .clipShape(Circle())
-                        }
-                        .padding(.trailing, 20)
-                    }
-                    
-                }
-                
-            })
         }
     }
 }

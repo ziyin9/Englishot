@@ -84,16 +84,16 @@ struct MediumConfidenceView: View {
                 .padding(.top, 5)
                 
                 // Confidence information
-                Text("辨識度：\(String(format: "%.1f", confidenceLevel * 100))%")
-                    .font(.subheadline)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 15)
-                    .padding(.vertical, 3)
-                    .background(
-                        Capsule()
-                            .fill(Color.yellow.opacity(0.7))
-                            .shadow(color: Color.yellow.opacity(0.5), radius: 3)
-                    )
+//                Text("辨識度：\(String(format: "%.1f", confidenceLevel * 100))%")
+//                    .font(.subheadline)
+//                    .foregroundColor(.white)
+//                    .padding(.horizontal, 15)
+//                    .padding(.vertical, 3)
+//                    .background(
+//                        Capsule()
+//                            .fill(Color.yellow.opacity(0.7))
+//                            .shadow(color: Color.yellow.opacity(0.5), radius: 3)
+//                    )
                 
                 // Image preview with frost overlay effect
                 if let capturedImage = image {
@@ -101,7 +101,7 @@ struct MediumConfidenceView: View {
                         Image(uiImage: capturedImage)
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(height: 160)
+                            .frame(height: 340)
                             .cornerRadius(12)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 12)

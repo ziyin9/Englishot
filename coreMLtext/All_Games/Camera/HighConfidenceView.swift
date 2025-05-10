@@ -87,18 +87,18 @@ struct HighConfidenceView: View {
                 .padding(.top, 5)
                 
                 // Confidence information
-                HStack {
-                    Text("辨識度：\(String(format: "%.1f", confidenceLevel * 100))%")
-                        .font(.subheadline)
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 3)
-                        .background(
-                            Capsule()
-                                .fill(Color.green.opacity(0.7))
-                                .shadow(color: Color.green.opacity(0.5), radius: 3)
-                        )
-                }
+//                HStack {
+//                    Text("辨識度：\(String(format: "%.1f", confidenceLevel * 100))%")
+//                        .font(.subheadline)
+//                        .foregroundColor(.white)
+//                        .padding(.horizontal, 10)
+//                        .padding(.vertical, 3)
+//                        .background(
+//                            Capsule()
+//                                .fill(Color.green.opacity(0.7))
+//                                .shadow(color: Color.green.opacity(0.5), radius: 3)
+//                        )
+//                }
                 
                 // Image preview with frost overlay effect
                 if let capturedImage = image {
@@ -106,7 +106,7 @@ struct HighConfidenceView: View {
                         Image(uiImage: capturedImage)
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(height: 160)
+                            .frame(height: 340)
                             .cornerRadius(12)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 12)
@@ -151,7 +151,7 @@ struct HighConfidenceView: View {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundColor(.green)
                         Text("單字已儲存至背包庫")
-                            .font(.footnote)
+                            .font(.system(size: 25, weight: .semibold))
                             .foregroundColor(Color(red: 0.0, green: 0.4, blue: 0.0))
                             .padding(.vertical, 3)
                     }

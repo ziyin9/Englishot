@@ -391,8 +391,8 @@ var vocabularyList: [Vocabulary] = [
     Vocabulary(
         //43
         bigtopic: "Mall",
-        category: "ClothingStore",E_word: "shirt",C_word: "襯衫",
-        exSentence: "Jason’s shirt has long sleeves and buttons.",
+        category: "ClothingStore",E_word: "shirt",C_word: "短袖",
+        exSentence: "We wear shorts and T-shirt for games.",
         audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E-%E6%BC%A2%E8%AA%9E-%E7%B9%81%E9%AB%94/us_pron/s/shi/shirt/shirt.mp3"
     ),
     Vocabulary(

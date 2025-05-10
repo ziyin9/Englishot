@@ -80,17 +80,17 @@ struct LowConfidenceView: View {
                 }
                 .padding(.top, 5)
                 
-                // Confidence information
-                Text("辨識度：\(String(format: "%.1f", confidenceLevel * 100))%")
-                    .font(.subheadline)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 15)
-                    .padding(.vertical, 3)
-                    .background(
-                        Capsule()
-                            .fill(Color.red.opacity(0.7))
-                            .shadow(color: Color.red.opacity(0.5), radius: 3)
-                    )
+//                // Confidence information
+//                Text("辨識度：\(String(format: "%.1f", confidenceLevel * 100))%")
+//                    .font(.subheadline)
+//                    .foregroundColor(.white)
+//                    .padding(.horizontal, 15)
+//                    .padding(.vertical, 3)
+//                    .background(
+//                        Capsule()
+//                            .fill(Color.red.opacity(0.7))
+//                            .shadow(color: Color.red.opacity(0.5), radius: 3)
+//                    )
                 
                 // Image preview with frost overlay effect
                 if let capturedImage = image {
@@ -98,7 +98,7 @@ struct LowConfidenceView: View {
                         Image(uiImage: capturedImage)
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(height: 160)
+                            .frame(height: 340)
                             .cornerRadius(12)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 12)
@@ -137,7 +137,7 @@ struct LowConfidenceView: View {
                         .foregroundColor(Color(red: 0.6, green: 0.1, blue: 0.1))
                         .multilineTextAlignment(.center)
                     
-                    Text("您拍攝的物件辨識度低於30%，可能不是我們預期的物件或拍攝條件不佳")
+                    Text("您拍攝的物件可能不是我們預期的物件或拍攝條件不佳")
                         .font(.footnote)
                         .foregroundColor(Color(red: 0.7, green: 0.2, blue: 0.2))
                         .multilineTextAlignment(.center)
