@@ -6,59 +6,59 @@ struct TutorialOverlayView: View {
     
     let steps: [TeachingStep] = [
         TeachingStep(
-            imageName: "Screenshot",
+            imageName: "Tutorial1",
             title: "Welcome to Englishot",
-            description: "This is a fun way to learn English through interactive maps and games."
+            description: "主頁地圖選擇五大主題進去子關卡"
         ),
         TeachingStep(
-            imageName: "Screenshot",
+            imageName: "Tutorial2",
             title: "Explore Locations",
-            description: "Visit different locations on the map to discover new learning opportunities."
+            description: "以該主題出現的小關卡等你破解"
         ),
         TeachingStep(
-            imageName: "Screenshot",
+            imageName: "Tutorial3",
             title: "Complete Challenges",
-            description: "Complete challenges at each location to improve your English skills."
+            description: "仔細觀察背景圖的小提示喔～還有下方的例句"
         ),
         TeachingStep(
-            imageName: "Screenshot",
+            imageName: "Tutorial4",
             title: "Complete Challenges",
-            description: "Complete challenges at each location to improve your English skills."
+            description: "點擊右上角的相機我們來進行拍照收集吧！一次只能一個物品喔"
         ),
         TeachingStep(
-            imageName: "Screenshot",
+            imageName: "Tutorial5",
             title: "Complete Challenges",
-            description: "Complete challenges at each location to improve your English skills."
+            description: "確定好答案後按拍攝"
         ),
         TeachingStep(
-            imageName: "Screenshot",
+            imageName: "Tutorial6",
             title: "Complete Challenges",
-            description: "Complete challenges at each location to improve your English skills."
+            description: "恭喜答對！收集到了這個單字存入背包～"
         ),
         TeachingStep(
-            imageName: "Screenshot",
+            imageName: "Tutorial7",
             title: "Complete Challenges",
-            description: "Complete challenges at each location to improve your English skills."
+            description: "右上角小卡A可以看這關已經有拍到的單字～且謎題的單字也會自動填入喔"
         ),
         TeachingStep(
-            imageName: "Screenshot",
+            imageName: "Tutorial8",
             title: "Complete Challenges",
-            description: "Complete challenges at each location to improve your English skills."
+            description: "進入背包，哇好多可愛的單字企鵝卡"
         ),
         TeachingStep(
-            imageName: "Screenshot",
+            imageName: "Tutorial9",
             title: "Complete Challenges",
-            description: "Complete challenges at each location to improve your English skills."
+            description: "開始學習你剛剛收集到的單字～按喇叭可以聽聲音喔～"
         ),
         TeachingStep(
-            imageName: "Screenshot",
+            imageName: "Tutorial10",
             title: "Complete Challenges",
-            description: "Complete challenges at each location to improve your English skills."
+            description: "還有你的進度！滿滿的成就感！再接再厲！"
         ),
         TeachingStep(
-            imageName: "Screenshot",
+            imageName: "Tutorial11",
             title: "Complete Challenges",
-            description: "Complete challenges at each location to improve your English skills."
+            description: "收集單字解鎖三款複習小遊戲等你玩！"
         )
     ]
     
