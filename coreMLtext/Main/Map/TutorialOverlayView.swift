@@ -98,7 +98,7 @@ struct TutorialOverlayView: View {
                             Image(steps[index].imageName)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(height: 450)
+                                .frame(height: 480)
                                 .cornerRadius(12)
 //                                .padding(.horizontal)
                             
