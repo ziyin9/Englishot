@@ -11,7 +11,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		7EB36D042CB0F94100FD745F /* Exceptions for "coreMLtext" folder in "Englishot" target */ = {
+		7EB36D042CB0F94100FD745F /* Exceptions for "Englishot" folder in "Englishot" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -26,12 +26,12 @@
 			path = CoreData;
 			sourceTree = "<group>";
 		};
-		7ECC676A2C7D5F2200815098 /* coreMLtext */ = {
+		7ECC676A2C7D5F2200815098 /* Englishot */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				7EB36D042CB0F94100FD745F /* Exceptions for "coreMLtext" folder in "Englishot" target */,
+				7EB36D042CB0F94100FD745F /* Exceptions for "Englishot" folder in "Englishot" target */,
 			);
-			path = coreMLtext;
+			path = Englishot;
 			sourceTree = "<group>";
 		};
 		7EF79C912DEB6789005E9C0D /* MLModel */ = {
@@ -55,7 +55,7 @@
 		7ECC675F2C7D5F2200815098 = {
 			isa = PBXGroup;
 			children = (
-				7ECC676A2C7D5F2200815098 /* coreMLtext */,
+				7ECC676A2C7D5F2200815098 /* Englishot */,
 				7ECC67692C7D5F2200815098 /* Products */,
 				7EF79C912DEB6789005E9C0D /* MLModel */,
 				7E26B7022D4092F400F92701 /* CoreData */,
@@ -87,7 +87,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				7E26B7022D4092F400F92701 /* CoreData */,
-				7ECC676A2C7D5F2200815098 /* coreMLtext */,
+				7ECC676A2C7D5F2200815098 /* Englishot */,
 				7EF79C912DEB6789005E9C0D /* MLModel */,
 			);
 			name = Englishot;
@@ -278,11 +278,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"coreMLtext/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Englishot/Preview Content\"";
 				DEVELOPMENT_TEAM = C7Q42VQ3H9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = coreMLtext/Info.plist;
+				INFOPLIST_FILE = Englishot/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -311,11 +311,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"coreMLtext/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Englishot/Preview Content\"";
 				DEVELOPMENT_TEAM = C7Q42VQ3H9;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = coreMLtext/Info.plist;
+				INFOPLIST_FILE = Englishot/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
