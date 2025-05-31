@@ -28,35 +28,6 @@ Englishot is an iOS application designed to help users improve their English lan
 - Responsive and adaptive layout
 - Accessibility support
 
-## Requirements
-
-- iOS 15.0+
-- Xcode 13.0+
-- Swift 5.0+
-
-## Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/Englishot.git
-```
-
-2. Open the project in Xcode:
-```bash
-cd Englishot
-open Englishot.xcodeproj
-```
-
-3. Build and run the project in Xcode
-
-## Project Structure
-
-- `All_Games/`: Contains game-related views and logic
-  - `AudioImageMatchingGame.swift`: Audio-visual matching game implementation
-  - `1_Home/`: Home screen and navigation components
-- `coreMLtext/`: CoreML integration for text analysis
-- `CoreData/`: Data persistence layer
-- `Englishot.xcodeproj/`: Xcode project configuration
 
 ## Game Modes
 
