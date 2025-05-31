@@ -34,6 +34,11 @@
 			path = coreMLtext;
 			sourceTree = "<group>";
 		};
+		7EF79C912DEB6789005E9C0D /* MLModel */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = MLModel;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +57,7 @@
 			children = (
 				7ECC676A2C7D5F2200815098 /* coreMLtext */,
 				7ECC67692C7D5F2200815098 /* Products */,
+				7EF79C912DEB6789005E9C0D /* MLModel */,
 				7E26B7022D4092F400F92701 /* CoreData */,
 			);
 			sourceTree = "<group>";
@@ -82,6 +88,7 @@
 			fileSystemSynchronizedGroups = (
 				7E26B7022D4092F400F92701 /* CoreData */,
 				7ECC676A2C7D5F2200815098 /* coreMLtext */,
+				7EF79C912DEB6789005E9C0D /* MLModel */,
 			);
 			name = Englishot;
 			packageProductDependencies = (

@@ -421,7 +421,7 @@ var vocabularyList: [Vocabulary] = [
         bigtopic: "Mall",
         category: "ClothingStore",E_word: "glasses",C_word: "眼鏡",
         exSentence: "He wears glasses to read books.",
-        audioURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E/us_pron/b/buz/buzz_/buzz.mp3"
+        audioURL: "https://s3-ap-northeast-1.amazonaws.com/ehanlin-keyword/audio/glasses.mp3"
     ),
     ////////////////////////////////////////////////////////////////////////先跳過找不到
     

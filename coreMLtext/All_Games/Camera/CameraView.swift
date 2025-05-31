@@ -87,20 +87,20 @@ struct CameraView: UIViewControllerRepresentable {
                 if let modelName = Coordinator_MLModel {
                     switch modelName {
                     case "Home_School":
-                        coreMLModel = try Home_School(configuration: configuration).model
+                        coreMLModel = try Microsoft_HomeSchool_1hour(configuration: configuration).model
                     // Add more models as needed
                     case "Mall_Market":
-                        coreMLModel = try Mall_Market(configuration: configuration).model
+                        coreMLModel = try Microsoft_MallMarket_1hour(configuration: configuration).model
                     case "Zoo":
                         coreMLModel = try Zoo(configuration: configuration).model
                     // Default case if the model name doesn't match
                     default:
                         print("⚠️ Model name not recognized. Using default Moretry300 model.")
-                        coreMLModel = try Moretry300(configuration: configuration).model
+                        coreMLModel = try Microsoft_HomeSchool_1hour(configuration: configuration).model
                     }
                 } else {
                     print("⚠️ No model name provided. Using default Moretry300 model.")
-                    coreMLModel = try Moretry300(configuration: configuration).model
+                    coreMLModel = try Microsoft_HomeSchool_1hour(configuration: configuration).model
                 }
                 
                 // Initialize VNCoreMLModel with the chosen model
