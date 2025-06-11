@@ -298,6 +298,9 @@ struct SpellingGameView: View {
             isCorrect = isWordCorrect
             
             if isWordCorrect {
+                // Award coins for correct answer
+                gameState.rewardForSpellingGame()
+                
                 // Show next button after a short delay
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
                     withAnimation(.easeIn(duration: 0.3)) {

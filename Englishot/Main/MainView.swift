@@ -1,12 +1,10 @@
 import SwiftUI
 
-
 struct MainView: View {
     @State private var selectedTab: Tab = .defaultTab
     @StateObject private var uiState = UIState()
     @StateObject private var gameState = GameState()
     @State private var isHovered: Tab?
-    
     
     var body: some View {
         NavigationView {
@@ -26,7 +24,6 @@ struct MainView: View {
             .navigationBarHidden(true)
         }
     }
-
 }
 
 struct TabContentView: View {
@@ -42,19 +39,18 @@ struct TabContentView: View {
                 .environmentObject(gameState)
         case .minigame:
             MiniGameView()
+        case .gacha:
+            GachaView()
         case .setting:
             SettingView()
         }
     }
 }
 
-
 func triggerImpactFeedback(style: UIImpactFeedbackGenerator.FeedbackStyle) {
     let generator = UIImpactFeedbackGenerator(style: style)
     generator.impactOccurred()
 }
-
-
 
 struct TopNavBarView: View {
     @Binding var selectedTab: Tab
@@ -65,8 +61,7 @@ struct TopNavBarView: View {
             Spacer()
             
             HStack(spacing: 0) {
-//                .data
-                ForEach([Tab.map, .backpack, .minigame , .setting], id: \.self) { tab in
+                ForEach([Tab.map, .backpack, .minigame, .gacha, .setting], id: \.self) { tab in
                     TopNavBarItem(
                         tab: tab,
                         isSelected: selectedTab == tab,
@@ -138,6 +133,7 @@ struct TopNavBarItem: View {
         case .map: return "Map"
         case .backpack: return "Backpack"
         case .minigame: return "Minigames"
+        case .gacha: return "Gacha"
         case .setting: return "Settings"
         }
     }
@@ -147,26 +143,18 @@ struct TopNavBarItem: View {
         case .map: return "mapicon"
         case .backpack: return "bbpicon"
         case .minigame:return "minigame"
+        case .gacha: return "gachaicon"
         case .setting: return "nutsetting"
         }
     }
-}
-
-struct NamespaceWrapper {
-    @Namespace static var namespace
 }
 
 enum Tab: Int {
     case map
     case backpack
     case minigame
+    case gacha
     case setting
-//    case data
     
     static var defaultTab: Tab { .map }
-}
-
-
-#Preview {
-    MainView()
 }

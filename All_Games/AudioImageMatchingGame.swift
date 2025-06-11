@@ -11,6 +11,9 @@ class AudioPlayer: ObservableObject {
 }
 
 struct AudioImageMatchingGame: View {
+    @EnvironmentObject var gameState: GameState
+    @Environment(\.dismiss) var dismiss
+    
     @State private var selectedWords: [Word] = []
     @State private var currentWord: Word?
     @State private var currentVocabulary: Vocabulary?
@@ -21,62 +24,146 @@ struct AudioImageMatchingGame: View {
     @StateObject private var audioPlayer = AudioPlayer()
     @State private var currentRound = 1
     @State private var totalRounds = 5
+    @State private var showGameCompletedAlert = false
+    @State private var showLeaveGameView = false
     
     var body: some View {
-        VStack {
-            Text("Audio-Image Matching Game")
-                .font(.title)
-                .padding()
+        ZStack {
+            // Background gradient
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color(#colorLiteral(red: 0.2, green: 0.7, blue: 0.9, alpha: 1)).opacity(0.1),
+                    Color(#colorLiteral(red: 0.4, green: 0.8, blue: 0.95, alpha: 1)).opacity(0.1)
+                ]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
             
-            Text("Round \(currentRound) of \(totalRounds)")
-                .font(.headline)
-                .padding(.bottom)
-            
-            if let currentWord = currentWord {
-                Text("Listen to the word and select the correct image")
-                    .font(.headline)
-                    .padding()
+            VStack(spacing: 20) {
+                GameHeaderView(
+                    title: "Sound & Image",
+                    subtitle: "Match the words you hear",
+                    colors: [Color(#colorLiteral(red: 0.2, green: 0.7, blue: 0.9, alpha: 1)), Color(#colorLiteral(red: 0.4, green: 0.8, blue: 0.95, alpha: 1))],
+                    showLeaveGameView: $showLeaveGameView
+                )
                 
-                Button(action: {
-                    playAudio()
-                }) {
-                    Image(systemName: "speaker.wave.2.fill")
-                        .font(.system(size: 40))
-                        .foregroundColor(.blue)
+                // Game progress
+                HStack {
+                    Text("Round \(currentRound) of \(totalRounds)")
+                        .font(.system(size: 18, weight: .semibold, design: .rounded))
+                        .foregroundColor(Color(#colorLiteral(red: 0.2, green: 0.7, blue: 0.9, alpha: 1)))
+                    
+                    Spacer()
+                    
+                    Text("Score: \(score)")
+                        .font(.system(size: 18, weight: .semibold, design: .rounded))
+                        .foregroundColor(Color(#colorLiteral(red: 0.2, green: 0.7, blue: 0.9, alpha: 1)))
                 }
-                .padding()
+                .padding(.horizontal, 25)
                 
-                LazyVGrid(columns: [
-                    GridItem(.flexible()),
-                    GridItem(.flexible()),
-                    GridItem(.flexible())
-                ], spacing: 20) {
-                    ForEach(shuffledImages, id: \.self) { word in
-                        if let imageData = word.itemimage,
-                           let uiImage = UIImage(data: imageData) {
-                            Image(uiImage: uiImage)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 150)
+                if let currentWord = currentWord {
+                    // Instruction
+                    Text("Listen to the word and select the correct image")
+                        .font(.system(size: 16, weight: .medium, design: .rounded))
+                        .foregroundColor(Color(#colorLiteral(red: 0.4, green: 0.5, blue: 0.8, alpha: 1)))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 20)
+                    
+                    // Audio play button
+                    Button(action: {
+                        playAudio()
+                    }) {
+                        HStack(spacing: 10) {
+                            Image(systemName: "speaker.wave.2.fill")
+                                .font(.system(size: 24))
+                            
+                            Text("Play Audio")
+                                .font(.system(size: 18, weight: .semibold, design: .rounded))
+                        }
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 25)
+                        .padding(.vertical, 15)
+                        .background(
+                            Capsule()
+                                .fill(
+                                    LinearGradient(
+                                        colors: [Color(#colorLiteral(red: 0.2, green: 0.7, blue: 0.9, alpha: 1)), Color(#colorLiteral(red: 0.4, green: 0.8, blue: 0.95, alpha: 1))],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                                .shadow(color: Color(#colorLiteral(red: 0.2, green: 0.7, blue: 0.9, alpha: 1)).opacity(0.4), radius: 8, x: 0, y: 4)
+                        )
+                    }
+                    .padding(.vertical, 10)
+                    
+                    // Images grid
+                    LazyVGrid(columns: [
+                        GridItem(.flexible(), spacing: 15),
+                        GridItem(.flexible(), spacing: 15),
+                        GridItem(.flexible(), spacing: 15)
+                    ], spacing: 20) {
+                        ForEach(shuffledImages, id: \.self) { word in
+                            if let imageData = word.itemimage,
+                               let uiImage = UIImage(data: imageData) {
+                                
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 15)
+                                        .fill(Color.white)
+                                        .shadow(color: Color(#colorLiteral(red: 0.2, green: 0.7, blue: 0.9, alpha: 1)).opacity(0.2), radius: 8, x: 0, y: 4)
+                                    
+                                    Image(uiImage: uiImage)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .padding(15)
+                                }
+                                .frame(height: 120)
                                 .onTapGesture {
                                     checkAnswer(selectedWord: word)
                                 }
+                            }
                         }
                     }
+                    .padding(.horizontal, 25)
                 }
-                .padding()
+                
+                Spacer()
             }
+            .padding(.vertical)
             
-            Text("Score: \(score)")
-                .font(.headline)
-                .padding()
+            // Leave game overlay
+            if showLeaveGameView {
+                LeaveGameView(
+                    showLeaveGameView: $showLeaveGameView,
+                    message: "離開遊戲？",
+                    button1Title: "離開遊戲",
+                    button1Action: {
+                        print("離開遊戲被點擊")
+                        dismiss()
+                    },
+                    button2Title: "繼續遊戲",
+                    button2Action: {
+                        showLeaveGameView = false
+                        print("繼續遊戲被點擊")
+                    }
+                )
+                .zIndex(1)
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                BackButton {
+                    showLeaveGameView = true
+                }
+            }
         }
         .onAppear {
             setupGame()
         }
         .alert(isPresented: $showResult) {
             Alert(
-                title: Text(isCorrect ? "Correct!" : "Try Again"),
+                title: Text(isCorrect ? "Correct! 🎉" : "Try Again 💪"),
                 message: Text(isCorrect ? "Great job!" : "Keep practicing!"),
                 dismissButton: .default(Text("Next")) {
                     if isCorrect {
@@ -89,6 +176,21 @@ struct AudioImageMatchingGame: View {
                         // Game completed
                         showGameCompleted()
                     }
+                }
+            )
+        }
+        .alert(isPresented: $showGameCompletedAlert) {
+            Alert(
+                title: Text("Game Completed! 🎊"),
+                message: Text("Your final score: \(score) out of \(totalRounds)\nYou earned 20 coins! 🪙"),
+                primaryButton: .default(Text("Play Again")) {
+                    // Reset game
+                    score = 0
+                    currentRound = 1
+                    setupGame()
+                },
+                secondaryButton: .default(Text("Exit")) {
+                    dismiss()
                 }
             )
         }
@@ -135,28 +237,15 @@ struct AudioImageMatchingGame: View {
     }
     
     private func showGameCompleted() {
-        // Show game completion alert
-        let alert = UIAlertController(
-            title: "Game Completed!",
-            message: "Your final score: \(score) out of \(totalRounds)",
-            preferredStyle: .alert
-        )
+        // Award coins for completing the audio game
+        gameState.rewardForAudioGame()
         
-        alert.addAction(UIAlertAction(title: "Play Again", style: .default) { _ in
-            // Reset game
-            score = 0
-            currentRound = 1
-            setupGame()
-        })
-        
-        // Present the alert
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let viewController = windowScene.windows.first?.rootViewController {
-            viewController.present(alert, animated: true)
-        }
+        // Show completion alert
+        showGameCompletedAlert = true
     }
 }
 
 #Preview {
     AudioImageMatchingGame()
+        .environmentObject(GameState())
 } 

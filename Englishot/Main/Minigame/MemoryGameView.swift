@@ -193,6 +193,8 @@ struct MemoryGameView: View {
                 matchedPairs += 1
                 
                 if matchedPairs == 6 {
+                    // Award coins for completing the memory game
+                    gameState.rewardForMemoryGame()
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                         showGameOver = true

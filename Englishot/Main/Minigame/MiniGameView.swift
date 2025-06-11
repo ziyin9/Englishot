@@ -45,6 +45,18 @@ struct MiniGameView: View {
                     Snowflake_View(snowflake: snowflake)
                 }
                 
+                // Coin Display in top right corner
+                VStack {
+                    HStack {
+                        Spacer()
+                        CoinDisplayView()
+                            .environmentObject(gameState)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 10)
+                    Spacer()
+                }
+                
                 // Content
                 VStack {
                     // Enhanced header
@@ -67,7 +79,7 @@ struct MiniGameView: View {
                             .foregroundColor(Color(#colorLiteral(red: 0.4, green: 0.5, blue: 0.8, alpha: 1)))
                     }
                     .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 2)
-                    .padding(.top, 20)
+                    .padding(.top, 60)
                     .offset(y: isLoaded ? 0 : -50)
                     .opacity(isLoaded ? 1 : 0)
                     
@@ -75,7 +87,7 @@ struct MiniGameView: View {
                     
                     // Game cards container with spring animation
                     ScrollView {
-                        VStack(spacing: 20) { // Reduced spacing between cards
+                        VStack(spacing: 20) {
                             // Spelling Game Card
                             Spacer()
                             NavigationLink(destination: SpellingGameView()
@@ -89,7 +101,8 @@ struct MiniGameView: View {
                                     colors: [Color(#colorLiteral(red: 0.5, green: 0.8, blue: 0.3, alpha: 1)), Color(#colorLiteral(red: 0.3, green: 0.65, blue: 0.5, alpha: 1))],
                                     isHovering: $isHoveringSpelling,
                                     isEnabled: isSpellingGamePlayable,
-                                    lockedMessage: "Collect At Least 1 Word"
+                                    lockedMessage: "Collect At Least 1 Word",
+                                    rewardCoins: 10
                                 )
                                 .scaleEffect(isHoveringSpelling ? 1.03 : 1.0)
                                 .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHoveringSpelling)
@@ -114,7 +127,8 @@ struct MiniGameView: View {
                                     colors: [Color(#colorLiteral(red: 0.3, green: 0.4, blue: 0.9, alpha: 1)), Color(#colorLiteral(red: 0.5, green: 0.6, blue: 0.95, alpha: 1))],
                                     isHovering: $isHoveringMemory,
                                     isEnabled: isMemoryGamePlayable,
-                                    lockedMessage: "Collect 6+ Words to Unlock"
+                                    lockedMessage: "Collect 6+ Words to Unlock",
+                                    rewardCoins: 15
                                 )
                                 .scaleEffect(isHoveringMemory ? 1.03 : 1.0)
                                 .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHoveringMemory)
@@ -139,7 +153,8 @@ struct MiniGameView: View {
                                     colors: [Color(#colorLiteral(red: 0.2, green: 0.7, blue: 0.9, alpha: 1)), Color(#colorLiteral(red: 0.4, green: 0.8, blue: 0.95, alpha: 1))],
                                     isHovering: $isHoveringAudio,
                                     isEnabled: isAudioGamePlayable,
-                                    lockedMessage: "Collect 6+ Words to Unlock"
+                                    lockedMessage: "Collect 6+ Words to Unlock",
+                                    rewardCoins: 20
                                 )
                                 .scaleEffect(isHoveringAudio ? 1.03 : 1.0)
                                 .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHoveringAudio)
@@ -159,6 +174,16 @@ struct MiniGameView: View {
                     Spacer()
                 }
                 .padding()
+                
+                // Coin reward overlay
+                if gameState.showCoinReward {
+                    CoinRewardOverlay(amount: gameState.rewardAmount)
+                        .transition(.asymmetric(
+                            insertion: .move(edge: .top).combined(with: .opacity),
+                            removal: .opacity
+                        ))
+                        .animation(.spring(response: 0.6, dampingFraction: 0.8), value: gameState.showCoinReward)
+                }
             }
             .navigationBarBackButtonHidden(true)
             .onAppear {
@@ -166,6 +191,105 @@ struct MiniGameView: View {
                 withAnimation(.spring(response: 0.7, dampingFraction: 0.7).delay(0.1)) {
                     isLoaded = true
                 }
+            }
+        }
+    }
+}
+
+// Coin Display Component
+struct CoinDisplayView: View {
+    @EnvironmentObject var gameState: GameState
+    @State private var bounce = false
+    
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "dollarsign.circle.fill")
+                .font(.system(size: 24))
+                .foregroundColor(.yellow)
+                .shadow(color: .orange, radius: 2)
+                .scaleEffect(bounce ? 1.2 : 1.0)
+                .animation(.spring(response: 0.3, dampingFraction: 0.5), value: bounce)
+            
+            Text("\(gameState.coins)")
+                .font(.system(size: 20, weight: .bold, design: .rounded))
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [.yellow, .orange],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .shadow(color: .black.opacity(0.3), radius: 1, x: 0, y: 1)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(
+            Capsule()
+                .fill(Color.black.opacity(0.2))
+                .overlay(
+                    Capsule()
+                        .stroke(Color.yellow.opacity(0.5), lineWidth: 1)
+                )
+        )
+        .onChange(of: gameState.coins) { _ in
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
+                bounce = true
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
+                    bounce = false
+                }
+            }
+        }
+    }
+}
+
+// Coin Reward Overlay
+struct CoinRewardOverlay: View {
+    let amount: Int
+    @State private var animateReward = false
+    @State private var showParticles = false
+    
+    var body: some View {
+        VStack {
+            HStack {
+                Spacer()
+                
+                VStack(spacing: 8) {
+                    Image(systemName: "dollarsign.circle.fill")
+                        .font(.system(size: 40))
+                        .foregroundColor(.yellow)
+                        .shadow(color: .orange, radius: 4)
+                        .scaleEffect(animateReward ? 1.3 : 0.5)
+                        .rotationEffect(.degrees(animateReward ? 360 : 0))
+                    
+                    Text("+\(amount)")
+                        .font(.system(size: 24, weight: .bold, design: .rounded))
+                        .foregroundColor(.yellow)
+                        .shadow(color: .black.opacity(0.5), radius: 2)
+                        .offset(y: animateReward ? -10 : 20)
+                        .opacity(animateReward ? 1 : 0)
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Color.black.opacity(0.7))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(Color.yellow.opacity(0.8), lineWidth: 2)
+                        )
+                )
+                
+                Spacer()
+            }
+            .padding(.top, 120)
+            
+            Spacer()
+        }
+        .onAppear {
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {
+                animateReward = true
             }
         }
     }
@@ -180,6 +304,7 @@ struct EnhancedGameCard: View {
     @Binding var isHovering: Bool
     let isEnabled: Bool
     let lockedMessage: String
+    let rewardCoins: Int?
     
     @State private var animateIcons = false
     
@@ -206,6 +331,62 @@ struct EnhancedGameCard: View {
                     RoundedRectangle(cornerRadius: 20)
                         .stroke(Color.white.opacity(0.3), lineWidth: 1)
                         .scaleEffect(0.97 - CGFloat(index) * 0.05)
+                }
+            }
+            
+            // Coin reward indicator in top-right corner (only for games, not gacha)
+            if isEnabled && rewardCoins != nil {
+                VStack {
+                    HStack {
+                        Spacer()
+                        
+                        HStack(spacing: 4) {
+                            Image(systemName: "dollarsign.circle.fill")
+                                .font(.system(size: 16))
+                                .foregroundColor(.yellow)
+                            
+                            Text("\(rewardCoins!)")
+                                .font(.system(size: 14, weight: .bold))
+                                .foregroundColor(.yellow)
+                        }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(
+                            Capsule()
+                                .fill(Color.black.opacity(0.6))
+                        )
+                        .padding(.top, 12)
+                        .padding(.trailing, 12)
+                    }
+                    Spacer()
+                }
+            }
+            
+            // Special indicator for gacha (shows required coins)
+            if !isEnabled && title.contains("Gacha") {
+                VStack {
+                    HStack {
+                        Spacer()
+                        
+                        HStack(spacing: 4) {
+                            Image(systemName: "lock.fill")
+                                .font(.system(size: 14))
+                                .foregroundColor(.red)
+                            
+                            Text("100🪙")
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundColor(.red)
+                        }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(
+                            Capsule()
+                                .fill(Color.black.opacity(0.6))
+                        )
+                        .padding(.top, 12)
+                        .padding(.trailing, 12)
+                    }
+                    Spacer()
                 }
             }
             
@@ -290,11 +471,11 @@ struct EnhancedGameCard: View {
                     Spacer()
                     
                     if isEnabled {
-                        Text("Play Now")
+                        Text(title.contains("Gacha") ? "Draw Now" : "Play Now")
                             .font(.system(size: 14, weight: .bold, design: .rounded)) // Reduced size
                             .foregroundColor(colors[0])
                         
-                        Image(systemName: "play.fill")
+                        Image(systemName: title.contains("Gacha") ? "gift.fill" : "play.fill")
                             .font(.system(size: 12, weight: .bold)) // Reduced size
                             .foregroundColor(colors[0])
                     } else {
