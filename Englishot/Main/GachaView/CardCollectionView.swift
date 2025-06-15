@@ -2,33 +2,40 @@ import SwiftUI
 import AVFoundation
 
 struct CardCollectionView: View {
-    @ObservedObject var gashaSystem: GachaSystem
+    @ObservedObject var gachaSystem: GachaSystem
     @Environment(\.dismiss) var dismiss
     @State private var selectedCard: PenguinCard?
     @State private var showCardDetail = false
     @State private var filterRarity: String = "All"
+    @State private var filterType: String = "All"
     @State private var audioPlayer: AVPlayer?
     
     private let rarityOptions = ["All", "Common", "Rare", "Epic", "Legendary"]
+    private let typeOptions = ["All", "Emotion", "Profession", "Activity"]
     private let columns = [
         GridItem(.flexible(), spacing: 15),
         GridItem(.flexible(), spacing: 15)
     ]
     
     var filteredCards: [PenguinCard] {
-        let allCards = gashaSystem.collectedCards
+        let allCards = gachaSystem.collectedCards
         
-        if filterRarity == "All" {
-            return allCards.sorted { $0.cardName < $1.cardName }
-        } else {
-            let filtered = allCards.filter { $0.rarity == filterRarity }
-            return filtered.sorted { $0.cardName < $1.cardName }
+        var filtered = allCards
+        
+        if filterRarity != "All" {
+            filtered = filtered.filter { $0.rarity == filterRarity }
         }
+        
+        if filterType != "All" {
+            filtered = filtered.filter { $0.cardType == filterType }
+        }
+        
+        return filtered.sorted { $0.cardName < $1.cardName }
     }
     
     private var completionPercentage: Int {
-        let collectedCount = gashaSystem.collectedCards.count
-        let totalCount = gashaSystem.availableCards.count
+        let collectedCount = gachaSystem.collectedCards.count
+        let totalCount = gachaSystem.availableCards.count
         
         guard totalCount > 0 else { return 0 }
         
@@ -39,7 +46,7 @@ struct CardCollectionView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                // Background
+                // Enhanced ice & snow background
                 LinearGradient(
                     gradient: Gradient(colors: [
                         Color(#colorLiteral(red: 0.1, green: 0.15, blue: 0.3, alpha: 1)),
@@ -49,6 +56,22 @@ struct CardCollectionView: View {
                     endPoint: .bottom
                 )
                 .ignoresSafeArea()
+                
+                // Animated snowflakes
+                ForEach(0..<30) { _ in
+                    Image(systemName: "snowflake")
+                        .font(.system(size: CGFloat.random(in: 8...15)))
+                        .foregroundColor(.white.opacity(0.3))
+                        .position(
+                            x: CGFloat.random(in: 0...UIScreen.main.bounds.width),
+                            y: CGFloat.random(in: 0...UIScreen.main.bounds.height)
+                        )
+                        .animation(
+                            Animation.linear(duration: Double.random(in: 5...10))
+                                .repeatForever(autoreverses: false),
+                            value: UUID()
+                        )
+                }
                 
                 VStack(spacing: 0) {
                     // Header
@@ -60,141 +83,80 @@ struct CardCollectionView: View {
                         
                         // Collection stats
                         HStack(spacing: 20) {
-                            VStack(spacing: 5) {
-                                Text("\(gashaSystem.collectedCards.count)")
-                                    .font(.system(size: 24, weight: .bold, design: .rounded))
-                                    .foregroundColor(.yellow)
-                                
-                                Text("Collected")
-                                    .font(.system(size: 14, weight: .medium, design: .rounded))
-                                    .foregroundColor(.white.opacity(0.8))
-                            }
+                            StatView(
+                                title: "Collected",
+                                value: "\(gachaSystem.collectedCards.count)/\(gachaSystem.availableCards.count)",
+                                icon: "checkmark.circle.fill",
+                                color: .green
+                            )
                             
-                            VStack(spacing: 5) {
-                                Text("\(gashaSystem.availableCards.count)")
-                                    .font(.system(size: 24, weight: .bold, design: .rounded))
-                                    .foregroundColor(.cyan)
-                                
-                                Text("Total")
-                                    .font(.system(size: 14, weight: .medium, design: .rounded))
-                                    .foregroundColor(.white.opacity(0.8))
-                            }
-                            
-                            VStack(spacing: 5) {
-                                Text("\(completionPercentage)%")
-                                    .font(.system(size: 24, weight: .bold, design: .rounded))
-                                    .foregroundColor(.green)
-                                
-                                Text("Complete")
-                                    .font(.system(size: 14, weight: .medium, design: .rounded))
-                                    .foregroundColor(.white.opacity(0.8))
-                            }
+                            StatView(
+                                title: "Completion",
+                                value: "\(completionPercentage)%",
+                                icon: "chart.pie.fill",
+                                color: .blue
+                            )
                         }
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 15)
-                        .background(
-                            RoundedRectangle(cornerRadius: 15)
-                                .fill(Color.black.opacity(0.3))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 15)
-                                        .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                                )
-                        )
+                        .padding(.horizontal)
                         
-                        // Filter by rarity
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 10) {
+                        // Filter controls
+                        HStack(spacing: 15) {
+                            // Rarity filter
+                            Picker("Rarity", selection: $filterRarity) {
                                 ForEach(rarityOptions, id: \.self) { rarity in
-                                    Button(action: { filterRarity = rarity }) {
-                                        Text(rarity)
-                                            .font(.system(size: 14, weight: .semibold, design: .rounded))
-                                            .foregroundColor(filterRarity == rarity ? .black : .white)
-                                            .padding(.horizontal, 15)
-                                            .padding(.vertical, 8)
-                                            .background(
-                                                Capsule()
-                                                    .fill(filterRarity == rarity ? .white : Color.white.opacity(0.2))
-                                            )
+                                    Text(rarity).tag(rarity)
+                                }
+                            }
+                            .pickerStyle(.menu)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color.white.opacity(0.2))
+                            )
+                            
+                            // Type filter
+                            Picker("Type", selection: $filterType) {
+                                ForEach(typeOptions, id: \.self) { type in
+                                    Text(type).tag(type)
+                                }
+                            }
+                            .pickerStyle(.menu)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color.white.opacity(0.2))
+                            )
+                        }
+                        .padding(.horizontal)
+                    }
+                    .padding(.bottom)
+                    
+                    // Card grid
+                    ScrollView {
+                        LazyVGrid(columns: columns, spacing: 15) {
+                            ForEach(filteredCards) { card in
+                                CollectionCardView(card: card)
+                                    .onTapGesture {
+                                        selectedCard = card
+                                        showCardDetail = true
                                     }
-                                }
                             }
-                            .padding(.horizontal, 20)
                         }
-                    }
-                    .padding(.bottom, 20)
-                    
-                    // Cards grid
-                    if filteredCards.isEmpty {
-                        VStack(spacing: 20) {
-                            Spacer()
-                            
-                            Image(systemName: "rectangle.stack")
-                                .font(.system(size: 60))
-                                .foregroundColor(.white.opacity(0.5))
-                            
-                            Text("No cards in this category")
-                                .font(.system(size: 18, weight: .medium, design: .rounded))
-                                .foregroundColor(.white.opacity(0.7))
-                            
-                            Text("Keep playing games to collect more penguins!")
-                                .font(.system(size: 14, weight: .medium, design: .rounded))
-                                .foregroundColor(.white.opacity(0.5))
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal, 40)
-                            
-                            Spacer()
-                        }
-                    } else {
-                        ScrollView {
-                            LazyVGrid(columns: columns, spacing: 20) {
-                                ForEach(filteredCards) { card in
-                                    CollectionCardView(card: card)
-                                        .onTapGesture {
-                                            selectedCard = card
-                                            showCardDetail = true
-                                            playCardSound()
-                                        }
-                                }
-                            }
-                            .padding(.horizontal, 20)
-                            .padding(.bottom, 100)
-                        }
+                        .padding()
                     }
                 }
             }
-            .navigationBarHidden(true)
-        }
-        .overlay(
-            // Close button
-            VStack {
-                HStack {
-                    Spacer()
-                    
-                    Button(action: { dismiss() }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 30))
-                            .foregroundColor(.white)
-                            .shadow(color: .black.opacity(0.3), radius: 2)
-                    }
-                    .padding(.trailing, 20)
-                    .padding(.top, 20)
+            .sheet(isPresented: $showCardDetail) {
+                if let card = selectedCard {
+                    CardDetailView(card: card)
                 }
-                
-                Spacer()
             }
-        )
-        .sheet(isPresented: $showCardDetail) {
-            if let card = selectedCard {
-                CardDetailView(card: card)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    BackButton {
+                        dismiss()
+                    }
+                }
             }
         }
-    }
-    
-    private func playCardSound() {
-        // Optional: Play a card selection sound
-        guard let url = Bundle.main.url(forResource: "card_select", withExtension: "mp3") else { return }
-        audioPlayer = AVPlayer(url: url)
-        audioPlayer?.play()
     }
 }
 
@@ -205,7 +167,7 @@ struct CollectionCardView: View {
     var body: some View {
         VStack(spacing: 10) {
             ZStack {
-                // Card background
+                // Enhanced card background with ice theme
                 RoundedRectangle(cornerRadius: 15)
                     .fill(
                         LinearGradient(
@@ -217,39 +179,78 @@ struct CollectionCardView: View {
                     .frame(height: 200)
                     .overlay(
                         RoundedRectangle(cornerRadius: 15)
-                            .stroke(card.rarityColor, lineWidth: 2)
+                            .stroke(
+                                LinearGradient(
+                                    colors: [.white, card.rarityColor.opacity(0.5)],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ),
+                                lineWidth: 2
+                            )
                     )
                     .shadow(color: card.rarityColor.opacity(0.4), radius: 8, x: 0, y: 4)
                 
+                // Ice crystal pattern
+                ForEach(0..<4) { i in
+                    Image(systemName: "snowflake")
+                        .font(.system(size: 8))
+                        .foregroundColor(.white.opacity(0.2))
+                        .rotationEffect(.degrees(Double(i) * 90))
+                        .offset(x: 60, y: 60)
+                }
+                
                 VStack(spacing: 8) {
-                    // Rarity badge
+                    // Type and rarity badges
                     HStack {
+                        // Type badge
+                        HStack(spacing: 4) {
+                            Image(systemName: card.cardTypeIcon)
+                                .font(.system(size: 8))
+                            Text(card.cardType)
+                                .font(.system(size: 8, weight: .bold, design: .rounded))
+                        }
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 3)
+                        .background(
+                            Capsule()
+                                .fill(card.cardTypeColor)
+                        )
+                        
                         Spacer()
                         
+                        // Rarity badge
                         Text(card.rarity.uppercased())
-                            .font(.system(size: 10, weight: .bold, design: .rounded))
+                            .font(.system(size: 8, weight: .bold, design: .rounded))
                             .foregroundColor(.white)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 3)
                             .background(
                                 Capsule()
                                     .fill(card.rarityColor)
                             )
                     }
                     .padding(.top, 8)
-                    .padding(.trailing, 8)
+                    .padding(.horizontal, 8)
                     
                     Spacer()
                     
                     // Penguin image
-                    Image("penguinnn")
+                    Image(card.imageName)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 80, height: 80)
                         .clipShape(Circle())
                         .overlay(
                             Circle()
-                                .stroke(card.rarityColor, lineWidth: 2)
+                                .stroke(
+                                    LinearGradient(
+                                        colors: [.white, card.rarityColor.opacity(0.5)],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    ),
+                                    lineWidth: 2
+                                )
                         )
                     
                     // Card name
@@ -266,38 +267,21 @@ struct CollectionCardView: View {
                     
                     Spacer()
                 }
-                
-                // Times drawn indicator
-                if card.timesDrawn > 1 {
-                    VStack {
-                        HStack {
-                            Text("×\(card.timesDrawn)")
-                                .font(.system(size: 12, weight: .bold, design: .rounded))
-                                .foregroundColor(.white)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 4)
-                                .background(
-                                    Capsule()
-                                        .fill(Color.orange)
-                                )
-                            
-                            Spacer()
-                        }
-                        .padding(.leading, 8)
-                        .padding(.top, 8)
-                        
-                        Spacer()
+            }
+            .scaleEffect(isPressed ? 0.95 : 1.0)
+            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isPressed)
+            .onTapGesture {
+                withAnimation {
+                    isPressed = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        isPressed = false
                     }
                 }
             }
         }
-        .scaleEffect(isPressed ? 0.95 : 1.0)
-        .animation(.easeInOut(duration: 0.1), value: isPressed)
-        .onLongPressGesture(minimumDuration: 0) { pressing in
-            isPressed = pressing
-        } perform: {}
     }
 }
+
 
 struct CardDetailView: View {
     let card: PenguinCard
@@ -500,5 +484,5 @@ struct CardDetailView: View {
 }
 
 #Preview {
-    CardCollectionView(gashaSystem: GachaSystem())
-} 
+    CardCollectionView(gachaSystem: GachaSystem())
+}

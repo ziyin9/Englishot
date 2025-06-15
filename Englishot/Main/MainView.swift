@@ -40,7 +40,7 @@ struct TabContentView: View {
         case .minigame:
             MiniGameView()
         case .gacha:
-            GachaView()
+            GachaView(gachaSystem: GachaSystem())
         case .setting:
             SettingView()
         }
