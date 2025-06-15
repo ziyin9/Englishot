@@ -287,14 +287,12 @@ struct SpellingGameView: View {
     
     private func selectLetter(_ letter: Letter) {
         // Use faster animation for selecting letters
-        withAnimation(.spring(response: 0.2, dampingFraction: 0.7)) {
             selectedLetters.append(letter)
             
             // Check if the word is complete
             if selectedLetters.count == currentWord?.word?.count {
                 checkAnswer()
             }
-        }
     }
     
     private func checkAnswer() {
@@ -309,12 +307,9 @@ struct SpellingGameView: View {
             if isWordCorrect {
                 // Award coins for correct answer
                 addCoin(by:SpellingGameRewardCoins)
-
                 // Show next button after a short delay
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-                    withAnimation(.easeIn(duration: 0.3)) {
                         showNextButton = true
-                    }
                 }
             } else {
                 // Shake the tiles
@@ -338,7 +333,8 @@ struct SpellingGameView: View {
     }
     
     private func createCelebrationParticles() {
-        for _ in 0..<30 {
+        celebrationParticles = []
+        for _ in 0..<15 {
             let randomX = CGFloat.random(in: 50...UIScreen.main.bounds.width-50)
             let randomY = CGFloat.random(in: 200...UIScreen.main.bounds.height-200)
             

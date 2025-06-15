@@ -218,7 +218,6 @@ struct AudioImageMatchingGame: View {
             setupGame()
         }
     }
-
     // Background color based on the answer state
     private func backgroundColor(for index: Int, word: Word) -> Color {
         if selectedImageIndex == index && isCorrect == true {
@@ -283,8 +282,9 @@ struct AudioImageMatchingGame: View {
         if selectedWord == currentWord {
             // Correct answer
             isCorrect = true
+            isAnswerLocked = true  // 锁定答案
             addCoin(by:AudioImageGameRewardCoins)
-
+            
             // Add success haptic feedback
             let generator = UINotificationFeedbackGenerator()
             generator.notificationOccurred(.success)
@@ -312,7 +312,6 @@ struct AudioImageMatchingGame: View {
 #Preview {
     AudioImageMatchingGame(AudioImageGameRewardCoins:10)
 }
-
 struct ScaleButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -320,3 +319,4 @@ struct ScaleButtonStyle: ButtonStyle {
             .animation(.spring(response: 0.3, dampingFraction: 0.6), value: configuration.isPressed)
     }
 }
+
