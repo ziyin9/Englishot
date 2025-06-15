@@ -3,6 +3,12 @@ import AVFoundation
 
 struct AudioImageMatchingGame: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var uiState: UIState
+
+    @FetchRequest(entity: Coin.entity(), sortDescriptors: []) var coinEntities: FetchedResults<Coin>
+
+    @State var AudioImageGameRewardCoins : Int64
+
     
     @State private var selectedWords: [Word] = []
     @State private var currentWord: Word?
@@ -15,13 +21,16 @@ struct AudioImageMatchingGame: View {
     @State private var selectedImageIndex: Int? = nil
     @State private var showNextButton = false
     @State private var incorrectSelections: Set<Int> = []
-    
     // Colors
     let backgroundColor = Color(#colorLiteral(red: 0.9490196078, green: 0.9764705882, blue: 0.9882352941, alpha: 1))
     let accentColor = Color(#colorLiteral(red: 0.2196078431, green: 0.5803921569, blue: 0.9882352941, alpha: 1))
     let correctColor = Color.green.opacity(0.2)
     let incorrectColor = Color.red.opacity(0.2)
     let cardColor = Color.white
+    
+    private var currentCoins: Int64 {
+        coinEntities.first?.amount ?? 0
+    }
     
     var body: some View {
         ZStack {
@@ -192,6 +201,9 @@ struct AudioImageMatchingGame: View {
                 )
                 .zIndex(1)
             }
+            if uiState.isCoinVisible {
+                CoinDisplayView(coins: currentCoins)
+            }
         }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -269,7 +281,8 @@ struct AudioImageMatchingGame: View {
         if selectedWord == currentWord {
             // Correct answer
             isCorrect = true
-            
+            addCoin(by:AudioImageGameRewardCoins)
+
             // Add success haptic feedback
             let generator = UINotificationFeedbackGenerator()
             generator.notificationOccurred(.success)
@@ -295,7 +308,7 @@ struct AudioImageMatchingGame: View {
 }
 
 #Preview {
-    AudioImageMatchingGame()
+    AudioImageMatchingGame(AudioImageGameRewardCoins:10)
 }
 
 struct ScaleButtonStyle: ButtonStyle {

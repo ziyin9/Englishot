@@ -86,3 +86,74 @@ func deleteWord(wordString: String) {
         print("Fetch failed: \(error)")
     }
 }
+
+
+
+
+
+//
+//  CoinFunc
+
+
+func initializeCoinIfNeeded() {
+    let context = CoreDataManager.shared.context
+    let fetchRequest: NSFetchRequest<Coin> = Coin.fetchRequest()
+
+    do {
+        let coins = try context.fetch(fetchRequest)
+        if coins.isEmpty {
+            let newCoin = Coin(context: context)
+            newCoin.amount = 0
+            CoreDataManager.shared.saveContext()
+        }
+    } catch {
+        print("Failed to fetch Coin: \(error)")
+    }
+}
+
+func fetchCoin() -> Coin? {
+    let context = CoreDataManager.shared.context
+    let fetchRequest: NSFetchRequest<Coin> = Coin.fetchRequest()
+
+    do {
+        let coins = try context.fetch(fetchRequest)
+        return coins.first
+    } catch {
+        print("Failed to fetch Coin: \(error)")
+        return nil
+    }
+}
+
+func addCoin(by amountToAdd: Int64) {
+    let context = CoreDataManager.shared.context
+    let fetchRequest: NSFetchRequest<Coin> = Coin.fetchRequest()
+
+    do {
+        let coins = try context.fetch(fetchRequest)
+        if let coin = coins.first {
+            coin.amount += amountToAdd
+        } else {
+            let newCoin = Coin(context: context)
+            newCoin.amount = amountToAdd
+        }
+        CoreDataManager.shared.saveContext()
+    } catch {
+        print("Failed to fetch Coin: \(error)")
+    }
+}
+
+func deductCoin(by amountToDeduct: Int64) {
+    let context = CoreDataManager.shared.context
+    let fetchRequest: NSFetchRequest<Coin> = Coin.fetchRequest()
+
+    do {
+        let coins = try context.fetch(fetchRequest)
+        if let coin = coins.first {
+            coin.amount = max(0, coin.amount - amountToDeduct)
+            CoreDataManager.shared.saveContext()
+        }
+    } catch {
+        print("Failed to fetch Coin: \(error)")
+    }
+}
+

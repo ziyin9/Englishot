@@ -42,4 +42,7 @@ class CoreDataManager {
             }
         }
     }
+    
+    
+    
 }

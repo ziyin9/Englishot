@@ -16,6 +16,9 @@ struct coreMLtextApp: App {
     init() {
         // 確保 CoreData 的上下文在應用啟動時已經初始化
         _ = CoreDataManager.shared
+        
+        initializeCoinIfNeeded()
+
     }
 
     var body: some Scene {

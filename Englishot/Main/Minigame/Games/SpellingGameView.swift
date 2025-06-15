@@ -7,6 +7,10 @@ struct SpellingGameView: View {
     @EnvironmentObject var uiState: UIState
     
     @FetchRequest(entity: Word.entity(), sortDescriptors: []) var wordEntities: FetchedResults<Word>
+    @FetchRequest(entity: Coin.entity(), sortDescriptors: []) var coinEntities: FetchedResults<Coin>
+
+    @State var SpellingGameRewardCoins : Int64
+
     
     @State private var currentWord: Word? = nil
     @State private var shuffledLetters: [Letter] = []
@@ -18,7 +22,10 @@ struct SpellingGameView: View {
     @State private var animateFail = false
     @State private var celebrationParticles: [CelebrationParticle] = []
     @State private var showLeaveGameView = false // 控制顯示離開遊戲視圖
-
+    
+    private var currentCoins: Int64 {
+        coinEntities.first?.amount ?? 0
+    }
     
     var body: some View {
         ZStack {
@@ -238,6 +245,9 @@ struct SpellingGameView: View {
                 )
                 .zIndex(1)
             }
+            if uiState.isCoinVisible {
+                CoinDisplayView(coins: currentCoins)
+            }
         }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -299,8 +309,8 @@ struct SpellingGameView: View {
             
             if isWordCorrect {
                 // Award coins for correct answer
-                gameState.rewardForSpellingGame()
-                
+                addCoin(by:SpellingGameRewardCoins)
+
                 // Show next button after a short delay
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
                     withAnimation(.easeIn(duration: 0.3)) {

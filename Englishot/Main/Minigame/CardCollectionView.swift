@@ -2,7 +2,7 @@ import SwiftUI
 import AVFoundation
 
 struct CardCollectionView: View {
-    @ObservedObject var gashaSystem: GashaSystem
+    @ObservedObject var gashaSystem: GachaSystem
     @Environment(\.dismiss) var dismiss
     @State private var selectedCard: PenguinCard?
     @State private var showCardDetail = false
@@ -500,5 +500,5 @@ struct CardDetailView: View {
 }
 
 #Preview {
-    CardCollectionView(gashaSystem: GashaSystem())
+    CardCollectionView(gashaSystem: GachaSystem())
 } 

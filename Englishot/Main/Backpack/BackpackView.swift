@@ -217,9 +217,9 @@ struct BackpackView: View {
                                                         .shadow(radius: 10)
                                                 )
                                         }
-                                        .sheet(isPresented: $showDeleteWordView) {
-                                            DeleteWordView(wordEntities: $wordEntitiesArray) // 傳遞綁定的 wordEntities
-                                        }
+//                                        .sheet(isPresented: $showDeleteWordView) {
+//                                            DeleteWordView(wordEntities: $wordEntitiesArray) // 傳遞綁定的 wordEntities
+//                                        }
 
                                         if uiState.showDataView{
                                             PopupDataView()
@@ -227,9 +227,9 @@ struct BackpackView: View {
                                         
                                         
                                     }
-                                    .sheet(isPresented: $showMemoryGame) {
-                                        MemoryGameView()
-                                            .edgesIgnoringSafeArea(.all)
+//                                    .sheet(isPresented: $showMemoryGame) {
+//                                        MemoryGameView()
+//                                            .edgesIgnoringSafeArea(.all)
                                         //            .overlay {
                                         //                if showingDataView {
                                         //                    PopupDataView(
@@ -243,11 +243,11 @@ struct BackpackView: View {
                                         //                }
                                         //            }
                                         
-                                    }
-                                    .sheet(isPresented: $showAudioImageGame) {
-                                        AudioImageMatchingGame()
-                                            .edgesIgnoringSafeArea(.all)
-                                    }
+//                                    }
+//                                    .sheet(isPresented: $showAudioImageGame) {
+//                                        AudioImageMatchingGame()
+//                                            .edgesIgnoringSafeArea(.all)
+//                                    }
                                     
                                     
                                     

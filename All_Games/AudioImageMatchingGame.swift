@@ -11,8 +11,8 @@ class AudioPlayer: ObservableObject {
 }
 
 struct AudioImageMatchingGame: View {
-    @EnvironmentObject var gameState: GameState
     @Environment(\.dismiss) var dismiss
+    @FetchRequest(entity: Coin.entity(), sortDescriptors: []) var coinEntities: FetchedResults<Coin>
     
     @State private var selectedWords: [Word] = []
     @State private var currentWord: Word?
@@ -27,6 +27,10 @@ struct AudioImageMatchingGame: View {
     @State private var showGameCompletedAlert = false
     @State private var showLeaveGameView = false
     
+    private var currentCoins: Int64 {
+        coinEntities.first?.amount ?? 0
+    }
+    
     var body: some View {
         ZStack {
             // Background gradient
@@ -39,6 +43,11 @@ struct AudioImageMatchingGame: View {
                 endPoint: .bottom
             )
             .ignoresSafeArea()
+            
+            // Coin Display
+            if uiState.isCoinVisible {
+                CoinDisplayView(coins: currentCoins)
+            }
             
             VStack(spacing: 20) {
                 GameHeaderView(
@@ -139,20 +148,18 @@ struct AudioImageMatchingGame: View {
                     message: "離開遊戲？",
                     button1Title: "離開遊戲",
                     button1Action: {
-                        print("離開遊戲被點擊")
                         dismiss()
                     },
                     button2Title: "繼續遊戲",
                     button2Action: {
                         showLeaveGameView = false
-                        print("繼續遊戲被點擊")
                     }
                 )
                 .zIndex(1)
             }
         }
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
+            ToolbarItem(placement: .navigationBar) {
                 BackButton {
                     showLeaveGameView = true
                 }
@@ -173,7 +180,6 @@ struct AudioImageMatchingGame: View {
                         currentRound += 1
                         setupGame()
                     } else {
-                        // Game completed
                         showGameCompleted()
                     }
                 }
@@ -182,9 +188,8 @@ struct AudioImageMatchingGame: View {
         .alert(isPresented: $showGameCompletedAlert) {
             Alert(
                 title: Text("Game Completed! 🎊"),
-                message: Text("Your final score: \(score) out of \(totalRounds)\nYou earned 20 coins! 🪙"),
+                message: Text("Your final score: \(score) out of \(totalRounds)"),
                 primaryButton: .default(Text("Play Again")) {
-                    // Reset game
                     score = 0
                     currentRound = 1
                     setupGame()
@@ -237,15 +242,10 @@ struct AudioImageMatchingGame: View {
     }
     
     private func showGameCompleted() {
-        // Award coins for completing the audio game
-        gameState.rewardForAudioGame()
-        
-        // Show completion alert
         showGameCompletedAlert = true
     }
 }
 
 #Preview {
     AudioImageMatchingGame()
-        .environmentObject(GameState())
 } 

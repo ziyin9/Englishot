@@ -15,6 +15,10 @@ struct MemoryGameView: View {
     @EnvironmentObject var gameState: GameState
     @EnvironmentObject var uiState: UIState
     @FetchRequest(entity: Word.entity(), sortDescriptors: []) var wordEntities: FetchedResults<Word>
+    @FetchRequest(entity: Coin.entity(), sortDescriptors: []) var coinEntities: FetchedResults<Coin>
+
+    @State var MemoryGameRewardCoins : Int64
+
     
     @State private var cards: [MemoryCard] = []
     @State private var selectedCards: [MemoryCard] = []
@@ -28,6 +32,9 @@ struct MemoryGameView: View {
         GridItem(.flexible(), spacing: 10),
         GridItem(.flexible(), spacing: 10)
     ]
+    private var currentCoins: Int64 {
+        coinEntities.first?.amount ?? 0
+    }
     
     var body: some View {
         ZStack {
@@ -128,6 +135,9 @@ struct MemoryGameView: View {
                 
                 LeaveGameView(showLeaveGameView: $showGameOver, message: "Good Job!", button1Title: "離開遊戲", button1Action: { dismiss() }, button2Title: "再玩一次", button2Action: {setupGame() })
             }
+            if uiState.isCoinVisible {
+                CoinDisplayView(coins: currentCoins)
+            }
         }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -194,8 +204,7 @@ struct MemoryGameView: View {
                 
                 if matchedPairs == 6 {
                     // Award coins for completing the memory game
-                    gameState.rewardForMemoryGame()
-                    
+                    addCoin(by:MemoryGameRewardCoins)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                         showGameOver = true
                     }
@@ -306,7 +315,7 @@ struct CardView: View {
 
 // Preview
 #Preview {
-    MemoryGameView()
+    MemoryGameView(MemoryGameRewardCoins:100)
         .environmentObject(GameState())
         .environmentObject(UIState())
 }

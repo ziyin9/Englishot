@@ -1,17 +1,20 @@
 import SwiftUI
 
 struct MiniGameView: View {
-    @EnvironmentObject var gameState: GameState
-    @EnvironmentObject var uiState: UIState
     @Environment(\.dismiss) var dismiss
-
+    @EnvironmentObject var uiState: UIState
     @FetchRequest(entity: Word.entity(), sortDescriptors: []) var wordEntities: FetchedResults<Word>
+    @FetchRequest(entity: Coin.entity(), sortDescriptors: []) var coinEntities: FetchedResults<Coin>
     
     @State private var isLoaded = false
     @State private var snowflakes: [Snowflake] = (0..<50).map { _ in Snowflake() }
     @State private var isHoveringMemory = false
     @State private var isHoveringAudio = false
     @State private var isHoveringSpelling = false
+    
+    @State private var SpellingGameRewardCoins : Int64 = 20
+    @State private var MemoryGameRewardCoins : Int64  = 50
+    @State private var AudioImageGameRewardCoins : Int64  = 200
     
     private var isMemoryGamePlayable: Bool {
         wordEntities.count >= 6
@@ -25,10 +28,14 @@ struct MiniGameView: View {
         wordEntities.count >= 1
     }
     
+    private var currentCoins: Int64 {
+        coinEntities.first?.amount ?? 0
+    }
+    
     var body: some View {
         NavigationView {
             ZStack {
-                // Enhanced background gradient with more depth
+                // Background gradient
                 LinearGradient(
                     gradient: Gradient(colors: [
                         Color(#colorLiteral(red: 0.8, green: 0.9, blue: 1.0, alpha: 1)), // Light sky blue
@@ -45,16 +52,9 @@ struct MiniGameView: View {
                     Snowflake_View(snowflake: snowflake)
                 }
                 
-                // Coin Display in top right corner
-                VStack {
-                    HStack {
-                        Spacer()
-                        CoinDisplayView()
-                            .environmentObject(gameState)
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 10)
-                    Spacer()
+                // Coin Display
+                if uiState.isCoinVisible {
+                    CoinDisplayView(coins: currentCoins)
                 }
                 
                 // Content
@@ -90,7 +90,7 @@ struct MiniGameView: View {
                         VStack(spacing: 20) {
                             // Spelling Game Card
                             Spacer()
-                            NavigationLink(destination: SpellingGameView()
+                            NavigationLink(destination: SpellingGameView(SpellingGameRewardCoins:SpellingGameRewardCoins)
                                 .navigationBarBackButtonHidden()
                             ) {
                                 EnhancedGameCard(
@@ -102,7 +102,7 @@ struct MiniGameView: View {
                                     isHovering: $isHoveringSpelling,
                                     isEnabled: isSpellingGamePlayable,
                                     lockedMessage: "Collect At Least 1 Word",
-                                    rewardCoins: 10
+                                    rewardCoins: SpellingGameRewardCoins
                                 )
                                 .scaleEffect(isHoveringSpelling ? 1.03 : 1.0)
                                 .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHoveringSpelling)
@@ -116,7 +116,7 @@ struct MiniGameView: View {
                             .opacity(isLoaded ? 1 : 0)
                             
                             // Memory Game Card
-                            NavigationLink(destination: MemoryGameView()
+                            NavigationLink(destination: MemoryGameView(MemoryGameRewardCoins:MemoryGameRewardCoins)
                                 .navigationBarBackButtonHidden()
                             ) {
                                 EnhancedGameCard(
@@ -128,7 +128,7 @@ struct MiniGameView: View {
                                     isHovering: $isHoveringMemory,
                                     isEnabled: isMemoryGamePlayable,
                                     lockedMessage: "Collect 6+ Words to Unlock",
-                                    rewardCoins: 15
+                                    rewardCoins: MemoryGameRewardCoins
                                 )
                                 .scaleEffect(isHoveringMemory ? 1.03 : 1.0)
                                 .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHoveringMemory)
@@ -142,7 +142,7 @@ struct MiniGameView: View {
                             .opacity(isLoaded ? 1 : 0)
                             
                             // Audio-Image Game Card
-                            NavigationLink(destination: AudioImageMatchingGame()
+                            NavigationLink(destination: AudioImageMatchingGame(AudioImageGameRewardCoins:AudioImageGameRewardCoins)
                                 .navigationBarBackButtonHidden()
                             ) {
                                 EnhancedGameCard(
@@ -154,7 +154,7 @@ struct MiniGameView: View {
                                     isHovering: $isHoveringAudio,
                                     isEnabled: isAudioGamePlayable,
                                     lockedMessage: "Collect 6+ Words to Unlock",
-                                    rewardCoins: 20
+                                    rewardCoins: AudioImageGameRewardCoins
                                 )
                                 .scaleEffect(isHoveringAudio ? 1.03 : 1.0)
                                 .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHoveringAudio)
@@ -174,82 +174,38 @@ struct MiniGameView: View {
                     Spacer()
                 }
                 .padding()
-                
-                // Coin reward overlay
-                if gameState.showCoinReward {
-                    CoinRewardOverlay(amount: gameState.rewardAmount)
-                        .transition(.asymmetric(
-                            insertion: .move(edge: .top).combined(with: .opacity),
-                            removal: .opacity
-                        ))
-                        .animation(.spring(response: 0.6, dampingFraction: 0.8), value: gameState.showCoinReward)
-                }
             }
             .navigationBarBackButtonHidden(true)
             .onAppear {
+                // Initialize coin if needed
+                initializeCoinIfNeeded()
+                
                 // Staggered animations
                 withAnimation(.spring(response: 0.7, dampingFraction: 0.7).delay(0.1)) {
                     isLoaded = true
                 }
             }
         }
+        
+        // Add coin reward overlay with UIState control
+        if uiState.showCoinReward {
+            CoinRewardOverlay(amount: uiState.coinRewardAmount)
+                .environmentObject(uiState)
+                .transition(.asymmetric(
+                    insertion: .move(edge: .top).combined(with: .opacity),
+                    removal: .opacity
+                ))
+                .animation(.spring(response: 0.6, dampingFraction: 0.8), value: uiState.showCoinReward)
+        }
     }
 }
 
-// Coin Display Component
-struct CoinDisplayView: View {
-    @EnvironmentObject var gameState: GameState
-    @State private var bounce = false
-    
-    var body: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "dollarsign.circle.fill")
-                .font(.system(size: 24))
-                .foregroundColor(.yellow)
-                .shadow(color: .orange, radius: 2)
-                .scaleEffect(bounce ? 1.2 : 1.0)
-                .animation(.spring(response: 0.3, dampingFraction: 0.5), value: bounce)
-            
-            Text("\(gameState.coins)")
-                .font(.system(size: 20, weight: .bold, design: .rounded))
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [.yellow, .orange],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-                .shadow(color: .black.opacity(0.3), radius: 1, x: 0, y: 1)
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
-        .background(
-            Capsule()
-                .fill(Color.black.opacity(0.2))
-                .overlay(
-                    Capsule()
-                        .stroke(Color.yellow.opacity(0.5), lineWidth: 1)
-                )
-        )
-        .onChange(of: gameState.coins) { _ in
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
-                bounce = true
-            }
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
-                    bounce = false
-                }
-            }
-        }
-    }
-}
 
 // Coin Reward Overlay
 struct CoinRewardOverlay: View {
+    @EnvironmentObject var uiState: UIState
     let amount: Int
     @State private var animateReward = false
-    @State private var showParticles = false
     
     var body: some View {
         VStack {
@@ -257,7 +213,7 @@ struct CoinRewardOverlay: View {
                 Spacer()
                 
                 VStack(spacing: 8) {
-                    Image(systemName: "dollarsign.circle.fill")
+                    Image(systemName: "fish.fill")
                         .font(.system(size: 40))
                         .foregroundColor(.yellow)
                         .shadow(color: .orange, radius: 4)
@@ -291,8 +247,52 @@ struct CoinRewardOverlay: View {
             withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {
                 animateReward = true
             }
+            
+            // Automatically hide reward after animation
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                withAnimation {
+                    uiState.showCoinReward = false
+                }
+            }
         }
     }
+}
+
+// Helper extension for coin display positioning
+extension View {
+    func coinDisplayPosition(_ position: CoinDisplayPosition = .topRight) -> some View {
+        self.modifier(CoinDisplayPositionModifier(position: position))
+    }
+}
+
+// Coin display position modifier
+struct CoinDisplayPositionModifier: ViewModifier {
+    let position: CoinDisplayPosition
+    
+    func body(content: Content) -> some View {
+        switch position {
+        case .topRight:
+            content
+                .padding(.top, 10)
+                .padding(.trailing, 20)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+        case .topLeft:
+            content
+                .padding(.top, 10)
+                .padding(.leading, 20)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        case .center:
+            content
+                .frame(maxWidth: .infinity, alignment: .center)
+        }
+    }
+}
+
+// Coin display position enum
+enum CoinDisplayPosition {
+    case topRight
+    case topLeft
+    case center
 }
 
 struct EnhancedGameCard: View {
@@ -304,7 +304,7 @@ struct EnhancedGameCard: View {
     @Binding var isHovering: Bool
     let isEnabled: Bool
     let lockedMessage: String
-    let rewardCoins: Int?
+    let rewardCoins: Int64?
     
     @State private var animateIcons = false
     
@@ -341,7 +341,11 @@ struct EnhancedGameCard: View {
                         Spacer()
                         
                         HStack(spacing: 4) {
-                            Image(systemName: "dollarsign.circle.fill")
+                            Image(systemName: "plus")
+//                                .font(.bold)
+                                .foregroundColor(.white)
+
+                            Image(systemName: "fish.fill")
                                 .font(.system(size: 16))
                                 .foregroundColor(.yellow)
                             
@@ -508,6 +512,5 @@ struct EnhancedGameCard: View {
 
 #Preview {
     MiniGameView()
-        .environmentObject(GameState())
         .environmentObject(UIState())
 }
