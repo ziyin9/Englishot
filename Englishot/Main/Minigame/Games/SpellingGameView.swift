@@ -160,7 +160,7 @@ struct SpellingGameView: View {
                                 .padding(.vertical, 12)
                                 .background(
                                     Capsule()
-                                        .fill(selectedLetters.isEmpty ? 
+                                        .fill(selectedLetters.isEmpty ?
                                             Color(#colorLiteral(red: 0.5, green: 0.8, blue: 0.3, alpha: 0.5)) :
                                             Color(#colorLiteral(red: 0.5, green: 0.8, blue: 0.3, alpha: 1)))
                                 )
@@ -207,18 +207,17 @@ struct SpellingGameView: View {
                         .foregroundColor(Color(#colorLiteral(red: 0.5, green: 0.8, blue: 0.3, alpha: 1)))
                         .scaleEffect(animateSuccess ? 1.3 : 0.5)
                         .opacity(animateSuccess ? 1 : 0)
-                        .animation(.interpolatingSpring(stiffness: 100, damping: 10), value: animateSuccess)
+                        .animation(.interpolatingSpring(stiffness: 400, damping: 25), value: isCorrect)
                     Spacer()
                 }
-                .zIndex(10)
+                .zIndex(10) //確保correct在最上層
                 .onAppear {
-                    withAnimation {
                         animateSuccess = true
-                    }
                     createCelebrationParticles()
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                         withAnimation {
                             self.isCorrect = nil
+//                            self.animateSuccess = false
                         }
                     }
                 }
@@ -260,7 +259,7 @@ struct SpellingGameView: View {
             loadNewWord()
         }
     }
-    
+
     private func loadNewWord() {
         // Reset state
         selectedLetters = []

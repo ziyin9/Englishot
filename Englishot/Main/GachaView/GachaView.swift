@@ -1,12 +1,5 @@
-//
-//  GachaView.swift
-//  Englishot
-//
-//  Created by 陳姿縈 on 6/11/25.
-//
-
-
 import SwiftUI
+import CoreData
 
 struct GachaView: View {
     @Environment(\.dismiss) var dismiss
@@ -21,10 +14,8 @@ struct GachaView: View {
     @State private var showInsufficientCoinsAlert = false
     @State private var showConfirmDrawAlert = false
     @State private var selectedSortOption = "Rarity"
-    @State private var selectedFilter = "All"
     
     private let sortOptions = ["Rarity", "Unlocked", "Newest"]
-    private let filterOptions = ["All", "Emotion", "Profession", "Activity"]
     private let columns = [
         GridItem(.flexible(), spacing: 10),
         GridItem(.flexible(), spacing: 10),
@@ -42,27 +33,16 @@ struct GachaView: View {
         currentCoins >= requiredCoins
     }
     
-    private var sortedAndFilteredCards: [PenguinCard] {
-        var cards = gachaSystem.availableCards
-        
-        // Apply filter
-        if selectedFilter != "All" {
-            cards = cards.filter { $0.cardType == selectedFilter }
+    private var cardsByType: [String: [PenguinCard]] {
+        Dictionary(grouping: gachaSystem.availableCards) { $0.cardType }
+    }
+    
+    private func sortedCards(for type: String) -> [PenguinCard] {
+        let cards = cardsByType[type] ?? []
+        return cards.sorted { card1, card2 in
+            let rarityOrder = ["Snowflake": 0, "Ice Crystal": 1, "Frozen Star": 2, "Aurora": 3]
+            return (rarityOrder[card1.rarity] ?? 0) < (rarityOrder[card2.rarity] ?? 0)
         }
-        
-        // Apply sort
-        switch selectedSortOption {
-        case "Rarity":
-            cards.sort { $0.rarity > $1.rarity }
-        case "Unlocked":
-            cards.sort { $0.unlocked && !$1.unlocked }
-        case "Newest":
-            cards.sort { ($0.dateCollected ?? Date.distantPast) > ($1.dateCollected ?? Date.distantPast) }
-        default:
-            break
-        }
-        
-        return cards
     }
     
     var body: some View {
@@ -118,46 +98,40 @@ struct GachaView: View {
                         )
                     }
                     .padding(.horizontal)
-                    
-                    // Sort and filter controls
-                    HStack(spacing: 15) {
-                        // Sort picker
-                        Picker("Sort", selection: $selectedSortOption) {
-                            ForEach(sortOptions, id: \.self) { option in
-                                Text(option).tag(option)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color.white.opacity(0.2))
-                        )
-                        
-                        // Filter picker
-                        Picker("Filter", selection: $selectedFilter) {
-                            ForEach(filterOptions, id: \.self) { option in
-                                Text(option).tag(option)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color.white.opacity(0.2))
-                        )
-                    }
-                    .padding(.horizontal)
                 }
                 .padding(.top)
                 
-                // Card grid
+                // Card sections by type
                 ScrollView {
-                    LazyVGrid(columns: columns, spacing: 10) {
-                        ForEach(sortedAndFilteredCards) { card in
-                            CardGridItem(card: card)
-                                .frame(height: 120)
+                    VStack(spacing: 25) {
+                        ForEach(["Emotion", "Profession", "Activity"], id: \.self) { type in
+                            if let cards = cardsByType[type], !cards.isEmpty {
+                                VStack(alignment: .leading, spacing: 10) {
+                                    // Section header
+                                    HStack {
+                                        Image(systemName: getTypeIcon(for: type))
+                                            .font(.system(size: 20))
+                                            .foregroundColor(getTypeColor(for: type))
+                                        
+                                        Text(getTypeTitle(for: type))
+                                            .font(.system(size: 18, weight: .bold, design: .rounded))
+                                            .foregroundColor(.white)
+                                    }
+                                    .padding(.horizontal)
+                                    
+                                    // Cards grid
+                                    LazyVGrid(columns: columns, spacing: 10) {
+                                        ForEach(sortedCards(for: type)) { card in
+                                            CardGridItem(card: card)
+                                                .frame(height: 120)
+                                        }
+                                    }
+                                    .padding(.horizontal)
+                                }
+                            }
                         }
                     }
-                    .padding()
+                    .padding(.vertical)
                 }
                 
                 // Draw button
@@ -217,6 +191,33 @@ struct GachaView: View {
         }
     }
     
+    private func getTypeIcon(for type: String) -> String {
+        switch type {
+        case "Emotion": return "face.smiling"
+        case "Profession": return "briefcase"
+        case "Activity": return "figure.walk"
+        default: return "questionmark"
+        }
+    }
+    
+    private func getTypeTitle(for type: String) -> String {
+        switch type {
+        case "Emotion": return "表情"
+        case "Profession": return "職業"
+        case "Activity": return "活動"
+        default: return type
+        }
+    }
+    
+    private func getTypeColor(for type: String) -> Color {
+        switch type {
+        case "Emotion": return .pink
+        case "Profession": return .green
+        case "Activity": return .orange
+        default: return .gray
+        }
+    }
+    
     private func drawCard() {
         // Deduct coins
         deductCoin(by: requiredCoins)
@@ -248,121 +249,128 @@ struct GachaView: View {
         }
     }
 }
-
+//小卡呈現樣式
 struct CardGridItem: View {
     let card: PenguinCard
+    @State private var showDetail = false
     
     var body: some View {
-        ZStack {
-            // Card background with ice crystal pattern
-            RoundedRectangle(cornerRadius: 12)
-                .fill(card.rarityGradient)
-                .overlay(
-                    // Ice crystal pattern
-                    ZStack {
-                        ForEach(0..<4) { i in
-                            Image(systemName: "snowflake")
-                                .font(.system(size: 8))
-                                .foregroundColor(.white.opacity(0.1))
-                                .rotationEffect(.degrees(Double(i) * 90))
-                                .offset(x: CGFloat.random(in: -20...20), y: CGFloat.random(in: -20...20))
-                        }
-                    }
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(
-                            LinearGradient(
-                                colors: [.white, card.rarityColor.opacity(0.5)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            lineWidth: 1
+        Button(action: {
+            showDetail = true
+        }) {
+            ZStack {
+                // Card background
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color(card.rarityColor).opacity(0.3),
+                                Color(card.rarityColor).opacity(0.1)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
                         )
-                )
-                .shadow(color: card.rarityColor.opacity(0.3), radius: 4, x: 0, y: 2)
-            
-            VStack(spacing: 4) {
-                // Card image with ice frame
-                if card.unlocked {
-                    Image(card.imageName)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 50, height: 50)
-                        .clipShape(Circle())
-                        .overlay(
-                            Circle()
-                                .stroke(
-                                    LinearGradient(
-                                        colors: [.white, card.rarityColor],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    ),
-                                    lineWidth: 2
-                                )
-                        )
-                        .shadow(color: card.rarityColor.opacity(0.3), radius: 2)
-                } else {
-                    // Locked card placeholder with ice theme
-                    ZStack {
-                        Circle()
-                            .fill(
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(
                                 LinearGradient(
-                                    colors: [.white.opacity(0.1), .white.opacity(0.05)],
+                                    colors: [
+                                        Color(card.rarityColor).opacity(0.5),
+                                        Color(card.rarityColor).opacity(0.2)
+                                    ],
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
-                                )
+                                ),
+                                lineWidth: 1
                             )
-                            .frame(width: 50, height: 50)
-                        
-                        Image(systemName: "penguin")
-                            .font(.system(size: 30))
-                            .foregroundColor(.gray)
-                        
-                        Image(systemName: "lock.fill")
-                            .font(.system(size: 15))
-                            .foregroundColor(.gray)
-                            .offset(x: 15, y: 15)
+                    )
+                
+                // Ice crystal pattern overlay
+                ZStack {
+                    ForEach(0..<3) { i in
+                        Image(systemName: "snowflake")
+                            .font(.system(size: 20))
+                            .foregroundColor(.white.opacity(0.1))
+                            .rotationEffect(.degrees(Double(i) * 60))
+                            .offset(x: CGFloat.random(in: -20...20), y: CGFloat.random(in: -20...20))
                     }
                 }
                 
-                // Card name with type badge
-                VStack(spacing: 2) {
-                    Text(card.cardName)
-                        .font(.system(size: 10, weight: .medium, design: .rounded))
-                        .foregroundColor(.primary)
+                VStack(spacing: 8) {
+                    // Card image
+                    if card.unlocked {
+                        Image(card.imageName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 60)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                            )
+                            .shadow(color: Color(card.rarityColor).opacity(0.3), radius: 5)
+                    } else {
+                        // Locked card placeholder
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(
+                                    LinearGradient(
+                                        colors: [
+                                            Color.gray.opacity(0.3),
+                                            Color.gray.opacity(0.1)
+                                        ],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                            
+                            Image(systemName: "lock.fill")
+                                .font(.system(size: 24))
+                                .foregroundColor(.white.opacity(0.5))
+                        }
+                        .frame(height: 60)
+                    }
+                    
+                    // Card name
+                    Text(card.englishWord)
+                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                        .foregroundColor(.white)
                         .lineLimit(1)
                     
                     // Type badge
-                    Text(card.cardType)
-                        .font(.system(size: 8, weight: .bold, design: .rounded))
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .background(
-                            Capsule()
-                                .fill(card.cardTypeColor)
-                        )
+//                    Text(card.cardType)
+//                        .font(.system(size: 10, weight: .medium, design: .rounded))
+//                        .foregroundColor(.white.opacity(0.8))
+//                        .padding(.horizontal, 8)
+//                        .padding(.vertical, 2)
+//                        .background(
+//                            Capsule()
+//                                .fill(Color.white.opacity(0.2))
+//                        )
+                    
+                    // Rarity badge
+                    HStack(spacing: 4) {
+                        Text(card.rarityIcon)
+                            .font(.system(size: 10))
+//                        Text(card.rarity)
+//                            .font(.system(size: 10, weight: .medium, design: .rounded))
+                    }
+                    .foregroundColor(Color(card.rarityColor))
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 2)
+                    .background(
+                        Capsule()
+                            .fill(Color(card.rarityColor).opacity(0.2))
+                    )
                 }
-                
-                // Rarity badge with icon
-                HStack(spacing: 2) {
-                    Text(card.rarityIcon)
-                        .font(.system(size: 8))
-                    Text(card.rarity)
-                        .font(.system(size: 8, weight: .bold, design: .rounded))
-                }
-                .foregroundColor(.white)
-                .padding(.horizontal, 6)
-                .padding(.vertical, 2)
-                .background(
-                    Capsule()
-                        .fill(card.rarityColor)
-                )
+                .padding(8)
             }
-            .padding(4)
         }
-        .opacity(card.unlocked ? 1.0 : 0.6)
+        .buttonStyle(PlainButtonStyle())
+        .sheet(isPresented: $showDetail) {
+            CardDetailView(card: card)
+        }
     }
 }
 
@@ -374,27 +382,27 @@ struct StatView: View {
     
     var body: some View {
         VStack(spacing: 4) {
-            Image(systemName: icon)
-                .font(.system(size: 20))
-                .foregroundColor(color)
-            
-            Text(value)
-                .font(.system(size: 16, weight: .bold, design: .rounded))
-                .foregroundColor(.white)
+            HStack(spacing: 4) {
+                Image(systemName: icon)
+                    .font(.system(size: 16))
+                Text(value)
+                    .font(.system(size: 16, weight: .bold, design: .rounded))
+            }
+            .foregroundColor(color)
             
             Text(title)
-                .font(.system(size: 10, weight: .medium, design: .rounded))
+                .font(.system(size: 12, weight: .medium, design: .rounded))
                 .foregroundColor(.white.opacity(0.8))
         }
-        .frame(maxWidth: .infinity)
         .padding(.vertical, 8)
+        .padding(.horizontal, 12)
         .background(
-            RoundedRectangle(cornerRadius: 12)
+            RoundedRectangle(cornerRadius: 10)
                 .fill(Color.white.opacity(0.1))
         )
     }
 }
 
 #Preview {
-    GachaView(gachaSystem:GachaSystem())
-}
+    GachaView(gachaSystem: GachaSystem())
+} 

@@ -21,6 +21,8 @@ struct AudioImageMatchingGame: View {
     @State private var selectedImageIndex: Int? = nil
     @State private var showNextButton = false
     @State private var incorrectSelections: Set<Int> = []
+    @State private var isAnswerLocked = false
+
     // Colors
     let backgroundColor = Color(#colorLiteral(red: 0.9490196078, green: 0.9764705882, blue: 0.9882352941, alpha: 1))
     let accentColor = Color(#colorLiteral(red: 0.2196078431, green: 0.5803921569, blue: 0.9882352941, alpha: 1))
@@ -131,9 +133,8 @@ struct AudioImageMatchingGame: View {
                                 }
                                 .frame(height: 150)
                                 .onTapGesture {
-                                    // Only allow selection if not already marked as incorrect
-                                    // and not showing the next button yet
-                                    if !showNextButton && !incorrectSelections.contains(index) {
+                                    // 只有在答案未锁定且未显示Next按钮时才允许选择
+                                    if !isAnswerLocked && !showNextButton && !incorrectSelections.contains(index) {
                                         selectedImageIndex = index
                                         // Add haptic feedback
                                         let impactMed = UIImpactFeedbackGenerator(style: .medium)
@@ -160,6 +161,7 @@ struct AudioImageMatchingGame: View {
                         isCorrect = nil
                         showNextButton = false
                         incorrectSelections.removeAll()
+                        isAnswerLocked = false  // 重置答案锁定状态
                     }) {
                         ZStack {
                             RoundedRectangle(cornerRadius: 25)
@@ -216,7 +218,7 @@ struct AudioImageMatchingGame: View {
             setupGame()
         }
     }
-    
+
     // Background color based on the answer state
     private func backgroundColor(for index: Int, word: Word) -> Color {
         if selectedImageIndex == index && isCorrect == true {

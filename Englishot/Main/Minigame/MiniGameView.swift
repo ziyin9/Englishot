@@ -14,7 +14,7 @@ struct MiniGameView: View {
     
     @State private var SpellingGameRewardCoins : Int64 = 20
     @State private var MemoryGameRewardCoins : Int64  = 50
-    @State private var AudioImageGameRewardCoins : Int64  = 200
+    @State private var AudioImageGameRewardCoins : Int64  = 9000
     
     private var isMemoryGamePlayable: Bool {
         wordEntities.count >= 6
