@@ -143,11 +143,15 @@ struct MemoryGameView: View {
             ToolbarItem(placement: .topBarLeading) {
                 BackButton {
                     showLeaveGameView = true
+                    uiState.isNavBarVisible = true
+
                 }
             }
         }
         .onAppear {
             setupGame()
+            uiState.isNavBarVisible = false
+
         }
     }
     
@@ -229,6 +233,7 @@ struct MemoryGameView: View {
             isProcessing = false
         }
     }
+    
 }
 
 struct CardView: View {

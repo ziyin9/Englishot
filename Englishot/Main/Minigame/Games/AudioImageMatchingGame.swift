@@ -211,11 +211,15 @@ struct AudioImageMatchingGame: View {
             ToolbarItem(placement: .topBarLeading) {
                 BackButton {
                     showLeaveGameView = true
+                    uiState.isNavBarVisible = true
+
                 }
             }
         }
         .onAppear {
             setupGame()
+            uiState.isNavBarVisible = false
+
         }
     }
     // Background color based on the answer state

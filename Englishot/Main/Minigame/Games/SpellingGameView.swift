@@ -252,11 +252,15 @@ struct SpellingGameView: View {
             ToolbarItem(placement: .topBarLeading) {
                 BackButton {
                     showLeaveGameView = true
+                    uiState.isNavBarVisible = true
+
                 }
             }
         }
         .onAppear {
             loadNewWord()
+            uiState.isNavBarVisible = false
+                 
         }
     }
 

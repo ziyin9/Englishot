@@ -1,9 +1,11 @@
 import SwiftUI
+import CoreData
 
 struct CardDetailView: View {
     let card: PenguinCard
     @Environment(\.dismiss) var dismiss
     @State private var isPlayingAudio = false
+    @State private var isCollected = false
     
     var body: some View {
         ZStack {
@@ -37,7 +39,7 @@ struct CardDetailView: View {
             ScrollView {
                 VStack(spacing: 25) {
                     // Card image
-                    if card.unlocked {
+                    if isCollected {
                         Image(card.imageName)
                             .resizable()
                             .scaledToFit()
@@ -87,19 +89,21 @@ struct CardDetailView: View {
                                 .font(.system(size: 32, weight: .bold, design: .rounded))
                                 .foregroundColor(.white)
                             
-                            Button(action: {
-                                // Play pronunciation
-                                isPlayingAudio = true
-                                // Add audio playback logic here
-                            }) {
-                                Image(systemName: isPlayingAudio ? "speaker.wave.2.fill" : "speaker.wave.2")
-                                    .font(.system(size: 24))
-                                    .foregroundColor(.white)
-                                    .padding(10)
-                                    .background(
-                                        Circle()
-                                            .fill(Color.white.opacity(0.2))
-                                    )
+                            if isCollected {
+                                Button(action: {
+                                    // Play pronunciation
+                                    isPlayingAudio = true
+                                    // Add audio playback logic here
+                                }) {
+                                    Image(systemName: isPlayingAudio ? "speaker.wave.2.fill" : "speaker.wave.2")
+                                        .font(.system(size: 24))
+                                        .foregroundColor(.white)
+                                        .padding(10)
+                                        .background(
+                                            Circle()
+                                                .fill(Color.white.opacity(0.2))
+                                        )
+                                }
                             }
                         }
                         
@@ -142,7 +146,7 @@ struct CardDetailView: View {
                     .padding(.horizontal)
                     
                     // Description
-                    if card.unlocked {
+                    if isCollected {
                         VStack(alignment: .leading, spacing: 10) {
                             Text("Description")
                                 .font(.system(size: 18, weight: .bold, design: .rounded))
@@ -175,6 +179,23 @@ struct CardDetailView: View {
                         .foregroundColor(.white)
                 }
             }
+        }
+        .onAppear {
+            checkIfWordIsCollected()
+        }
+    }
+    
+    private func checkIfWordIsCollected() {
+        let context = CoreDataManager.shared.context
+        let fetchRequest: NSFetchRequest<PenguinCardWord> = PenguinCardWord.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "penguinword == %@", card.englishWord)
+        
+        do {
+            let results = try context.fetch(fetchRequest)
+            isCollected = !results.isEmpty
+        } catch {
+            print("Failed to check if word is collected: \(error)")
+            isCollected = false
         }
     }
 }

@@ -15,7 +15,7 @@ struct GachaView: View {
     @State private var showConfirmDrawAlert = false
     @State private var selectedSortOption = "Rarity"
     @State private var showGameScene = false
-    //555
+    @State private var refreshTrigger = false
     
     private let sortOptions = ["Rarity", "Unlocked", "Newest"]
     private let columns = [
@@ -52,8 +52,8 @@ struct GachaView: View {
             // Enhanced ice & snow background
             LinearGradient(
                 gradient: Gradient(colors: [
-                    Color(#colorLiteral(red: 0.1, green: 0.15, blue: 0.3, alpha: 1)),
-                    Color(#colorLiteral(red: 0.2, green: 0.25, blue: 0.4, alpha: 1))
+                    Color(#colorLiteral(red: 0.8, green: 0.9, blue: 1.0, alpha: 1)),  // Light ice blue
+                    Color(#colorLiteral(red: 0.9, green: 0.95, blue: 1.0, alpha: 1))  // Almost white with slight blue tint
                 ]),
                 startPoint: .top,
                 endPoint: .bottom
@@ -82,26 +82,48 @@ struct GachaView: View {
                     Text("Penguin Collection")
                         .font(.system(size: 24, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
-                    
-                    // Collection progress
-                    HStack(spacing: 20) {
-                        StatView(
-                            title: "Collected",
-                            value: "\(gachaSystem.collectedCards.count)/\(gachaSystem.availableCards.count)",
-                            icon: "checkmark.circle.fill",
-                            color: .green
-                        )
-                        
-                        StatView(
-                            title: "Completion",
-                            value: "\(Int(Double(gachaSystem.collectedCards.count) / Double(gachaSystem.availableCards.count) * 100))%",
-                            icon: "chart.pie.fill",
-                            color: .blue
-                        )
-                    }
-                    .padding(.horizontal)
                 }
                 .padding(.top)
+                
+                // Rarity Legend Section
+                HStack(spacing: 8) {
+                    // Snowflake
+                    RarityLegendItem(
+                        title: "雪花級",
+                        subtitle: "Snowflake",
+                        color: Color(hex: "AEE9F3"),
+                        icon: "snowflake"
+                    )
+                    
+                    // Ice Crystal
+                    RarityLegendItem(
+                        title: "冰晶級",
+                        subtitle: "Ice Crystal",
+                        color: Color(hex: "72D0F4"),
+                        icon: "sparkles"
+                    )
+                    
+                    // Frozen Star
+                    RarityLegendItem(
+                        title: "冰凍星級",
+                        subtitle: "Frozen Star",
+                        color: Color(hex: "5A9EF8"),
+                        icon: "star.fill"
+                    )
+                    
+                    // Aurora
+                    RarityLegendItem(
+                        title: "極光級",
+                        subtitle: "Aurora",
+                        colors: [
+                            Color(hex: "8EC6FF"),
+                            Color(hex: "D1BFFF"),
+                            Color(hex: "A3F2E5")
+                        ],
+                        icon: "sparkles.rectangle.stack"
+                    )
+                }
+                .padding(.horizontal)
                 
                 // Card sections by type
                 ScrollView {
@@ -124,7 +146,7 @@ struct GachaView: View {
                                     // Cards grid
                                     LazyVGrid(columns: columns, spacing: 10) {
                                         ForEach(sortedCards(for: type)) { card in
-                                            CardGridItem(card: card)
+                                            CardGridItem(card: card, refreshTrigger: $refreshTrigger)
                                                 .frame(height: 120)
                                         }
                                     }
@@ -174,6 +196,7 @@ struct GachaView: View {
                         withAnimation {
                             showGameScene = false
                             drawCard()
+                            refreshTrigger.toggle()
                         }
                     }
                     .transition(.opacity)
@@ -257,160 +280,70 @@ struct GachaView: View {
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.7).delay(0.5)) {
                     cardScale = 1.0
                 }
-            }
-        }
-    }
-}
-//小卡呈現樣式
-struct CardGridItem: View {
-    let card: PenguinCard
-    @State private var showDetail = false
-    
-    var body: some View {
-        Button(action: {
-            showDetail = true
-        }) {
-            ZStack {
-                // Card background
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color(card.rarityColor).opacity(0.3),
-                                Color(card.rarityColor).opacity(0.1)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(
-                                LinearGradient(
-                                    colors: [
-                                        Color(card.rarityColor).opacity(0.5),
-                                        Color(card.rarityColor).opacity(0.2)
-                                    ],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                ),
-                                lineWidth: 1
-                            )
-                    )
                 
-                // Ice crystal pattern overlay
-                ZStack {
-                    ForEach(0..<3) { i in
-                        Image(systemName: "snowflake")
-                            .font(.system(size: 20))
-                            .foregroundColor(.white.opacity(0.1))
-                            .rotationEffect(.degrees(Double(i) * 60))
-                            .offset(x: CGFloat.random(in: -20...20), y: CGFloat.random(in: -20...20))
-                    }
-                }
-                
-                VStack(spacing: 8) {
-                    // Card image
-                    if card.unlocked {
-                        Image(card.imageName)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 60)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                            )
-                            .shadow(color: Color(card.rarityColor).opacity(0.3), radius: 5)
-                    } else {
-                        // Locked card placeholder
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 8)
-                                .fill(
-                                    LinearGradient(
-                                        colors: [
-                                            Color.gray.opacity(0.3),
-                                            Color.gray.opacity(0.1)
-                                        ],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    )
-                                )
-                            
-                            Image(systemName: "lock.fill")
-                                .font(.system(size: 24))
-                                .foregroundColor(.white.opacity(0.5))
-                        }
-                        .frame(height: 60)
-                    }
-                    
-                    // Card name
-                    Text(card.englishWord)
-                        .font(.system(size: 12, weight: .medium, design: .rounded))
-                        .foregroundColor(.white)
-                        .lineLimit(1)
-                    
-                    // Type badge
-//                    Text(card.cardType)
-//                        .font(.system(size: 10, weight: .medium, design: .rounded))
-//                        .foregroundColor(.white.opacity(0.8))
-//                        .padding(.horizontal, 8)
-//                        .padding(.vertical, 2)
-//                        .background(
-//                            Capsule()
-//                                .fill(Color.white.opacity(0.2))
-//                        )
-                    
-                    // Rarity badge
-                    HStack(spacing: 4) {
-                        Text(card.rarityIcon)
-                            .font(.system(size: 10))
-//                        Text(card.rarity)
-//                            .font(.system(size: 10, weight: .medium, design: .rounded))
-                    }
-                    .foregroundColor(Color(card.rarityColor))
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 2)
-                    .background(
-                        Capsule()
-                            .fill(Color(card.rarityColor).opacity(0.2))
-                    )
-                }
-                .padding(8)
+                // Trigger refresh after animation completes
+                refreshTrigger.toggle()
             }
-        }
-        .buttonStyle(PlainButtonStyle())
-        .sheet(isPresented: $showDetail) {
-            CardDetailView(card: card)
         }
     }
 }
 
-struct StatView: View {
+struct RarityLegendItem: View {
     let title: String
-    let value: String
+    let subtitle: String
+    let colors: [Color]
     let icon: String
-    let color: Color
+    
+    init(title: String, subtitle: String, color: Color, icon: String) {
+        self.title = title
+        self.subtitle = subtitle
+        self.colors = [color]
+        self.icon = icon
+    }
+    
+    init(title: String, subtitle: String, colors: [Color], icon: String) {
+        self.title = title
+        self.subtitle = subtitle
+        self.colors = colors
+        self.icon = icon
+    }
     
     var body: some View {
         VStack(spacing: 4) {
-            HStack(spacing: 4) {
-                Image(systemName: icon)
-                    .font(.system(size: 16))
-                Text(value)
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
-            }
-            .foregroundColor(color)
+            // Icon
+            Image(systemName: icon)
+                .font(.system(size: 16))
+                .foregroundColor(.white)
+                .frame(width: 24, height: 24)
             
-            Text(title)
-                .font(.system(size: 12, weight: .medium, design: .rounded))
-                .foregroundColor(.white.opacity(0.8))
+            // Text
+            VStack(spacing: 2) {
+                Text(title)
+                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .foregroundColor(.white)
+                Text(subtitle)
+                    .font(.system(size: 10, weight: .regular, design: .rounded))
+                    .foregroundColor(.white.opacity(0.7))
+            }
         }
+        .frame(maxWidth: .infinity)
         .padding(.vertical, 8)
-        .padding(.horizontal, 12)
         .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(Color.white.opacity(0.1))
+            Group {
+                if colors.count == 1 {
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(colors[0])
+                } else {
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(
+                            LinearGradient(
+                                colors: colors,
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                }
+            }
         )
     }
 }
