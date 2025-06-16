@@ -14,6 +14,8 @@ struct GachaView: View {
     @State private var showInsufficientCoinsAlert = false
     @State private var showConfirmDrawAlert = false
     @State private var selectedSortOption = "Rarity"
+    @State private var showGameScene = false
+    //555
     
     private let sortOptions = ["Rarity", "Unlocked", "Newest"]
     private let columns = [
@@ -137,7 +139,7 @@ struct GachaView: View {
                 // Draw button
                 Button(action: {
                     if canDrawCard {
-                        showConfirmDrawAlert = true
+                        showGameScene = true
                     } else {
                         showInsufficientCoinsAlert = true
                     }
@@ -155,7 +157,7 @@ struct GachaView: View {
                         Capsule()
                             .fill(
                                 LinearGradient(
-                                    colors: canDrawCard ? 
+                                    colors: canDrawCard ?
                                         [Color.purple, Color.blue] :
                                         [Color.gray.opacity(0.5), Color.gray.opacity(0.3)],
                                     startPoint: .leading,
@@ -167,6 +169,16 @@ struct GachaView: View {
                 }
                 .disabled(!canDrawCard)
                 .padding(.bottom)
+                .fullScreenCover(isPresented: $showGameScene) {
+                    GameSceneView(isPresented: $showGameScene) {
+                        withAnimation {
+                            showGameScene = false
+                            drawCard()
+                        }
+                    }
+                    .transition(.opacity)
+                }
+                //555
             }
         }
         .alert("Insufficient Coins", isPresented: $showInsufficientCoinsAlert) {
@@ -405,4 +417,4 @@ struct StatView: View {
 
 #Preview {
     GachaView(gachaSystem: GachaSystem())
-} 
+}

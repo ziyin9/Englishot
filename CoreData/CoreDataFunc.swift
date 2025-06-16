@@ -157,3 +157,58 @@ func deductCoin(by amountToDeduct: Int64) {
     }
 }
 
+
+
+//Penguin
+
+func addPenguinWord(word: String) {
+    let context = CoreDataManager.shared.context
+
+    // 先檢查資料庫內是否已經存在這個 word
+    let fetchRequest: NSFetchRequest<PenguinCardWord> = PenguinCardWord.fetchRequest()
+    fetchRequest.predicate = NSPredicate(format: "penguinword == %@", word)
+
+    do {
+        let results = try context.fetch(fetchRequest)
+        if results.isEmpty {
+            // 沒有重複，可以新增
+            let newEntry = PenguinCardWord(context: context)
+            newEntry.penguinword = word
+
+            CoreDataManager.shared.saveContext()
+            print("成功新增 penguinword: \(word)")
+        } else {
+            // 已經存在，不重複加入
+            print("已存在 penguinword: \(word)，不重複加入")
+        }
+    } catch {
+        print("檢查失敗: \(error)")
+    }
+}
+
+
+func deletePenguinWord(wordString: String) {
+
+    let context = CoreDataManager.shared.context
+    
+    // 查找是否有相同的單字
+    let fetchRequest: NSFetchRequest<PenguinCardWord> = PenguinCardWord.fetchRequest()
+    fetchRequest.predicate = NSPredicate(format: "penguinword == %@", wordString)
+    
+    do {
+        let words = try context.fetch(fetchRequest)
+        
+        // 如果找到了相應的單字，刪除
+        if let wordToDelete = words.first {
+            context.delete(wordToDelete)
+
+            CoreDataManager.shared.saveContext()
+        } else {
+            print("No word found with the given name.")
+        }
+    } catch {
+        print("Fetch failed: \(error)")
+    }
+}
+
+
