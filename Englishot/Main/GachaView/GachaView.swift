@@ -1,7 +1,6 @@
 import SwiftUI
 import CoreData
 
-
 struct GachaView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var uiState: UIState
@@ -22,6 +21,7 @@ struct GachaView: View {
     @State private var isDuplicate = false
     @State private var refundAmount: Int64 = 0
     @State private var showDeveloperDelete = false
+    @State private var selectedGachaType: GachaType = .normal
     
     private let sortOptions = ["Rarity", "Unlocked", "Newest"]
     private let columns = [
@@ -31,7 +31,9 @@ struct GachaView: View {
         GridItem(.flexible(), spacing: 10)
     ]
     
-    private let requiredCoins: Int64 = 100
+    private var requiredCoins: Int64 {
+        selectedGachaType.cost
+    }
     
     private var currentCoins: Int64 {
         coinEntities.first?.amount ?? 0
@@ -99,88 +101,20 @@ struct GachaView: View {
                 }
                 .padding(.top)
                 
-                // Rarity Legend Section
-                VStack{
-                    // Draw button
-                    Button(action: {
-                        if canDrawCard {
+                // Gacha Type Selector
+                GachaTypeSelectorView(
+                    selectedGachaType: $selectedGachaType,
+                    currentCoins: currentCoins,
+                    onDrawCard: { gachaType in
+                        if currentCoins >= gachaType.cost {
                             showConfirmDrawAlert = true
                         } else {
                             showInsufficientCoinsAlert = true
                         }
-                    }) {
-                        HStack {
-                            Image(systemName: "sparkles")
-                            Text("Draw Card")
-                            Text("(\(requiredCoins) 🪙)")
-                        }
-                        .font(.system(size: 18, weight: .bold, design: .rounded))
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 25)
-                        .padding(.vertical, 12)
-                        .background(
-                            Capsule()
-                                .fill(
-                                    LinearGradient(
-                                        colors: canDrawCard ?
-                                            [Color.purple, Color.blue] :
-                                            [Color.gray.opacity(0.5), Color.gray.opacity(0.3)],
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
-                                )
-                                .shadow(color: canDrawCard ? .purple.opacity(0.5) : .clear, radius: 10)
-                        )
                     }
-                    .disabled(!canDrawCard)
-                    .padding(.bottom)
-                    .alert("Confirm Draw", isPresented: $showConfirmDrawAlert) {
-                        Button("Cancel", role: .cancel) { }
-                        Button("Draw") {
-                            drawCard()
-                        }
-                    } message: {
-                        Text("Spend \(requiredCoins) coins to draw a card?")
-                    }
-                    HStack(spacing: 8) {
-                        // Snowflake
-                        RarityLegendItem(
-                            title: "雪花級",
-                            subtitle: "Snowflake",
-                            color: Color(hex: "AEE9F3"),
-                            icon: "snowflake"
-                        )
-                        
-                        // Ice Crystal
-                        RarityLegendItem(
-                            title: "冰晶級",
-                            subtitle: "Ice Crystal",
-                            color: Color(hex: "72D0F4"),
-                            icon: "sparkles"
-                        )
-                        
-                        // Frozen Star
-                        RarityLegendItem(
-                            title: "冰凍星級",
-                            subtitle: "Frozen Star",
-                            color: Color(hex: "5A9EF8"),
-                            icon: "star.fill"
-                        )
-                        
-                        // Aurora
-                        RarityLegendItem(
-                            title: "極光級",
-                            subtitle: "Aurora",
-                            colors: [
-                                Color(hex: "8EC6FF"),
-                                Color(hex: "D1BFFF"),
-                                Color(hex: "A3F2E5")
-                            ],
-                            icon: "sparkles.rectangle.stack"
-                        )
-                    }
-                    .padding(.horizontal)
-                }
+                )
+                .padding(.horizontal)
+                
                 // Card sections by type
                 ScrollView {
                     VStack(spacing: 25) {
@@ -264,6 +198,14 @@ struct GachaView: View {
         } message: {
             Text("You need \(requiredCoins) coins to draw a card. Play mini-games to earn more coins!")
         }
+        .alert("Confirm Draw", isPresented: $showConfirmDrawAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Draw") {
+                drawCard()
+            }
+        } message: {
+            Text("Spend \(requiredCoins) coins to draw a \(selectedGachaType.title) card?")
+        }
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 BackButton {
@@ -322,8 +264,8 @@ struct GachaView: View {
         }
         
         
-        // Draw card using GachaSystem
-        if gachaSystem.drawCard(gameState: GameState()) {
+        // Draw card using GachaSystem with selected type
+        if gachaSystem.drawCard(gameState: GameState(), gachaType: selectedGachaType) {
             // Card drawn successfully
             showCard = true
             cardScale = 0.1
@@ -374,59 +316,149 @@ struct GachaView: View {
     }
 }
 
-struct RarityLegendItem: View {
-    let title: String
-    let subtitle: String
-    let colors: [Color]
-    let icon: String
-    
-    init(title: String, subtitle: String, color: Color, icon: String) {
-        self.title = title
-        self.subtitle = subtitle
-        self.colors = [color]
-        self.icon = icon
-    }
-    
-    init(title: String, subtitle: String, colors: [Color], icon: String) {
-        self.title = title
-        self.subtitle = subtitle
-        self.colors = colors
-        self.icon = icon
-    }
+// New component for gacha type selector
+struct GachaTypeSelectorView: View {
+    @Binding var selectedGachaType: GachaType
+    let currentCoins: Int64
+    let onDrawCard: (GachaType) -> Void
     
     var body: some View {
-        VStack(spacing: 4) {
-            // Icon
-            Image(systemName: icon)
-                .font(.system(size: 16))
-                .foregroundColor(.white)
-                .frame(width: 24, height: 24)
-            
-            // Text
-            VStack(spacing: 2) {
-                Text(title)
-                    .font(.system(size: 12, weight: .medium, design: .rounded))
+        VStack(spacing: 12) {
+            // Current coins display
+            HStack {
+                Image(systemName: "bitcoinsign.circle.fill")
+                    .foregroundColor(.yellow)
+                Text("Current Coins: \(currentCoins)")
+                    .font(.system(size: 16, weight: .semibold, design: .rounded))
                     .foregroundColor(.white)
-                Text(subtitle)
-                    .font(.system(size: 10, weight: .regular, design: .rounded))
-                    .foregroundColor(.white.opacity(0.7))
+                Spacer()
+            }
+            .padding(.horizontal, 4)
+            
+            // Scrollable gacha type selector
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 15) {
+                    ForEach(GachaType.allCases, id: \.self) { gachaType in
+                        GachaTypeCard(
+                            gachaType: gachaType,
+                            isSelected: selectedGachaType == gachaType,
+                            canAfford: currentCoins >= gachaType.cost,
+                            onTap: {
+                                selectedGachaType = gachaType
+                                onDrawCard(gachaType)
+                            }
+                        )
+                    }
+                }
+                .padding(.horizontal, 5)
             }
         }
-        .frame(maxWidth: .infinity)
         .padding(.vertical, 8)
-        .background(
-            Group {
-                if colors.count == 1 {
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(colors[0])
-                } else {
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(
-                            LinearGradient(
-                                colors: colors,
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
+    }
+}
+
+struct GachaTypeCard: View {
+    let gachaType: GachaType
+    let isSelected: Bool
+    let canAfford: Bool
+    let onTap: () -> Void
+    
+    @State private var isPressed = false
+    
+    var body: some View {
+        Button(action: {
+            withAnimation(.easeInOut(duration: 0.1)) {
+                isPressed = true
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                withAnimation(.easeInOut(duration: 0.1)) {
+                    isPressed = false
+                }
+                onTap()
+            }
+        }) {
+            VStack(spacing: 8) {
+                // Icon and title
+                VStack(spacing: 4) {
+                    Image(systemName: gachaType.icon)
+                        .font(.system(size: 24, weight: .semibold))
+                        .foregroundColor(.white)
+                        .shadow(radius: 2)
+                    
+                    Text(gachaType.title)
+                        .font(.system(size: 14, weight: .bold, design: .rounded))
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.center)
+                }
+                
+                // Subtitle
+                Text(gachaType.subtitle)
+                    .font(.system(size: 10, weight: .medium, design: .rounded))
+                    .foregroundColor(.white.opacity(0.8))
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                    .frame(height: 25)
+                
+                // Cost
+                HStack(spacing: 4) {
+                    Image(systemName: "bitcoinsign.circle.fill")
+                        .font(.system(size: 12))
+                        .foregroundColor(.yellow)
+                    Text("\(gachaType.cost)")
+                        .font(.system(size: 14, weight: .bold, design: .rounded))
+                        .foregroundColor(.white)
+                }
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(
+                    Capsule()
+                        .fill(Color.black.opacity(0.3))
+                )
+            }
+            .frame(width: 140, height: 120)
+            .padding(12)
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(
+                        LinearGradient(
+                            colors: canAfford ? gachaType.gradientColors : [Color.gray.opacity(0.5), Color.gray.opacity(0.3)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(
+                                isSelected ? Color.white.opacity(0.8) : Color.white.opacity(0.2),
+                                lineWidth: isSelected ? 3 : 1
                             )
+                    )
+                    .shadow(
+                        color: canAfford ? gachaType.gradientColors.first?.opacity(0.3) ?? .clear : .clear,
+                        radius: isSelected ? 8 : 4,
+                        x: 0,
+                        y: 2
+                    )
+            )
+            .scaleEffect(isPressed ? 0.95 : (isSelected ? 1.05 : 1.0))
+            .opacity(canAfford ? 1.0 : 0.6)
+        }
+        .disabled(!canAfford)
+        .animation(.easeInOut(duration: 0.2), value: isSelected)
+        .animation(.easeInOut(duration: 0.1), value: isPressed)
+        
+        // Lock overlay for unaffordable options
+        .overlay(
+            Group {
+                if !canAfford {
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 20))
+                        .foregroundColor(.white.opacity(0.8))
+                        .background(
+                            Circle()
+                                .fill(Color.black.opacity(0.6))
+                                .frame(width: 40, height: 40)
                         )
                 }
             }

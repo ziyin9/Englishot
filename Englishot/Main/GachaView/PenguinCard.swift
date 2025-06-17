@@ -7,6 +7,75 @@
 import SwiftUI
 import CoreData
 
+// Define gacha types enum
+enum GachaType: String, CaseIterable {
+    case normal = "normal"
+    case emotion = "emotion"
+    case profession = "profession"
+    case activity = "activity"
+    case festival = "festival"
+    
+    var title: String {
+        switch self {
+        case .normal: return "綜合抽卡"
+        case .emotion: return "限定表情"
+        case .profession: return "限定職業"
+        case .activity: return "活動抽卡"
+        case .festival: return "節日限定"
+        }
+    }
+    
+    var subtitle: String {
+        switch self {
+        case .normal: return "隨機抽取所有類型"
+        case .emotion: return "只抽表情卡片"
+        case .profession: return "只抽職業卡片"
+        case .activity: return "只抽活動卡片"
+        case .festival: return "只抽節日卡片"
+        }
+    }
+    
+    var cost: Int64 {
+        switch self {
+        case .normal: return 100
+        case .emotion: return 150
+        case .profession: return 170
+        case .activity: return 180
+        case .festival: return 200
+        }
+    }
+    
+    var icon: String {
+        switch self {
+        case .normal: return "sparkles"
+        case .emotion: return "face.smiling"
+        case .profession: return "briefcase"
+        case .activity: return "figure.walk"
+        case .festival: return "gift.fill"
+        }
+    }
+    
+    var gradientColors: [Color] {
+        switch self {
+        case .normal: return [Color.blue.opacity(0.8), Color.cyan.opacity(0.6)]
+        case .emotion: return [Color.pink.opacity(0.8), Color.purple.opacity(0.6)]
+        case .profession: return [Color.green.opacity(0.8), Color.mint.opacity(0.6)]
+        case .activity: return [Color.orange.opacity(0.8), Color.yellow.opacity(0.6)]
+        case .festival: return [Color.red.opacity(0.8), Color.orange.opacity(0.6)]
+        }
+    }
+    
+    var allowedCardTypes: [String] {
+        switch self {
+        case .normal: return ["Emotion", "Profession", "Activity", "Festival"]
+        case .emotion: return ["Emotion"]
+        case .profession: return ["Profession"]
+        case .activity: return ["Activity"]
+        case .festival: return ["Festival"]
+        }
+    }
+}
+
 struct PenguinCard: Identifiable, Codable {
     var id = UUID()
     var cardName: String
@@ -801,10 +870,10 @@ class GachaSystem: ObservableObject {
     }
     
     // Draw a card using coins
-    func drawCard(gameState: GameState) -> Bool {
-        let drawCost = 100 // Basic draw cost
+    func drawCard(gameState: GameState, gachaType: GachaType = .normal) -> Bool {
+        let drawCost = gachaType.cost
         
-        deductCoin(by: (Int64(drawCost) ))
+        deductCoin(by: Int64(drawCost))
         
         let randomValue = Double.random(in: 0...1)
         let selectedRarity: String
@@ -819,10 +888,27 @@ class GachaSystem: ObservableObject {
             selectedRarity = "Snowflake"
         }
         
-        // Filter cards by rarity
-        let cardsOfRarity = availableCards.filter { $0.rarity == selectedRarity }
-        guard let drawnCard = cardsOfRarity.randomElement() else { return false }
+        // Filter cards by rarity and card type based on gacha type
+        let cardsOfRarity = availableCards.filter { card in
+            card.rarity == selectedRarity && gachaType.allowedCardTypes.contains(card.cardType)
+        }
         
+        guard let drawnCard = cardsOfRarity.randomElement() else { 
+            // If no cards found for the specific type and rarity, try all rarities for the type
+            let cardsOfType = availableCards.filter { card in
+                gachaType.allowedCardTypes.contains(card.cardType)
+            }
+            guard let fallbackCard = cardsOfType.randomElement() else { 
+                return false 
+            }
+            return processDrawnCard(fallbackCard)
+        }
+        
+        return processDrawnCard(drawnCard)
+    }
+    
+    // Helper function to process the drawn card
+    private func processDrawnCard(_ drawnCard: PenguinCard) -> Bool {
         // Update card data
         var updatedCard = drawnCard
         updatedCard.timesDrawn += 1
