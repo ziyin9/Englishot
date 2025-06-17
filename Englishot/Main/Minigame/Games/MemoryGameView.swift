@@ -136,13 +136,6 @@ struct MemoryGameView: View {
                 
                 LeaveGameView(showLeaveGameView: $showGameOver, message: "Good Job!", button1Title: "離開遊戲", button1Action: { dismiss() }, button2Title: "再玩一次", button2Action: {setupGame() })
             }
-            if uiState.showCoinReward {
-                CoinRewardView(amount: Int64(uiState.coinRewardAmount), delay: 0)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-                    .padding(.top, 5)
-                    .padding(.trailing, 20)
-                    .zIndex(100)
-            }
         }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {

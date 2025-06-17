@@ -4,6 +4,7 @@
         <attribute name="amount" optional="YES" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES"/>
     </entity>
     <entity name="PenguinCardWord" representedClassName="PenguinCardWord" syncable="YES" codeGenerationType="class">
+        <attribute name="isNew" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="penguinword" optional="YES" attributeType="String"/>
     </entity>
     <entity name="Word" representedClassName="Word" syncable="YES" codeGenerationType="class">

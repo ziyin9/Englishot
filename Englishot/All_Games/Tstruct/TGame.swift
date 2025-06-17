@@ -248,7 +248,7 @@ struct TGame: View {
                                 .background(Color.blue.opacity(0.3))
                                 .clipShape(Circle())
                         }
-                        .padding(.trailing, 20)
+                        .padding(.trailing, 160)
                     }
                 }
             })

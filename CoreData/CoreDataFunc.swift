@@ -174,7 +174,7 @@ func addPenguinWord(word: String) {
             // 沒有重複，可以新增
             let newEntry = PenguinCardWord(context: context)
             newEntry.penguinword = word
-
+            newEntry.isNew = true
             CoreDataManager.shared.saveContext()
             print("成功新增 penguinword: \(word)")
         } else {
@@ -211,4 +211,25 @@ func deletePenguinWord(wordString: String) {
     }
 }
 
+func TurnIsNewTofalse(wordString: String){
+    let context = CoreDataManager.shared.context
+    
+    // 查找是否有相同的單字
+    let fetchRequest: NSFetchRequest<PenguinCardWord> = PenguinCardWord.fetchRequest()
+    fetchRequest.predicate = NSPredicate(format: "penguinword == %@", wordString)
+    
+    do {
+        let words = try context.fetch(fetchRequest)
+        
+        if let wordToDelete = words.first {
+            wordToDelete.isNew = false
 
+            CoreDataManager.shared.saveContext()
+            print("success turn to false")
+        } else {
+            print("No word found with the given name.")
+        }
+    } catch {
+        print("Fetch failed: \(error)")
+    }
+}

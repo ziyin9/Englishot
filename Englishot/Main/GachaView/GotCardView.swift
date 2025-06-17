@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreData
 
 struct GotCardView: View {
     let card: PenguinCard
@@ -6,6 +7,7 @@ struct GotCardView: View {
     let refundAmount: Int64
     @Binding var isPresented: Bool
     @State private var showContent = false
+    @State private var isNew = false
     
     var body: some View {
         ZStack {
@@ -47,6 +49,41 @@ struct GotCardView: View {
                                 )
                         )
                         .shadow(color: card.rarityColor.opacity(0.5), radius: 10)
+                    
+                    // New badge if it's a new card
+                    if isNew && !isDuplicate {
+                        VStack {
+                            HStack {
+                                Spacer()
+                                ZStack {
+                                    // Badge background with glow effect
+                                    Circle()
+                                        .fill(Color.red)
+                                        .frame(width: 60, height: 60)
+                                        .shadow(color: .red.opacity(0.7), radius: 8)
+                                    
+                                    Circle()
+                                        .fill(
+                                            LinearGradient(
+                                                colors: [.red, .pink],
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            )
+                                        )
+                                        .frame(width: 60, height: 60)
+                                    
+                                    // NEW text
+                                    Text("NEW")
+                                        .font(.system(size: 14, weight: .bold, design: .rounded))
+                                        .foregroundColor(.white)
+                                        .shadow(color: .black.opacity(0.5), radius: 2)
+                                }
+                                .offset(x: 15, y: -15)
+                            }
+                            Spacer()
+                        }
+                        .frame(width: 200, height: 200)
+                    }
                 }
                 .scaleEffect(showContent ? 1 : 0.5)
                 .opacity(showContent ? 1 : 0)
@@ -123,6 +160,7 @@ struct GotCardView: View {
                 .offset(y: showContent ? 0 : 30)
                 .opacity(showContent ? 1 : 0)
             }
+            .frame(width: 350, height: 500)
             .padding(30)
             .background(
                 RoundedRectangle(cornerRadius: 25)
@@ -130,10 +168,30 @@ struct GotCardView: View {
             )
             .padding(.horizontal, 20)
         }
+        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
         .onAppear {
+            checkIfWordIsNew()
             withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                 showContent = true
             }
+        }
+    }
+    
+    private func checkIfWordIsNew() {
+        let context = CoreDataManager.shared.context
+        let fetchRequest: NSFetchRequest<PenguinCardWord> = PenguinCardWord.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "penguinword == %@", card.englishWord)
+        
+        do {
+            let results = try context.fetch(fetchRequest)
+            if let penguinCardWord = results.first {
+                isNew = penguinCardWord.isNew
+            } else {
+                isNew = false
+            }
+        } catch {
+            print("Failed to check if word is new: \(error)")
+            isNew = false
         }
     }
 } 

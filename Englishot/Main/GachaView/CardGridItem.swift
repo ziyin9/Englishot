@@ -11,6 +11,7 @@ struct CardGridItem: View {
     let card: PenguinCard
     @State private var showDetail = false
     @State private var isCollected = false
+    @State private var isNew = false
     @Binding var refreshTrigger: Bool
     @EnvironmentObject var gachaSystem: GachaSystem
     
@@ -41,6 +42,11 @@ struct CardGridItem: View {
     var body: some View {
         Button(action: {
             if isCollected {
+                // Mark as viewed when clicked
+                if isNew {
+                    TurnIsNewTofalse(wordString: card.englishWord)
+                    isNew = false
+                }
                 showDetail = true
             }
         }) {
@@ -122,7 +128,7 @@ struct CardGridItem: View {
                             Image(card.imageName)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(height: 60)
+                                .frame(height: 70)
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 8)
@@ -162,7 +168,7 @@ struct CardGridItem: View {
                     .padding(8)
                     
                     // New badge
-                    if isCollected && card.isNew {
+                    if isCollected && isNew {
                         VStack {
                             HStack {
                                 Spacer()
@@ -227,9 +233,16 @@ struct CardGridItem: View {
         do {
             let results = try context.fetch(fetchRequest)
             isCollected = !results.isEmpty
+            // Check if the word is new
+            if let penguinCardWord = results.first {
+                isNew = penguinCardWord.isNew
+            } else {
+                isNew = false
+            }
         } catch {
             print("Failed to check if word is collected: \(error)")
             isCollected = false
+            isNew = false
         }
     }
 }

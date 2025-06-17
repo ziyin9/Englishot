@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct TutorialOverlayView: View {
+    @EnvironmentObject var uiState: UIState
     @Binding var isShowing: Bool
     @State private var currentStep = 0
     
@@ -74,6 +75,7 @@ struct TutorialOverlayView: View {
                 HStack {
                     Button(action: {
                         dismiss()
+                        uiState.isCoinVisible = true
                     }) {
                         ZStack {
                             Circle()

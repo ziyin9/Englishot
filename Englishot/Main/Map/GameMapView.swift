@@ -518,7 +518,10 @@ struct GameMapView: View {
                 Button(action: {
                     withAnimation {
                         showTutorial = true
+                        //下方TabView關閉
                         uiState.isNavBarVisible = false
+                        //上方金幣關閉
+                        uiState.isCoinVisible = false
                     }
                     triggerImpactFeedback(style: .light)
                 }) {

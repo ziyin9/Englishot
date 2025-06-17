@@ -24,7 +24,7 @@ struct MainView: View {
                 if uiState.isNavBarVisible {
                     TopNavBarView(selectedTab: $selectedTab, isHovered: $isHovered)
                 }
-                if uiState.isCoinVisible{
+                if ((selectedTab != .setting)&&(uiState.isCoinVisible)){
                     CoinDisplayView(coins: currentCoins)
                 }
 

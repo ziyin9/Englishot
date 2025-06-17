@@ -21,11 +21,11 @@ struct CoinRewardView: View {
                     endPoint: .bottomTrailing
                 )
             )
-        
             .shadow(color: .black.opacity(0.3), radius: 1, x: 0, y: 1)
             .offset(y: offset)
             .scaleEffect(scale)
             .opacity(opacity)
+            .position(x: UIScreen.main.bounds.width - 50, y: 10)  // 調高起始位置
             .onAppear {
                 // Add initial delay if specified
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
@@ -43,7 +43,6 @@ struct CoinRewardView: View {
                     }
                 }
             }
-        
     }
 }
 
@@ -52,4 +51,4 @@ struct CoinRewardView: View {
         CoinRewardView(amount: 50, delay: 0)
         CoinRewardView(amount: -30, delay: 0)
     }
-} 
+}

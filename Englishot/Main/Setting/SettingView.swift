@@ -169,13 +169,6 @@ struct SettingView: View {
                                                     .monospacedDigit()
                                             }
                                             
-//                                            Slider(value: $snowIntensity, in: 0.1...1, step: 0.05)
-//                                                .tint(.blue)
-//                                                .overlay(
-//                                                    RoundedRectangle(cornerRadius: 10)
-//                                                        .stroke(Color.blue.opacity(0.2), lineWidth: 1)
-//                                                        .padding(-2)
-//                                                )
                                         }
                                     }
                                 }
@@ -195,15 +188,6 @@ struct SettingView: View {
                                                     action: privacyManager.requestCameraPermission
                                                 )
                                                 
-//                                                Divider()
-//                                                    .background(Color.blue.opacity(0.2))
-//                                                
-//                                                EnhancedPrivacySettingRow(
-//                                                    icon: "mic.fill",
-//                                                    title: "Microphone Access",
-//                                                    status: privacyManager.permissionStatusText(for: privacyManager.microphonePermissionStatus),
-//                                                    action: privacyManager.requestMicrophonePermission
-//                                                )
                                                 
                                                 Divider()
                                                     .background(Color.blue.opacity(0.2))
@@ -267,9 +251,11 @@ struct SettingView: View {
                                     }
                                 }
                             }
+
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 25)
+                        
                     }
                 }
             }

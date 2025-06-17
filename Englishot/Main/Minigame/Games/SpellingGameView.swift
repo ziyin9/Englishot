@@ -246,13 +246,7 @@ struct SpellingGameView: View {
                 .zIndex(1)
             }
             
-            if uiState.showCoinReward {
-                CoinRewardView(amount: Int64(uiState.coinRewardAmount), delay: 0)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-                    .padding(.top, 5)
-                    .padding(.trailing, 20)
-                    .zIndex(100)
-            }
+   
             
         }
         .toolbar {

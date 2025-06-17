@@ -5,6 +5,7 @@
 //  Created by 陳姿縈 on 6/13/25.
 //
 import SwiftUI
+import CoreData
 
 struct PenguinCard: Identifiable, Codable {
     var id = UUID()
@@ -15,7 +16,6 @@ struct PenguinCard: Identifiable, Codable {
     var emotionType: String
     var unlocked: Bool = false
     var collected: Bool = false
-    var isNew: Bool = false
     var rarity: String // Snowflake, Ice Crystal, Frozen Star, Aurora
     var imageName: String
     var timesDrawn: Int16 = 0
@@ -139,6 +139,7 @@ class GachaSystem: ObservableObject {
     @Published var collectedCards: [PenguinCard] = []//
     @Published var showGashaResult = false
     @Published var lastDrawnCard: PenguinCard?
+    @Published var lastDrawWasDuplicate = false
     
     // Draw rates
     private let snowflakeRate: Double = 0.6  // 60%
@@ -149,6 +150,8 @@ class GachaSystem: ObservableObject {
     init() {
         setupInitialCards()
         loadCollectedCards()
+        // Ensure cards are synced with Core Data on app start
+        syncCardsWithCoreData()
     }
     
     // Setup initial card data
@@ -614,7 +617,110 @@ class GachaSystem: ObservableObject {
                 cardType: "Profession"
             ),
             
-            
+    // Activity Cards
+                PenguinCard(
+                    cardName: "Jogging Penguin",
+                    englishWord: "jogging",
+                    chineseWord: "慢跑",
+                    pronunciationURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/j/jog/jogging/jogging.mp3",
+                    emotionType: "active",
+                    rarity: "Aurora",
+                    imageName: "penguin_jogging",
+                    descriptionText: "A penguin enjoys jogging every morning, staying fit and healthy.",
+                    voiceLine: "Let's go for a run!",
+                    cardType: "Activity"
+                ),
+
+                PenguinCard(
+                    cardName: "Camping Penguin",
+                    englishWord: "camping",
+                    chineseWord: "露營",
+                    pronunciationURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/c/cam/camping/camping.mp3",
+                    emotionType: "active",
+                    rarity: "Ice Crystal",
+                    imageName: "penguin_camping",
+                    descriptionText: "A penguin loves camping under the stars.",
+                    voiceLine: "Time to set up camp!",
+                    cardType: "Activity"
+                ),
+
+                PenguinCard(
+                    cardName: "Fishing Penguin",
+                    englishWord: "fishing",
+                    chineseWord: "釣魚",
+                    pronunciationURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/f/fis/fishing/fishing.mp3",
+                    emotionType: "active",
+                    rarity: "Ice Crystal",
+                    imageName: "penguin_fishing",
+                    descriptionText: "A penguin enjoys fishing by the lakeside.",
+                    voiceLine: "Catch of the day!",
+                    cardType: "Activity"
+                ),
+
+                PenguinCard(
+                    cardName: "Hiking Penguin",
+                    englishWord: "hiking",
+                    chineseWord: "健行",
+                    pronunciationURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/h/hik/hiking/hiking.mp3",
+                    emotionType: "active",
+                    rarity: "Snowflake",
+                    imageName: "penguin_hiking",
+                    descriptionText: "A penguin loves hiking up mountains to enjoy the view.",
+                    voiceLine: "Let's climb higher!",
+                    cardType: "Activity"
+                ),
+
+                PenguinCard(
+                    cardName: "Shopping Penguin",
+                    englishWord: "shopping",
+                    chineseWord: "購物",
+                    pronunciationURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/s/sho/shopping/shopping.mp3",
+                    emotionType: "active",
+                    rarity: "Snowflake",
+                    imageName: "penguin_shopping",
+                    descriptionText: "A penguin enjoys shopping for the latest trends.",
+                    voiceLine: "Time for some retail therapy!",
+                    cardType: "Activity"
+                ),
+
+                PenguinCard(
+                    cardName: "Skiing Penguin",
+                    englishWord: "skiing",
+                    chineseWord: "滑雪",
+                    pronunciationURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/s/ski/skiing/skiing.mp3",
+                    emotionType: "active",
+                    rarity: "Aurora",
+                    imageName: "penguin_skiing",
+                    descriptionText: "A penguin loves skiing down snowy slopes.",
+                    voiceLine: "Woo-hoo! Let's ski!",
+                    cardType: "Activity"
+                ),
+
+                PenguinCard(
+                    cardName: "Surfing Penguin",
+                    englishWord: "surfing",
+                    chineseWord: "衝浪",
+                    pronunciationURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/s/sur/surfing/surfing.mp3",
+                    emotionType: "active",
+                    rarity: "Frozen Star",
+                    imageName: "penguin_surfing",
+                    descriptionText: "A penguin catches waves on a surfboard.",
+                    voiceLine: "Hang ten, dude!",
+                    cardType: "Activity"
+                ),
+
+                PenguinCard(
+                    cardName: "Swimming Penguin",
+                    englishWord: "swimming",
+                    chineseWord: "游泳",
+                    pronunciationURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/s/swi/swimming/swimming.mp3",
+                    emotionType: "active",
+                    rarity: "Snowflake",
+                    imageName: "penguin_swimming",
+                    descriptionText: "A penguin gracefully swims through the water.",
+                    voiceLine: "Let's dive in!",
+                    cardType: "Activity"
+                ),
             
     // Festival Cards
                 PenguinCard(
@@ -625,7 +731,7 @@ class GachaSystem: ObservableObject {
                     emotionType: "Festival",
                     rarity: "Snowflake",
                     imageName: "penguin_christmas",
-                    descriptionText: "Every year on December 25th, this penguin decorates the tree, sings carols, and waits for Santa’s arrival.",
+                    descriptionText: "Every year on December 25th, this penguin decorates the tree, sings carols, and waits for Santa's arrival.",
                     voiceLine: "Jingle bells, jingle bells, Merry Christmas!",
                     cardType: "Festival"
                 ),
@@ -662,7 +768,7 @@ class GachaSystem: ObservableObject {
                     rarity: "Snowflake",
                     imageName: "penguin_lanternfestival",
                     descriptionText: "On the fifteenth day of the lunar new year, this penguin lights lanterns and enjoys sweet rice balls.",
-                    voiceLine: "Let’s light up the night!",
+                    voiceLine: "Let's light up the night!",
                     cardType: "Festival"
                 ),
                 PenguinCard(
@@ -689,6 +795,8 @@ class GachaSystem: ObservableObject {
                     voiceLine: "Be my Valentine!",
                     cardType: "Festival"
                 ),
+            
+            
         ]
     }
     
@@ -720,12 +828,12 @@ class GachaSystem: ObservableObject {
         updatedCard.timesDrawn += 1
         updatedCard.unlocked = true
         
-        // Check if card was already collected
-        let wasCollected = updatedCard.collected
+        // Check if card was already collected from Core Data
+        let wasCollected = isWordCollectedInCoreData(word: updatedCard.englishWord)
+        lastDrawWasDuplicate = wasCollected
         
-        if !updatedCard.collected {
+        if !wasCollected {
             updatedCard.collected = true
-            updatedCard.isNew = true
             updatedCard.dateCollected = Date()
             // Add word to PenguinCardWord if it's a new card
             addPenguinWord(word: updatedCard.englishWord)
@@ -763,8 +871,11 @@ class GachaSystem: ObservableObject {
         }
     }
     
-    // Load collected cards from UserDefaults
+    // Load collected cards from UserDefaults and sync with Core Data
     private func loadCollectedCards() {
+        // First sync availableCards with Core Data to ensure correct collected status
+        syncCardsWithCoreData()
+        
         if let data = UserDefaults.standard.data(forKey: "CollectedPenguinCards"),
            let decoded = try? JSONDecoder().decode([PenguinCard].self, from: data) {
             collectedCards = decoded
@@ -778,13 +889,43 @@ class GachaSystem: ObservableObject {
         }
     }
     
-    // Mark card as viewed
-    func markCardAsViewed(cardId: UUID) {
-        if let index = collectedCards.firstIndex(where: { $0.id == cardId }) {
-            collectedCards[index].isNew = false
+    // Sync cards with Core Data to ensure correct collected status
+    private func syncCardsWithCoreData() {
+        for index in availableCards.indices {
+            let isCollectedInCoreData = isWordCollectedInCoreData(word: availableCards[index].englishWord)
+            availableCards[index].collected = isCollectedInCoreData
+            
+            // Update collectedCards array based on Core Data
+            if isCollectedInCoreData {
+                if !collectedCards.contains(where: { $0.id == availableCards[index].id }) {
+                    collectedCards.append(availableCards[index])
+                }
+            } else {
+                collectedCards.removeAll { $0.id == availableCards[index].id }
+            }
         }
-        if let index = availableCards.firstIndex(where: { $0.id == cardId }) {
-            availableCards[index].isNew = false
+    }
+    
+    // Check if word is collected in Core Data
+    private func isWordCollectedInCoreData(word: String) -> Bool {
+        let context = CoreDataManager.shared.context
+        let fetchRequest: NSFetchRequest<PenguinCardWord> = PenguinCardWord.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "penguinword == %@", word)
+        
+        do {
+            let results = try context.fetch(fetchRequest)
+            return !results.isEmpty
+        } catch {
+            print("Failed to check if word is collected in Core Data: \(error)")
+            return false
+        }
+    }
+    
+    // Mark card as viewed (now handled by CoreData)
+    func markCardAsViewed(cardId: UUID) {
+        // Find the card to get its English word
+        if let card = collectedCards.first(where: { $0.id == cardId }) {
+            TurnIsNewTofalse(wordString: card.englishWord)
         }
         saveCollectedCards()
     }

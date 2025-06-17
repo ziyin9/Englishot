@@ -249,7 +249,7 @@ struct GachaView: View {
                 }
                 Spacer()
             }
-            
+            //  抽卡這裡要有以下這段才會   show
             if uiState.showCoinReward {
                 CoinRewardView(amount: Int64(uiState.coinRewardAmount), delay: 0)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
@@ -307,7 +307,10 @@ struct GachaView: View {
         }
     
     private func drawCard() {
-        // Show coin deduction animation first
+        
+//         Show coin deduction animation first
+        
+        
         if let coinDisplayView = uiState.coinDisplayView {
             coinDisplayView.showRewardAnimation(amount: -requiredCoins)
         } else {
@@ -317,6 +320,7 @@ struct GachaView: View {
                 uiState.showCoinReward = false
             }
         }
+        
         
         // Draw card using GachaSystem
         if gachaSystem.drawCard(gameState: GameState()) {
@@ -345,7 +349,7 @@ struct GachaView: View {
                 // Show GotCardView
                 if let drawnCard = gachaSystem.lastDrawnCard {
                     lastDrawnCard = drawnCard
-                    isDuplicate = drawnCard.timesDrawn > 1
+                    isDuplicate = gachaSystem.lastDrawWasDuplicate
                     refundAmount = drawnCard.duplicateRefund
                     showGotCard = true
                     

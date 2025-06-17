@@ -4,11 +4,11 @@ import AVFoundation
 struct AudioImageMatchingGame: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var uiState: UIState
-
+    
     @FetchRequest(entity: Coin.entity(), sortDescriptors: []) var coinEntities: FetchedResults<Coin>
-
+    
     @State var AudioImageGameRewardCoins : Int64
-
+    
     
     @State private var selectedWords: [Word] = []
     @State private var currentWord: Word?
@@ -22,7 +22,7 @@ struct AudioImageMatchingGame: View {
     @State private var showNextButton = false
     @State private var incorrectSelections: Set<Int> = []
     @State private var isAnswerLocked = false
-
+    
     // Colors
     let backgroundColor = Color(#colorLiteral(red: 0.9490196078, green: 0.9764705882, blue: 0.9882352941, alpha: 1))
     let accentColor = Color(#colorLiteral(red: 0.2196078431, green: 0.5803921569, blue: 0.9882352941, alpha: 1))
@@ -55,10 +55,10 @@ struct AudioImageMatchingGame: View {
                 )
                 Spacer()
                 Spacer()
-
+                
                 
             }
-
+            
             VStack(spacing: 20) {
                 VStack{
                     
@@ -152,6 +152,11 @@ struct AudioImageMatchingGame: View {
                 }
                 .padding(.bottom, 20)
                 
+            }
+            .padding()
+            VStack{
+                Spacer()
+                Spacer()
                 if showNextButton {
                     Button(action: {
                         // Generate new question
@@ -180,8 +185,7 @@ struct AudioImageMatchingGame: View {
                     .padding(.bottom,50)
                 }
             }
-            .padding()
-            
+
             // Leave game overlay
             if showLeaveGameView {
                 Color.black.opacity(0.5)
@@ -204,28 +208,29 @@ struct AudioImageMatchingGame: View {
                 )
                 .zIndex(1)
             }
+            
+//            if uiState.showCoinReward {
+//                CoinRewardView(amount: Int64(uiState.coinRewardAmount), delay: 0)
+//                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+//                    .padding(.top, 5)
+//                    .padding(.trailing, 20)
+//                    .zIndex(100)
+//            }
 
-            if uiState.showCoinReward {
-                CoinRewardView(amount: Int64(uiState.coinRewardAmount), delay: 0)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-                    .padding(.top, 5)
-                    .padding(.trailing, 20)
-                    .zIndex(100)
-            }
-
+            
         }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 BackButton {
                     showLeaveGameView = true
-
+                    
                 }
             }
         }
         .onAppear {
             setupGame()
             uiState.isNavBarVisible = false
-
+            
         }
     }
     // Background color based on the answer state
@@ -291,35 +296,38 @@ struct AudioImageMatchingGame: View {
         if selectedWord == currentWord {
             isCorrect = true
             isAnswerLocked = true
-            addCoin(by:AudioImageGameRewardCoins)
+            addCoin(by: AudioImageGameRewardCoins)  // 增加金幣
             uiState.coinRewardAmount = Int(AudioImageGameRewardCoins)
-            uiState.showCoinReward = true
+            uiState.showCoinReward = true  // 顯示金幣動畫
+            
+            // 等待金幣動畫結束後隱藏
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                uiState.showCoinReward = false
+                uiState.showCoinReward = false  // 隱藏金幣動畫
             }
             
-            // Add success haptic feedback
+            // 成功的震動反饋
             let generator = UINotificationFeedbackGenerator()
             generator.notificationOccurred(.success)
             
-            // Show next button after short delay
+            // 顯示下一個問題的按鈕
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                 withAnimation {
                     showNextButton = true
                 }
             }
         } else {
-            // Wrong answer - add to incorrect selections
+            // 錯誤的回答，加入錯誤選擇
             incorrectSelections.insert(index)
             
-            // Add error haptic feedback
+            // 錯誤的震動反饋
             let generator = UINotificationFeedbackGenerator()
             generator.notificationOccurred(.error)
             
-            // Reset selection index so they can try again
+            // 清除選擇，讓玩家再試一次
             selectedImageIndex = nil
         }
     }
+
 }
 
 #Preview {
