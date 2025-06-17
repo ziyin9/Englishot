@@ -234,6 +234,7 @@ struct SpellingGameView: View {
                     button1Title: "離開遊戲",
                     button1Action: {
                         print("離開遊戲被點擊")
+                        uiState.isNavBarVisible = true
                         dismiss()
                     },
                     button2Title: "繼續遊戲",
@@ -252,7 +253,6 @@ struct SpellingGameView: View {
             ToolbarItem(placement: .topBarLeading) {
                 BackButton {
                     showLeaveGameView = true
-                    uiState.isNavBarVisible = true
 
                 }
             }

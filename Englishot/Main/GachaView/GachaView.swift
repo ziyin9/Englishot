@@ -1,6 +1,7 @@
 import SwiftUI
 import CoreData
 
+
 struct GachaView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var uiState: UIState
@@ -16,6 +17,11 @@ struct GachaView: View {
     @State private var selectedSortOption = "Rarity"
     @State private var showGameScene = false
     @State private var refreshTrigger = false
+    @State private var showGotCard = false
+    @State private var lastDrawnCard: PenguinCard?
+    @State private var isDuplicate = false
+    @State private var refundAmount: Int64 = 0
+    @State private var showDeveloperDelete = false
     
     private let sortOptions = ["Rarity", "Unlocked", "Newest"]
     private let columns = [
@@ -52,6 +58,14 @@ struct GachaView: View {
             // Enhanced ice & snow background
             LinearGradient(
                 gradient: Gradient(colors: [
+                    Color(#colorLiteral(red: 0.1, green: 0.15, blue: 0.3, alpha: 1)),
+                    Color(#colorLiteral(red: 0.1, green: 0.15, blue: 0.3, alpha: 1)),
+                    Color(#colorLiteral(red: 0.1464613083, green: 0.224046581, blue: 0.456802399, alpha: 1)),
+                    Color(#colorLiteral(red: 0.1464613083, green: 0.224046581, blue: 0.456802399, alpha: 1)),
+                    Color(#colorLiteral(red: 0.2592188678, green: 0.3274831218, blue: 0.5322758838, alpha: 1)),
+                    Color(#colorLiteral(red: 0.2592188678, green: 0.3274831218, blue: 0.5322758838, alpha: 1)),
+                    Color(#colorLiteral(red: 0.3584964276, green: 0.4529050306, blue: 0.7361308396, alpha: 1)),
+                    Color(#colorLiteral(red: 0.3584964276, green: 0.4529050306, blue: 0.7361308396, alpha: 1)),
                     Color(#colorLiteral(red: 0.8, green: 0.9, blue: 1.0, alpha: 1)),  // Light ice blue
                     Color(#colorLiteral(red: 0.9, green: 0.95, blue: 1.0, alpha: 1))  // Almost white with slight blue tint
                 ]),
@@ -86,45 +100,89 @@ struct GachaView: View {
                 .padding(.top)
                 
                 // Rarity Legend Section
-                HStack(spacing: 8) {
-                    // Snowflake
-                    RarityLegendItem(
-                        title: "雪花級",
-                        subtitle: "Snowflake",
-                        color: Color(hex: "AEE9F3"),
-                        icon: "snowflake"
-                    )
-                    
-                    // Ice Crystal
-                    RarityLegendItem(
-                        title: "冰晶級",
-                        subtitle: "Ice Crystal",
-                        color: Color(hex: "72D0F4"),
-                        icon: "sparkles"
-                    )
-                    
-                    // Frozen Star
-                    RarityLegendItem(
-                        title: "冰凍星級",
-                        subtitle: "Frozen Star",
-                        color: Color(hex: "5A9EF8"),
-                        icon: "star.fill"
-                    )
-                    
-                    // Aurora
-                    RarityLegendItem(
-                        title: "極光級",
-                        subtitle: "Aurora",
-                        colors: [
-                            Color(hex: "8EC6FF"),
-                            Color(hex: "D1BFFF"),
-                            Color(hex: "A3F2E5")
-                        ],
-                        icon: "sparkles.rectangle.stack"
-                    )
+                VStack{
+                    // Draw button
+                    Button(action: {
+                        if canDrawCard {
+                            showGameScene = true
+                        } else {
+                            showInsufficientCoinsAlert = true
+                        }
+                    }) {
+                        HStack {
+                            Image(systemName: "sparkles")
+                            Text("Draw Card")
+                            Text("(\(requiredCoins) 🪙)")
+                        }
+                        .font(.system(size: 18, weight: .bold, design: .rounded))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 25)
+                        .padding(.vertical, 12)
+                        .background(
+                            Capsule()
+                                .fill(
+                                    LinearGradient(
+                                        colors: canDrawCard ?
+                                            [Color.purple, Color.blue] :
+                                            [Color.gray.opacity(0.5), Color.gray.opacity(0.3)],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                                .shadow(color: canDrawCard ? .purple.opacity(0.5) : .clear, radius: 10)
+                        )
+                    }
+                    .disabled(!canDrawCard)
+                    .padding(.bottom)
+                    .fullScreenCover(isPresented: $showGameScene) {
+                        GameSceneView(isPresented: $showGameScene) {
+                            withAnimation {
+                                showGameScene = false
+                                drawCard()
+                                refreshTrigger.toggle()
+                            }
+                        }
+                        .transition(.opacity)
+                    }
+                    HStack(spacing: 8) {
+                        // Snowflake
+                        RarityLegendItem(
+                            title: "雪花級",
+                            subtitle: "Snowflake",
+                            color: Color(hex: "AEE9F3"),
+                            icon: "snowflake"
+                        )
+                        
+                        // Ice Crystal
+                        RarityLegendItem(
+                            title: "冰晶級",
+                            subtitle: "Ice Crystal",
+                            color: Color(hex: "72D0F4"),
+                            icon: "sparkles"
+                        )
+                        
+                        // Frozen Star
+                        RarityLegendItem(
+                            title: "冰凍星級",
+                            subtitle: "Frozen Star",
+                            color: Color(hex: "5A9EF8"),
+                            icon: "star.fill"
+                        )
+                        
+                        // Aurora
+                        RarityLegendItem(
+                            title: "極光級",
+                            subtitle: "Aurora",
+                            colors: [
+                                Color(hex: "8EC6FF"),
+                                Color(hex: "D1BFFF"),
+                                Color(hex: "A3F2E5")
+                            ],
+                            icon: "sparkles.rectangle.stack"
+                        )
+                    }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
-                
                 // Card sections by type
                 ScrollView {
                     VStack(spacing: 25) {
@@ -147,7 +205,8 @@ struct GachaView: View {
                                     LazyVGrid(columns: columns, spacing: 10) {
                                         ForEach(sortedCards(for: type)) { card in
                                             CardGridItem(card: card, refreshTrigger: $refreshTrigger)
-                                                .frame(height: 120)
+                                                .frame(height: 80)
+                                                .environmentObject(gachaSystem)
                                         }
                                     }
                                     .padding(.horizontal)
@@ -158,51 +217,43 @@ struct GachaView: View {
                     .padding(.vertical)
                 }
                 
-                // Draw button
-                Button(action: {
-                    if canDrawCard {
-                        showGameScene = true
-                    } else {
-                        showInsufficientCoinsAlert = true
-                    }
-                }) {
-                    HStack {
-                        Image(systemName: "sparkles")
-                        Text("Draw Card")
-                        Text("(\(requiredCoins) 🪙)")
-                    }
-                    .font(.system(size: 18, weight: .bold, design: .rounded))
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 25)
-                    .padding(.vertical, 12)
-                    .background(
-                        Capsule()
-                            .fill(
-                                LinearGradient(
-                                    colors: canDrawCard ?
-                                        [Color.purple, Color.blue] :
-                                        [Color.gray.opacity(0.5), Color.gray.opacity(0.3)],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                            )
-                            .shadow(color: canDrawCard ? .purple.opacity(0.5) : .clear, radius: 10)
-                    )
-                }
-                .disabled(!canDrawCard)
-                .padding(.bottom)
-                .fullScreenCover(isPresented: $showGameScene) {
-                    GameSceneView(isPresented: $showGameScene) {
-                        withAnimation {
-                            showGameScene = false
-                            drawCard()
-                            refreshTrigger.toggle()
-                        }
-                    }
-                    .transition(.opacity)
-                }
-                //555
+
             }
+            if uiState.isCoinVisible {
+                CoinDisplayView(coins: currentCoins)
+            }
+            // Add GotCardView
+            if showGotCard, let card = lastDrawnCard {
+                GotCardView(
+                    card: card,
+                    isDuplicate: isDuplicate,
+                    refundAmount: refundAmount,
+                    isPresented: $showGotCard
+                )
+            }
+            
+            // Add developer delete button
+            VStack {
+                HStack {
+                    Button(action: {
+                        showDeveloperDelete = true
+                    }) {
+                        Image(systemName: "trash.fill")
+                            .font(.system(size: 16))
+                            .foregroundColor(.white)
+                            .padding(8)
+                            .background(
+                                Circle()
+                                    .fill(Color.red.opacity(0.8))
+                            )
+                    }
+                    .padding(.leading, 16)
+                    .padding(.top, 8)
+                    Spacer()
+                }
+                Spacer()
+            }
+            
         }
         .alert("Insufficient Coins", isPresented: $showInsufficientCoinsAlert) {
             Button("OK", role: .cancel) { }
@@ -223,6 +274,9 @@ struct GachaView: View {
                     dismiss()
                 }
             }
+        }
+        .sheet(isPresented: $showDeveloperDelete) {
+            DeveloperDeleteView(refreshTrigger: $refreshTrigger)
         }
     }
     
@@ -279,6 +333,14 @@ struct GachaView: View {
                 
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.7).delay(0.5)) {
                     cardScale = 1.0
+                }
+                
+                // Show GotCardView
+                if let drawnCard = gachaSystem.lastDrawnCard {
+                    lastDrawnCard = drawnCard
+                    isDuplicate = drawnCard.timesDrawn > 1
+                    refundAmount = drawnCard.duplicateRefund
+                    showGotCard = true
                 }
                 
                 // Trigger refresh after animation completes

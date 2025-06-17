@@ -15,6 +15,7 @@ struct PenguinCard: Identifiable, Codable {
     var emotionType: String
     var unlocked: Bool = false
     var collected: Bool = false
+    var isNew: Bool = false
     var rarity: String // Snowflake, Ice Crystal, Frozen Star, Aurora
     var imageName: String
     var timesDrawn: Int16 = 0
@@ -308,6 +309,18 @@ class GachaSystem: ObservableObject {
                 voiceLine: "I'm scared!",
                 cardType: "Emotion"
             ),
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
             // Profession Cards
             PenguinCard(
@@ -622,6 +635,7 @@ class GachaSystem: ObservableObject {
         
         if !updatedCard.collected {
             updatedCard.collected = true
+            updatedCard.isNew = true
             updatedCard.dateCollected = Date()
             // Add word to PenguinCardWord if it's a new card
             addPenguinWord(word: updatedCard.englishWord)
@@ -672,5 +686,16 @@ class GachaSystem: ObservableObject {
                 }
             }
         }
+    }
+    
+    // Mark card as viewed
+    func markCardAsViewed(cardId: UUID) {
+        if let index = collectedCards.firstIndex(where: { $0.id == cardId }) {
+            collectedCards[index].isNew = false
+        }
+        if let index = availableCards.firstIndex(where: { $0.id == cardId }) {
+            availableCards[index].isNew = false
+        }
+        saveCollectedCards()
     }
 }

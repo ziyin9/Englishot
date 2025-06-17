@@ -6,6 +6,7 @@ struct CardDetailView: View {
     @Environment(\.dismiss) var dismiss
     @State private var isPlayingAudio = false
     @State private var isCollected = false
+    @EnvironmentObject var gachaSystem: GachaSystem
     
     var body: some View {
         ZStack {

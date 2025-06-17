@@ -12,6 +12,7 @@ struct CardGridItem: View {
     @State private var showDetail = false
     @State private var isCollected = false
     @Binding var refreshTrigger: Bool
+    @EnvironmentObject var gachaSystem: GachaSystem
     
     // Add rarity color definitions
     private var rarityColors: [String: [Color]] {
@@ -149,16 +150,36 @@ struct CardGridItem: View {
                             }
                             .frame(height: 60)
                         }
-                        
+                        //點進去才能看好了
                         // Card name
-                        Text(card.englishWord)
-                            .font(.system(size: 15, weight: .medium, design: .rounded))
-                            .foregroundColor(.white)
-                            .lineLimit(1)
+//                        Text(card.englishWord)
+//                            .font(.s－ystem(size: 15, weight: .medium, design: .rounded))
+//                            .foregroundColor(.white)
+//                            .lineLimit(1)
                         
                         
                     }
                     .padding(8)
+                    
+                    // New badge
+                    if isCollected && card.isNew {
+                        VStack {
+                            HStack {
+                                Spacer()
+                                Text("New")
+                                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(
+                                        Capsule()
+                                            .fill(Color.red)
+                                    )
+                                    .padding(4)
+                            }
+                            Spacer()
+                        }
+                    }
                 }
                 // Rarity badge
                 HStack{
@@ -185,6 +206,10 @@ struct CardGridItem: View {
         .buttonStyle(PlainButtonStyle())
         .sheet(isPresented: $showDetail) {
             CardDetailView(card: card)
+                .environmentObject(gachaSystem)
+                .onDisappear {
+                    gachaSystem.markCardAsViewed(cardId: card.id)
+                }
         }
         .onAppear {
             checkIfWordIsCollected()
