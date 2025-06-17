@@ -333,6 +333,7 @@
 
 ///////////////////
 import SwiftUI
+import CoreData
 
 struct GameMapView: View {
     @State private var mapOffset: CGSize = .zero
@@ -346,8 +347,14 @@ struct GameMapView: View {
     @State private var angle: Double = 0
 
     @EnvironmentObject var uiState: UIState
-    
+    @FetchRequest(entity: Coin.entity(), sortDescriptors: []) var coinEntities: FetchedResults<Coin>
+
     let mapSize = CGSize(width: 640, height: 1904)
+
+    
+    private var currentCoins: Int64 {
+        coinEntities.first?.amount ?? 0
+    }
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -538,7 +545,8 @@ struct GameMapView: View {
                             uiState.isNavBarVisible = true
                         }
                 }
-//                    .animation(.spring(response: 0.4, dampingFraction: 0.75), value: showTutorial)
+                
+
             }
             .onAppear(){
                 uiState.isNavBarVisible = true
@@ -546,7 +554,7 @@ struct GameMapView: View {
             }
             .ignoresSafeArea()
             .navigationBarHidden(true)
-        }
+                    }
     }
 
     @ViewBuilder

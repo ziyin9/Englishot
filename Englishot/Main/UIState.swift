@@ -22,31 +22,8 @@ class UIState: ObservableObject {
     @Published var isCoinVisible: Bool = true
     @Published var showCoinReward: Bool = false
     @Published var coinRewardAmount: Int = 0
+    @Published var coinDisplayView: CoinDisplayView?
 
-    // Show coin reward with animation
-    func showCoinRewardAnimation(amount: Int) {
-        coinRewardAmount = amount
-        showCoinReward = true
-    }
-    
-    // Hide coin display
-    func hideCoinDisplay() {
-        withAnimation {
-            isCoinVisible = false
-        }
-    }
-    
-    // Show coin display
-    func showCoinDisplay() {
-        withAnimation {
-            isCoinVisible = true
-        }
-    }
-    
-    // Toggle coin display
-    func toggleCoinDisplay() {
-        withAnimation {
-            isCoinVisible.toggle()
-        }
-    }
+
+
 }

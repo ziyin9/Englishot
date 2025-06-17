@@ -104,7 +104,7 @@ struct GachaView: View {
                     // Draw button
                     Button(action: {
                         if canDrawCard {
-                            showGameScene = true
+                            showConfirmDrawAlert = true
                         } else {
                             showInsufficientCoinsAlert = true
                         }
@@ -134,15 +134,13 @@ struct GachaView: View {
                     }
                     .disabled(!canDrawCard)
                     .padding(.bottom)
-                    .fullScreenCover(isPresented: $showGameScene) {
-                        GameSceneView(isPresented: $showGameScene) {
-                            withAnimation {
-                                showGameScene = false
-                                drawCard()
-                                refreshTrigger.toggle()
-                            }
+                    .alert("Confirm Draw", isPresented: $showConfirmDrawAlert) {
+                        Button("Cancel", role: .cancel) { }
+                        Button("Draw") {
+                            drawCard()
                         }
-                        .transition(.opacity)
+                    } message: {
+                        Text("Spend \(requiredCoins) coins to draw a card?")
                     }
                     HStack(spacing: 8) {
                         // Snowflake
@@ -186,7 +184,7 @@ struct GachaView: View {
                 // Card sections by type
                 ScrollView {
                     VStack(spacing: 25) {
-                        ForEach(["Emotion", "Profession", "Activity"], id: \.self) { type in
+                        ForEach(["Emotion", "Profession", "Activity", "Festival"], id: \.self) { type in
                             if let cards = cardsByType[type], !cards.isEmpty {
                                 VStack(alignment: .leading, spacing: 10) {
                                     // Section header
@@ -210,6 +208,7 @@ struct GachaView: View {
                                         }
                                     }
                                     .padding(.horizontal)
+                                    Spacer()
                                 }
                             }
                         }
@@ -218,9 +217,6 @@ struct GachaView: View {
                 }
                 
 
-            }
-            if uiState.isCoinVisible {
-                CoinDisplayView(coins: currentCoins)
             }
             // Add GotCardView
             if showGotCard, let card = lastDrawnCard {
@@ -254,19 +250,19 @@ struct GachaView: View {
                 Spacer()
             }
             
+            if uiState.showCoinReward {
+                CoinRewardView(amount: Int64(uiState.coinRewardAmount), delay: 0)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                    .padding(.top, 5)
+                    .padding(.trailing, 20)
+                    .zIndex(100)
+            }
+            
         }
         .alert("Insufficient Coins", isPresented: $showInsufficientCoinsAlert) {
             Button("OK", role: .cancel) { }
         } message: {
             Text("You need \(requiredCoins) coins to draw a card. Play mini-games to earn more coins!")
-        }
-        .alert("Confirm Draw", isPresented: $showConfirmDrawAlert) {
-            Button("Cancel", role: .cancel) { }
-            Button("Draw") {
-                drawCard()
-            }
-        } message: {
-            Text("Spend \(requiredCoins) coins to draw a card?")
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
@@ -281,35 +277,46 @@ struct GachaView: View {
     }
     
     private func getTypeIcon(for type: String) -> String {
-        switch type {
-        case "Emotion": return "face.smiling"
-        case "Profession": return "briefcase"
-        case "Activity": return "figure.walk"
-        default: return "questionmark"
+            switch type {
+            case "Emotion": return "face.smiling"
+            case "Profession": return "briefcase"
+            case "Activity": return "figure.walk"
+            case "Festival": return "gift.fill"
+            default: return "questionmark"
+            }
         }
-    }
-    
-    private func getTypeTitle(for type: String) -> String {
-        switch type {
-        case "Emotion": return "表情"
-        case "Profession": return "職業"
-        case "Activity": return "活動"
-        default: return type
+        
+        private func getTypeTitle(for type: String) -> String {
+            switch type {
+            case "Emotion": return "表情"
+            case "Profession": return "職業"
+            case "Activity": return "活動"
+            case "Festival": return "節日"
+            default: return type
+            }
         }
-    }
-    
-    private func getTypeColor(for type: String) -> Color {
-        switch type {
-        case "Emotion": return .pink
-        case "Profession": return .green
-        case "Activity": return .orange
-        default: return .gray
+        
+        private func getTypeColor(for type: String) -> Color {
+            switch type {
+            case "Emotion": return .pink
+            case "Profession": return .green
+            case "Activity": return .orange
+            case "Festival": return .purple
+            default: return .gray
+            }
         }
-    }
     
     private func drawCard() {
-        // Deduct coins
-        deductCoin(by: requiredCoins)
+        // Show coin deduction animation first
+        if let coinDisplayView = uiState.coinDisplayView {
+            coinDisplayView.showRewardAnimation(amount: -requiredCoins)
+        } else {
+            uiState.coinRewardAmount = -Int(requiredCoins)
+            uiState.showCoinReward = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                uiState.showCoinReward = false
+            }
+        }
         
         // Draw card using GachaSystem
         if gachaSystem.drawCard(gameState: GameState()) {
@@ -341,6 +348,19 @@ struct GachaView: View {
                     isDuplicate = drawnCard.timesDrawn > 1
                     refundAmount = drawnCard.duplicateRefund
                     showGotCard = true
+                    
+                    // If it's a duplicate card, show the refund animation
+                    if isDuplicate {
+                        if let coinDisplayView = uiState.coinDisplayView {
+                            coinDisplayView.showRewardAnimation(amount: Int64(refundAmount))
+                        } else {
+                            uiState.coinRewardAmount = Int(refundAmount)
+                            uiState.showCoinReward = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                uiState.showCoinReward = false
+                            }
+                        }
+                    }
                 }
                 
                 // Trigger refresh after animation completes

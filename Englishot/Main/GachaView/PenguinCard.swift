@@ -91,6 +91,7 @@ struct PenguinCard: Identifiable, Codable {
         case "Emotion": return .pink
         case "Profession": return .green
         case "Activity": return .orange
+        case "Festival": return .purple
         default: return .gray
         }
     }
@@ -100,6 +101,7 @@ struct PenguinCard: Identifiable, Codable {
         case "Emotion": return "face.smiling"
         case "Profession": return "briefcase"
         case "Activity": return "figure.walk"
+        case "Festival": return "gift.fill"
         default: return "questionmark"
         }
     }
@@ -139,7 +141,7 @@ class GachaSystem: ObservableObject {
     @Published var lastDrawnCard: PenguinCard?
     
     // Draw rates
-    private let snowflakeRate: Double = 0.6    // 60%
+    private let snowflakeRate: Double = 0.6  // 60%
     private let iceCrystalRate: Double = 0.25  // 25%
     private let frozenStarRate: Double = 0.12  // 12%
     private let auroraRate: Double = 0.03      // 3%
@@ -492,13 +494,13 @@ class GachaSystem: ObservableObject {
                 cardType: "Profession"
             ),
             PenguinCard(
-                cardName: "Business Penguin",
-                englishWord: "businessperson",
+                cardName: "Merchant Penguin",
+                englishWord: "merchant",
                 chineseWord: "商人",
-                pronunciationURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/b/bus/busin/businessperson.mp3",
+                pronunciationURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/m/mer/merch/merchant.mp3",
                 emotionType: "professional",
                 rarity: "Frozen Star",
-                imageName: "penguin_business",
+                imageName: "penguin_merchant",
                 descriptionText: "A successful penguin making deals.",
                 voiceLine: "Let's make a deal!",
                 cardType: "Profession"
@@ -598,7 +600,95 @@ class GachaSystem: ObservableObject {
                 descriptionText: "A talented penguin playing music.",
                 voiceLine: "Let's make some music!",
                 cardType: "Profession"
-            )
+            ),
+            PenguinCard(
+                cardName: "Engineer Penguin",
+                englishWord: "engineer",
+                chineseWord: "工程師",
+                pronunciationURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/e/eng/engineer.mp3",
+                emotionType: "professional",
+                rarity: "Aurora",
+                imageName: "penguin_engineer",
+                descriptionText: "A brilliant penguin who designs and builds amazing machines.",
+                voiceLine: "Let's build something incredible!",
+                cardType: "Profession"
+            ),
+            
+            
+            
+    // Festival Cards
+                PenguinCard(
+                    cardName: "Christmas Penguin",
+                    englishWord: "Christmas",
+                    chineseWord: "聖誕節",
+                    pronunciationURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/c/hri/chris/christmas.mp3",
+                    emotionType: "Festival",
+                    rarity: "Snowflake",
+                    imageName: "penguin_christmas",
+                    descriptionText: "Every year on December 25th, this penguin decorates the tree, sings carols, and waits for Santa’s arrival.",
+                    voiceLine: "Jingle bells, jingle bells, Merry Christmas!",
+                    cardType: "Festival"
+                ),
+                PenguinCard(
+                    cardName: "Dragon Boat Penguin",
+                    englishWord: "Dragon Boat Festival",
+                    chineseWord: "端午節",
+                    pronunciationURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/d/dra/dragon-boat-festival.mp3",
+                    emotionType: "Festival",
+                    rarity: "Snowflake",
+                    imageName: "penguin_dragonboatfestival",
+                    descriptionText: "Every year on the fifth day of the fifth lunar month, this penguin joins dragon boat races and eats rice dumplings.",
+                    voiceLine: "Row fast! Eat zongzi!",
+                    cardType: "Festival"
+                ),
+                PenguinCard(
+                    cardName: "Halloween Penguin",
+                    englishWord: "Halloween",
+                    chineseWord: "萬聖節",
+                    pronunciationURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/h/hal/hallo/halloween.mp3",
+                    emotionType: "Festival",
+                    rarity: "Aurora",
+                    imageName: "penguin_halloween",
+                    descriptionText: "On October 31st, this penguin wears costumes, carves pumpkins, and collects candies.",
+                    voiceLine: "Trick or treat!",
+                    cardType: "Festival"
+                ),
+                PenguinCard(
+                    cardName: "Lantern Festival Penguin",
+                    englishWord: "Lantern Festival",
+                    chineseWord: "元宵節",
+                    pronunciationURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/l/lan/lantern-festival.mp3",
+                    emotionType: "Festival",
+                    rarity: "Snowflake",
+                    imageName: "penguin_lanternfestival",
+                    descriptionText: "On the fifteenth day of the lunar new year, this penguin lights lanterns and enjoys sweet rice balls.",
+                    voiceLine: "Let’s light up the night!",
+                    cardType: "Festival"
+                ),
+                PenguinCard(
+                    cardName: "Moon Festival Penguin",
+                    englishWord: "Moon Festival",
+                    chineseWord: "中秋節",
+                    pronunciationURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/m/moo/moon-festival.mp3",
+                    emotionType: "Festival",
+                    rarity: "Ice Crystal",
+                    imageName: "penguin_moonfestival",
+                    descriptionText: "On the fifteenth day of the eighth lunar month, this penguin admires the full moon and shares mooncakes with friends.",
+                    voiceLine: "Happy Moon Festival!",
+                    cardType: "Festival"
+                ),
+                PenguinCard(
+                    cardName: "Valentine Penguin",
+                    englishWord: "Valentine's Day",
+                    chineseWord: "情人節",
+                    pronunciationURL: "https://dictionary.cambridge.org/zht/media/英語-漢語-繁體/us_pron/v/val/valentine's-day.mp3",
+                    emotionType: "Festival",
+                    rarity: "Ice Crystal",
+                    imageName: "penguin_valentine'sday",
+                    descriptionText: "Every year on February 14th, this penguin prepares lovely gifts and shares sweet moments with loved ones.",
+                    voiceLine: "Be my Valentine!",
+                    cardType: "Festival"
+                ),
         ]
     }
     

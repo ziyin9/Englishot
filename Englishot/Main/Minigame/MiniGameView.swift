@@ -52,11 +52,6 @@ struct MiniGameView: View {
                     Snowflake_View(snowflake: snowflake)
                 }
                 
-                // Coin Display
-                if uiState.isCoinVisible {
-                    CoinDisplayView(coins: currentCoins)
-                }
-                
                 // Content
                 VStack {
                     // Enhanced header
@@ -94,7 +89,7 @@ struct MiniGameView: View {
                                 .navigationBarBackButtonHidden()
                             ) {
                                 EnhancedGameCard(
-                                    title: "Spelling Fun",
+                                    title: "拼字遊戲",//Spelling Fun
                                     subtitle: "Tap letters to spell the word",
                                     mainIcon: "textformat.abc",
                                     decorativeIcons: ["character", "character.book.closed", "pencil"],
@@ -120,7 +115,7 @@ struct MiniGameView: View {
                                 .navigationBarBackButtonHidden()
                             ) {
                                 EnhancedGameCard(
-                                    title: "Memory Match",
+                                    title: "翻牌對對碰",//Memory Match
                                     subtitle: "Test your word recall skills",
                                     mainIcon: "brain.head.profile",
                                     decorativeIcons: ["sparkles", "star.fill", "lightbulb.fill"],
@@ -146,7 +141,7 @@ struct MiniGameView: View {
                                 .navigationBarBackButtonHidden()
                             ) {
                                 EnhancedGameCard(
-                                    title: "Sound & Image",
+                                    title: "發音找圖",//Audio & Image
                                     subtitle: "Match the words you hear",
                                     mainIcon: "speaker.wave.2.fill",
                                     decorativeIcons: ["ear.fill", "photo.fill", "waveform"],
@@ -189,74 +184,12 @@ struct MiniGameView: View {
         
         // Add coin reward overlay with UIState control
         if uiState.showCoinReward {
-            CoinRewardOverlay(amount: uiState.coinRewardAmount)
-                .environmentObject(uiState)
-                .transition(.asymmetric(
-                    insertion: .move(edge: .top).combined(with: .opacity),
-                    removal: .opacity
-                ))
-                .animation(.spring(response: 0.6, dampingFraction: 0.8), value: uiState.showCoinReward)
+            CoinRewardView(amount:Int64(uiState.coinRewardAmount),delay:0)
         }
     }
 }
 
 
-// Coin Reward Overlay
-struct CoinRewardOverlay: View {
-    @EnvironmentObject var uiState: UIState
-    let amount: Int
-    @State private var animateReward = false
-    
-    var body: some View {
-        VStack {
-            HStack {
-                Spacer()
-                
-                VStack(spacing: 8) {
-                    Image(systemName: "fish.fill")
-                        .font(.system(size: 40))
-                        .foregroundColor(.yellow)
-                        .shadow(color: .orange, radius: 4)
-                        .scaleEffect(animateReward ? 1.3 : 0.5)
-                        .rotationEffect(.degrees(animateReward ? 360 : 0))
-                    
-                    Text("+\(amount)")
-                        .font(.system(size: 24, weight: .bold, design: .rounded))
-                        .foregroundColor(.yellow)
-                        .shadow(color: .black.opacity(0.5), radius: 2)
-                        .offset(y: animateReward ? -10 : 20)
-                        .opacity(animateReward ? 1 : 0)
-                }
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(Color.black.opacity(0.7))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(Color.yellow.opacity(0.8), lineWidth: 2)
-                        )
-                )
-                
-                Spacer()
-            }
-            .padding(.top, 120)
-            
-            Spacer()
-        }
-        .onAppear {
-            withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {
-                animateReward = true
-            }
-            
-            // Automatically hide reward after animation
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                withAnimation {
-                    uiState.showCoinReward = false
-                }
-            }
-        }
-    }
-}
 
 // Helper extension for coin display positioning
 extension View {

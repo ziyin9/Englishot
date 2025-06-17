@@ -204,9 +204,15 @@ struct AudioImageMatchingGame: View {
                 )
                 .zIndex(1)
             }
-            if uiState.isCoinVisible {
-                CoinDisplayView(coins: currentCoins)
+
+            if uiState.showCoinReward {
+                CoinRewardView(amount: Int64(uiState.coinRewardAmount), delay: 0)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                    .padding(.top, 5)
+                    .padding(.trailing, 20)
+                    .zIndex(100)
             }
+
         }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -282,12 +288,15 @@ struct AudioImageMatchingGame: View {
     }
     
     private func checkAnswer(selectedWord: Word, at index: Int) {
-        // Determine if answer is correct
         if selectedWord == currentWord {
-            // Correct answer
             isCorrect = true
-            isAnswerLocked = true  // 锁定答案
+            isAnswerLocked = true
             addCoin(by:AudioImageGameRewardCoins)
+            uiState.coinRewardAmount = Int(AudioImageGameRewardCoins)
+            uiState.showCoinReward = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                uiState.showCoinReward = false
+            }
             
             // Add success haptic feedback
             let generator = UINotificationFeedbackGenerator()

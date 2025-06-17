@@ -245,9 +245,15 @@ struct SpellingGameView: View {
                 )
                 .zIndex(1)
             }
-            if uiState.isCoinVisible {
-                CoinDisplayView(coins: currentCoins)
+            
+            if uiState.showCoinReward {
+                CoinRewardView(amount: Int64(uiState.coinRewardAmount), delay: 0)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                    .padding(.top, 5)
+                    .padding(.trailing, 20)
+                    .zIndex(100)
             }
+            
         }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -311,9 +317,13 @@ struct SpellingGameView: View {
             if isWordCorrect {
                 // Award coins for correct answer
                 addCoin(by:SpellingGameRewardCoins)
-                // Show next button after a short delay
+                uiState.coinRewardAmount = Int(SpellingGameRewardCoins)
+                uiState.showCoinReward = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    uiState.showCoinReward = false
+                }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-                        showNextButton = true
+                    showNextButton = true
                 }
             } else {
                 // Shake the tiles

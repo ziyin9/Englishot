@@ -5,7 +5,12 @@ struct MainView: View {
     @StateObject private var uiState = UIState()
     @StateObject private var gameState = GameState()
     @State private var isHovered: Tab?
+    @FetchRequest(entity: Coin.entity(), sortDescriptors: []) var coinEntities: FetchedResults<Coin>
+
     
+    private var currentCoins: Int64 {
+        coinEntities.first?.amount ?? 0
+    }
     var body: some View {
         NavigationView {
             ZStack(alignment: .bottom) {
@@ -19,6 +24,10 @@ struct MainView: View {
                 if uiState.isNavBarVisible {
                     TopNavBarView(selectedTab: $selectedTab, isHovered: $isHovered)
                 }
+                if uiState.isCoinVisible{
+                    CoinDisplayView(coins: currentCoins)
+                }
+
             }
             .ignoresSafeArea(.keyboard)
             .navigationBarHidden(true)

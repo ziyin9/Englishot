@@ -37,6 +37,8 @@ struct TGame: View {
     @State private var showCameraHint: Bool = false
     @AppStorage("neverShowCameraHint") private var neverShowCameraHint: Bool = false
     
+    @State private var hasRewardedAllWords: Bool = false
+    
     var levelData: GameLevelData
     var ML_model: String?
     
@@ -197,6 +199,13 @@ struct TGame: View {
             
             .onChange(of: highestConfidenceWord) { oldValue, newValue in
                 processRecognizedWord(newValue)
+            }
+            
+            .onChange(of: allWordsFound) { _, newValue in
+                if newValue && !hasRewardedAllWords {
+                    addCoin(by: 200)
+                    hasRewardedAllWords = true
+                }
             }
             
             // 修改工具欄相機按鈕的動作

@@ -136,8 +136,12 @@ struct MemoryGameView: View {
                 
                 LeaveGameView(showLeaveGameView: $showGameOver, message: "Good Job!", button1Title: "離開遊戲", button1Action: { dismiss() }, button2Title: "再玩一次", button2Action: {setupGame() })
             }
-            if uiState.isCoinVisible {
-                CoinDisplayView(coins: currentCoins)
+            if uiState.showCoinReward {
+                CoinRewardView(amount: Int64(uiState.coinRewardAmount), delay: 0)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                    .padding(.top, 5)
+                    .padding(.trailing, 20)
+                    .zIndex(100)
             }
         }
         .toolbar {
@@ -207,8 +211,12 @@ struct MemoryGameView: View {
                 matchedPairs += 1
                 
                 if matchedPairs == 6 {
-                    // Award coins for completing the memory game
                     addCoin(by:MemoryGameRewardCoins)
+                    uiState.coinRewardAmount = Int(MemoryGameRewardCoins)
+                    uiState.showCoinReward = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        uiState.showCoinReward = false
+                    }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                         showGameOver = true
                     }
