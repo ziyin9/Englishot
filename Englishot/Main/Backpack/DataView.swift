@@ -42,7 +42,7 @@ struct DataView: View {
                 ScrollView {
                     VStack(spacing: 25) {
                         VStack{
-                            Text("Collection Progress")
+                            Text("收集進度")
                                 .font(.system(size: 40, weight: .bold, design: .rounded))
                                 .foregroundStyle(
                                     LinearGradient(

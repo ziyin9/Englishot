@@ -56,7 +56,7 @@ struct MiniGameView: View {
                 VStack {
                     // Enhanced header
                     VStack {
-                        Text("MiniGames")
+                        Text("複習小遊戲")
                             .font(.system(size: 42, weight: .bold, design: .rounded))
                             .foregroundStyle(
                                 LinearGradient(

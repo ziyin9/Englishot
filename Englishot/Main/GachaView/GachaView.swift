@@ -95,7 +95,7 @@ struct GachaView: View {
             VStack(spacing: 15) {
                 // Header with collection progress
                 VStack(spacing: 10) {
-                    Text("Penguin Collection")
+                    Text("企鵝卡收集冊")//"Penguin Collection"
                         .font(.system(size: 24, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
                 }
@@ -124,6 +124,8 @@ struct GachaView: View {
                                     // Section header
                                     HStack {
                                         Image("\(getTypeIcon(for: type))")
+                                            .resizable()
+                                            .frame(width: 50, height: 50)
                                             .font(.system(size: 20))
                                             .foregroundColor(getTypeColor(for: type))
                                         

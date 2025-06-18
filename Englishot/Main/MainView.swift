@@ -139,11 +139,11 @@ struct TopNavBarItem: View {
     
     private func getTabTitle(for tab: Tab) -> String {
         switch tab {
-        case .map: return "Map"
-        case .backpack: return "Backpack"
-        case .minigame: return "Minigames"
-        case .gacha: return "Gacha"
-        case .setting: return "Settings"
+        case .map: return "地圖"//"Map"
+        case .backpack: return "背包"//"Backpack"
+        case .minigame: return "複習"//"Minigames"
+        case .gacha: return "抽卡"//"Gacha"
+        case .setting: return "設定"//"Settings"
         }
     }
     
