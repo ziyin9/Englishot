@@ -111,23 +111,26 @@ struct GachaView: View {
                 }
                 .padding(.top)
                 
-                // Gacha Type Selector
-                GachaTypeSelectorView(
-                    selectedGachaType: $selectedGachaType,
-                    currentCoins: currentCoins,
-                    onDrawCard: { gachaType in
-                        if currentCoins >= gachaType.cost {
-                            showConfirmDrawAlert = true
-                        } else {
-                            showInsufficientCoinsAlert = true
-                        }
-                    }
-                )
-                .padding(.horizontal)
-                
+                                
                 // Card sections by type
                 ScrollView {
                     VStack(spacing: 25) {
+                        
+                        // Gacha Type Selector
+                        GachaTypeSelectorView(
+                            selectedGachaType: $selectedGachaType,
+                            currentCoins: currentCoins,
+                            onDrawCard: { gachaType in
+                                if currentCoins >= gachaType.cost {
+                                    showConfirmDrawAlert = true
+                                } else {
+                                    showInsufficientCoinsAlert = true
+                                }
+                            }
+                        )
+                        .padding(.horizontal)
+
+                        
                         ForEach(["Emotion", "Profession", "Activity", "Festival"], id: \.self) { type in
                             if let cards = cardsByType[type], !cards.isEmpty {
                                 VStack(alignment: .leading, spacing: 10) {
@@ -351,21 +354,10 @@ struct GachaTypeSelectorView: View {
     let onDrawCard: (GachaType) -> Void
     
     var body: some View {
-        VStack(spacing: 12) {
-            // Current coins display
-            HStack {
-                Image(systemName: "bitcoinsign.circle.fill")
-                    .foregroundColor(.yellow)
-                Text("Current Coins: \(currentCoins)")
-                    .font(.system(size: 16, weight: .semibold, design: .rounded))
-                    .foregroundColor(.white)
-                Spacer()
-            }
-            .padding(.horizontal, 4)
             
             // Scrollable gacha type selector
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 15) {
+                HStack(spacing: 3) {
                     ForEach(GachaType.allCases, id: \.self) { gachaType in
                         GachaTypeCard(
                             gachaType: gachaType,
@@ -375,13 +367,10 @@ struct GachaTypeSelectorView: View {
                                 selectedGachaType = gachaType
                                 onDrawCard(gachaType)
                             }
-                        )
+                        ).padding()
                     }
                 }
-                .padding(.horizontal, 5)
             }
-        }
-        .padding(.vertical, 8)
     }
 }
 
@@ -392,105 +381,386 @@ struct GachaTypeCard: View {
     let onTap: () -> Void
     
     @State private var isPressed = false
+    @State private var shimmerOffset: CGFloat = -200
+    @State private var glowIntensity: Double = 0.5
+    @State private var rotationAngle: Double = 0
+    
+    // Computed properties to break down complex expressions
+    private var backgroundColors: [Color] {
+        if canAfford {
+            return [
+                gachaType.gradientColors.first?.opacity(0.9) ?? .blue,
+                gachaType.gradientColors.last?.opacity(0.7) ?? .purple,
+                Color.black.opacity(0.2)
+            ]
+        } else {
+            return [
+                Color.gray.opacity(0.4),
+                Color.gray.opacity(0.2),
+                Color.black.opacity(0.3)
+            ]
+        }
+    }
+    
+    private var shimmerColors: [Color] {
+        [
+            Color.clear,
+            Color.white.opacity(canAfford ? 0.3 : 0.1),
+            Color.clear
+        ]
+    }
+    
+    private var borderColors: [Color] {
+        if canAfford {
+            return [
+                Color.white.opacity(isSelected ? 0.8 : 0.4),
+                gachaType.gradientColors.first?.opacity(0.6) ?? .blue,
+                Color.white.opacity(isSelected ? 0.8 : 0.4)
+            ]
+        } else {
+            return [Color.gray.opacity(0.3)]
+        }
+    }
+    
+    private var iconGlowColors: [Color] {
+        if canAfford {
+            return [
+                Color.white.opacity(0.3),
+                gachaType.gradientColors.first?.opacity(0.2) ?? .clear
+            ]
+        } else {
+            return [Color.clear]
+        }
+    }
+    
+    private var iconForegroundColors: [Color] {
+        if canAfford {
+            return [
+                Color.white,
+                Color.white.opacity(0.8),
+                gachaType.gradientColors.first?.opacity(0.9) ?? .blue
+            ]
+        } else {
+            return [Color.gray]
+        }
+    }
+    
+    private var titleForegroundColors: [Color] {
+        if canAfford {
+            return [
+                Color.white,
+                Color.white.opacity(0.9)
+            ]
+        } else {
+            return [Color.gray.opacity(0.7)]
+        }
+    }
+    
+    private var costBackgroundColors: [Color] {
+        if canAfford {
+            return [
+                Color.black.opacity(0.6),
+                Color.black.opacity(0.4)
+            ]
+        } else {
+            return [Color.gray.opacity(0.5)]
+        }
+    }
+    
+    private var cardBackground: some View {
+        RoundedRectangle(cornerRadius: 20)
+            .fill(
+                RadialGradient(
+                    colors: backgroundColors,
+                    center: .topLeading,
+                    startRadius: 20,
+                    endRadius: 160
+                )
+            )
+            .overlay(shimmerOverlay)
+            .overlay(borderOverlay)
+    }
+    
+    private var shimmerOverlay: some View {
+        RoundedRectangle(cornerRadius: 20)
+            .fill(
+                LinearGradient(
+                    colors: shimmerColors,
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+            )
+            .offset(x: shimmerOffset)
+            .clipped()
+    }
+    
+    private var borderOverlay: some View {
+        RoundedRectangle(cornerRadius: 20)
+            .stroke(
+                LinearGradient(
+                    colors: borderColors,
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                ),
+                lineWidth: isSelected ? 3 : 2
+            )
+    }
+    
+    private var cardContent: some View {
+        VStack(spacing: 12) {
+            iconSection
+            titleSection
+//            subtitleSection
+            costSection
+        }
+        .padding(16)
+    }
+    
+    private var iconSection: some View {
+        ZStack {
+            Circle()
+                .fill(
+                    RadialGradient(
+                        colors: iconGlowColors,
+                        center: .center,
+                        startRadius: 5,
+                        endRadius: 25
+                    )
+                )
+                .frame(width: 50, height: 50)
+                .scaleEffect(isSelected ? 1.2 : 1.0)
+            
+            Image(systemName: gachaType.icon)
+                .font(.system(size: 28, weight: .bold))
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: iconForegroundColors,
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                .shadow(color: .black.opacity(0.3), radius: 2, x: 1, y: 1)
+                .rotationEffect(.degrees(isSelected ? rotationAngle : 0))
+        }
+    }
+    
+    private var titleSection: some View {
+        Text(gachaType.title)
+            .font(.system(size: 16, weight: .black, design: .rounded))
+            .foregroundStyle(
+                LinearGradient(
+                    colors: titleForegroundColors,
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            )
+            .shadow(color: .black.opacity(0.5), radius: 1, x: 1, y: 1)
+            .multilineTextAlignment(.center)
+    }
+    
+    private var subtitleSection: some View {
+        Text(gachaType.subtitle)
+            .font(.system(size: 11, weight: .semibold, design: .rounded))
+            .foregroundColor(canAfford ? .white.opacity(0.85) : .gray.opacity(0.6))
+            .shadow(color: .black.opacity(0.3), radius: 1)
+            .multilineTextAlignment(.center)
+            .lineLimit(2)
+            .frame(height: 28)
+    }
+    
+    private var costSection: some View {
+        HStack(spacing: 6) {
+            coinIcon
+            costText
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .background(costBackground)
+    }
+    
+    private var coinIcon: some View {
+        Image(systemName: "bitcoinsign.circle.fill")
+            .font(.system(size: 14, weight: .bold))
+            .foregroundStyle(
+                LinearGradient(
+                    colors: [Color.yellow, Color.orange],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            )
+            .shadow(color: .yellow.opacity(0.5), radius: 2)
+    }
+    
+    private var costText: some View {
+        Text("\(gachaType.cost)")
+            .font(.system(size: 15, weight: .black, design: .rounded))
+            .foregroundColor(.white)
+            .shadow(color: .black.opacity(0.5), radius: 1)
+    }
+    
+    private var costBackground: some View {
+        Capsule()
+            .fill(
+                LinearGradient(
+                    colors: costBackgroundColors,
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            )
+            .overlay(
+                Capsule()
+                    .stroke(
+                        Color.white.opacity(canAfford ? 0.3 : 0.1),
+                        lineWidth: 1
+                    )
+            )
+    }
+    
+    private var floatingParticles: some View {
+        ForEach(0..<6) { i in
+            Circle()
+                .fill(gachaType.gradientColors.first?.opacity(0.6) ?? .blue)
+                .frame(width: CGFloat.random(in: 2...4))
+                .position(
+                    x: CGFloat.random(in: 20...140),
+                    y: CGFloat.random(in: 20...140)
+                )
+                .animation(
+                    Animation.easeInOut(duration: Double.random(in: 1...2))
+                        .repeatForever(autoreverses: true)
+                        .delay(Double(i) * 0.2),
+                    value: glowIntensity
+                )
+        }
+    }
     
     var body: some View {
         Button(action: {
-            withAnimation(.easeInOut(duration: 0.1)) {
+            // Enhanced press animation with haptic feedback
+            let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+            impactFeedback.impactOccurred()
+            
+            withAnimation(.easeInOut(duration: 0.15)) {
                 isPressed = true
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                withAnimation(.easeInOut(duration: 0.1)) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
                     isPressed = false
                 }
                 onTap()
             }
         }) {
-            VStack(spacing: 8) {
-                // Icon and title
-                VStack(spacing: 4) {
-                    Image(systemName: gachaType.icon)
-                        .font(.system(size: 24, weight: .semibold))
-                        .foregroundColor(.white)
-                        .shadow(radius: 2)
-                    
-                    Text(gachaType.title)
-                        .font(.system(size: 14, weight: .bold, design: .rounded))
-                        .foregroundColor(.white)
-                        .multilineTextAlignment(.center)
-                }
+            ZStack {
+                // Main card background with enhanced gradients
+                cardBackground
                 
-                // Subtitle
-                Text(gachaType.subtitle)
-                    .font(.system(size: 10, weight: .medium, design: .rounded))
-                    .foregroundColor(.white.opacity(0.8))
-                    .multilineTextAlignment(.center)
-                    .lineLimit(2)
-                    .frame(height: 25)
+                // Content
+                cardContent
                 
-                // Cost
-                HStack(spacing: 4) {
-                    Image(systemName: "bitcoinsign.circle.fill")
-                        .font(.system(size: 12))
-                        .foregroundColor(.yellow)
-                    Text("\(gachaType.cost)")
-                        .font(.system(size: 14, weight: .bold, design: .rounded))
-                        .foregroundColor(.white)
+                // Floating particles effect for selected cards
+                if isSelected && canAfford {
+                    floatingParticles
                 }
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(
-                    Capsule()
-                        .fill(Color.black.opacity(0.3))
-                )
             }
-            .frame(width: 140, height: 120)
-            .padding(12)
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(
-                        LinearGradient(
-                            colors: canAfford ? gachaType.gradientColors : [Color.gray.opacity(0.5), Color.gray.opacity(0.3)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(
-                                isSelected ? Color.white.opacity(0.8) : Color.white.opacity(0.2),
-                                lineWidth: isSelected ? 3 : 1
-                            )
-                    )
-                    .shadow(
-                        color: canAfford ? gachaType.gradientColors.first?.opacity(0.3) ?? .clear : .clear,
-                        radius: isSelected ? 8 : 4,
-                        x: 0,
-                        y: 2
-                    )
-            )
-            .scaleEffect(isPressed ? 0.95 : (isSelected ? 1.05 : 1.0))
-            .opacity(canAfford ? 1.0 : 0.6)
+            .frame(width: 160, height: 140)
+            .cardModifiers(isPressed: isPressed, isSelected: isSelected, canAfford: canAfford, gachaType: gachaType)
+                
+
         }
         .disabled(!canAfford)
-        .animation(.easeInOut(duration: 0.2), value: isSelected)
-        .animation(.easeInOut(duration: 0.1), value: isPressed)
         
-        // Lock overlay for unaffordable options
+        // Enhanced lock overlay with glass effect
         .overlay(
             Group {
                 if !canAfford {
-                    Image(systemName: "lock.fill")
-                        .font(.system(size: 20))
-                        .foregroundColor(.white.opacity(0.8))
+                    ZStack {
+                        // Glass effect background
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color.black.opacity(0.3))
+                            .blur(radius: 1)
+                        
+                        // Lock icon with enhanced styling
+                        VStack(spacing: 4) {
+                            Image(systemName: "lock.fill")
+                                .font(.system(size: 24, weight: .bold))
+                                .foregroundStyle(
+                                    LinearGradient(
+                                        colors: [Color.white, Color.gray.opacity(0.8)],
+                                        startPoint: .top,
+                                        endPoint: .bottom
+                                    )
+                                )
+                                .shadow(color: .black.opacity(0.5), radius: 2)
+                            
+                            Text("Locked")
+                                .font(.system(size: 10, weight: .bold, design: .rounded))
+                                .foregroundColor(.white.opacity(0.8))
+                                .shadow(color: .black.opacity(0.5), radius: 1)
+                        }
+                        .padding()
                         .background(
                             Circle()
-                                .fill(Color.black.opacity(0.6))
-                                .frame(width: 40, height: 40)
+                                .fill(Color.black.opacity(0.4))
+                                .frame(width: 60, height: 60)
+                                .blur(radius: 0.5)
                         )
+                    }
                 }
             }
         )
+        .onAppear {
+            // Start shimmer animation
+            withAnimation(.linear(duration: 2.0).repeatForever(autoreverses: false)) {
+                shimmerOffset = 200
+            }
+            
+            // Start glow animation
+            withAnimation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true)) {
+                glowIntensity = 1.0
+            }
+            
+            // Start rotation animation for selected cards
+            if isSelected {
+                withAnimation(.linear(duration: 8.0).repeatForever(autoreverses: false)) {
+                    rotationAngle = 360
+                }
+            }
+        }
+        .onChange(of: isSelected) { newValue in
+            if newValue {
+                withAnimation(.linear(duration: 8.0).repeatForever(autoreverses: false)) {
+                    rotationAngle = 360
+                }
+            } else {
+                withAnimation(.easeOut(duration: 0.5)) {
+                    rotationAngle = 0
+                }
+            }
+        }
+    }
+}
+
+// Extension for card modifiers
+extension View {
+    @ViewBuilder
+    func cardModifiers(isPressed: Bool, isSelected: Bool, canAfford: Bool, gachaType: GachaType) -> some View {
+        self
+            .scaleEffect(isPressed ? 0.92 : (isSelected ? 1.08 : 1.0))
+            .opacity(canAfford ? 1.0 : 0.5)
+            .shadow(
+                color: canAfford ? (gachaType.gradientColors.first?.opacity(isSelected ? 0.4 : 0.2) ?? .clear) : .clear,
+                radius: isSelected ? 12 : 6,
+                x: 0,
+                y: isSelected ? 8 : 4
+            )
+            .rotation3DEffect(
+                .degrees(isPressed ? 5 : 0),
+                axis: (x: 1, y: 0, z: 0),
+                perspective: 1.0
+            )
+            .animation(.spring(response: 0.5, dampingFraction: 0.7), value: isSelected)
+            .animation(.easeInOut(duration: 0.15), value: isPressed)
     }
 }
 

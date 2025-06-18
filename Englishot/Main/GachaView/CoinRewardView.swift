@@ -25,12 +25,12 @@ struct CoinRewardView: View {
             .offset(y: offset)
             .scaleEffect(scale)
             .opacity(opacity)
-            .position(x: UIScreen.main.bounds.width - 50, y: 10)  // 調高起始位置
+            .position(x: UIScreen.main.bounds.width - 50, y: 70)  // 調高起始位置
             .onAppear {
                 // Add initial delay if specified
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
                     withAnimation(.easeOut(duration: 0.6)) {
-                        offset = 40
+                        offset = -40
                         scale = 1.2
                         opacity = 1
                     }

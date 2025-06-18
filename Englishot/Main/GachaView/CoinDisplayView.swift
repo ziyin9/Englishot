@@ -11,10 +11,12 @@ struct CoinDisplayView: View {
         Group {
                 ZStack {
                     HStack(spacing: 8) {
-                        Image(systemName: "fish.fill")
-                            .font(.system(size: 20))
-                            .foregroundColor(.yellow)
-                            .shadow(color: .orange, radius: 2)
+                        Image("fishcoin")
+                            .resizable()
+                            .frame(width: 40, height: 40)
+//                            .font(.system(size: 20))
+                            .foregroundColor(.blue)
+                            .shadow(color: .blue, radius: 2)
                             .scaleEffect(bounce ? 1.2 : 1.0)
                             .animation(.spring(response: 0.3, dampingFraction: 0.5), value: bounce)
                         
@@ -36,7 +38,7 @@ struct CoinDisplayView: View {
                             .fill(Color.black.opacity(0.2))
                             .overlay(
                                 Capsule()
-                                    .stroke(Color.yellow.opacity(0.5), lineWidth: 1)
+                                    .stroke(Color.blue.opacity(0.5), lineWidth: 2)
                             )
                     )
                     .transition(.scale.combined(with: .opacity))
@@ -83,4 +85,4 @@ struct CoinDisplayView: View {
 #Preview {
     CoinDisplayView(coins: 520)
         .environmentObject(UIState())
-} 
+}
