@@ -87,7 +87,7 @@ struct SpellingGameView: View {
                         ForEach(0..<(currentWord?.word?.count ?? 0), id: \.self) { index in
                             if index < selectedLetters.count {
                                 LetterTile(letter: selectedLetters[index], isSelected: true)
-                                    .scaleEffect(animateSuccess ? 1.1 : 1.0)
+                                 .scaleEffect(animateSuccess ? 1.1 : 1.0)
                             } else {
                                 RoundedRectangle(cornerRadius: 10)
                                     .stroke(Color(#colorLiteral(red: 0.5, green: 0.8, blue: 0.3, alpha: 1)).opacity(0.3), lineWidth: 2)
@@ -418,7 +418,7 @@ struct LetterTile: View {
                 .font(.system(size: 24, weight: .bold))
                 .foregroundColor(isSelected ? .white : Color(#colorLiteral(red: 0.3, green: 0.6, blue: 0.3, alpha: 1)))
         }
-        .frame(width: 30, height: 45)
+        .frame(width: isSelected ? 30 : 50, height: isSelected ? 45 : 60)
     }
 }
 

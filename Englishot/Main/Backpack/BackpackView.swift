@@ -217,9 +217,9 @@ struct BackpackView: View {
                                                         .shadow(radius: 10)
                                                 )
                                         }
-//                                        .sheet(isPresented: $showDeleteWordView) {
-//                                            DeleteWordView(wordEntities: $wordEntitiesArray) // 傳遞綁定的 wordEntities
-//                                        }
+                                        .sheet(isPresented: $showDeleteWordView) {
+                                            DeleteWordView(wordEntities: $wordEntitiesArray) // 傳遞綁定的 wordEntities
+                                        }
 
                                         if uiState.showDataView{
                                             PopupDataView()

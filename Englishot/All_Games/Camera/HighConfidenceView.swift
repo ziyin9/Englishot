@@ -1,5 +1,6 @@
 import SwiftUI
 import UIKit
+import CoreData
 
 struct HighConfidenceView: View {
     let image: UIImage?
@@ -8,6 +9,10 @@ struct HighConfidenceView: View {
     @Binding var showHighConfidenceView: Bool
     @Binding var showingCamera: Bool
     var onSave: () -> Void
+    
+    // 加入新屬性來控制是否顯示"new"標記和金幣獎勵
+    @State private var isNewWord: Bool = false
+    @State private var showCoinReward: Bool = false
     
     // Animation states
     @State private var isAnimating = false
@@ -21,9 +26,16 @@ struct HighConfidenceView: View {
     let feedbackGenerator = UINotificationFeedbackGenerator()
     
     // Snowflake positions - randomized for visual effect
-    let snowflakePositions = (0..<12).map { _ in
-        (x: CGFloat.random(in: -150...150), y: CGFloat.random(in: -200...200), size: CGFloat.random(in: 10...25))
-    }
+    let snowflakePositions: [(x: CGFloat, y: CGFloat, size: CGFloat)] = {
+        var positions: [(x: CGFloat, y: CGFloat, size: CGFloat)] = []
+        for _ in 0..<12 {
+            let x = CGFloat.random(in: -150...150)
+            let y = CGFloat.random(in: -200...200)
+            let size = CGFloat.random(in: 10...25)
+            positions.append((x: x, y: y, size: size))
+        }
+        return positions
+    }()
     
     var body: some View {
         ZStack {
@@ -42,35 +54,21 @@ struct HighConfidenceView: View {
             
             // Snowflakes in background
             ForEach(0..<snowflakePositions.count, id: \.self) { index in
-                Image(systemName: "snowflake")
-                    .font(.system(size: snowflakePositions[index].size))
-                    .foregroundColor(.white)
-                    .position(
-                        x: UIScreen.main.bounds.width/2 + snowflakePositions[index].x,
-                        y: UIScreen.main.bounds.height/2 + snowflakePositions[index].y
-                    )
-                    .opacity(snowflakesOpacity)
-                    .rotationEffect(.degrees(rotationAngle + Double(index) * 10))
-                    .animation(
-                        Animation.linear(duration: Double.random(in: 3...6))
-                            .repeatForever(autoreverses: true)
-                            .delay(Double.random(in: 0...2)),
-                        value: rotationAngle
-                    )
+                sSnowflakeView(
+                    position: snowflakePositions[index],
+                    index: index,
+                    rotationAngle: rotationAngle,
+                    opacity: snowflakesOpacity
+                )
             }
                 
                 // Additional snowflake accents - reduced number
                 ForEach(0..<3, id: \.self) { index in
-                    Image(systemName: "snowflake")
-                        .font(.system(size: CGFloat.random(in: 15...20)))
-                        .foregroundColor(.white.opacity(0.7))
-                        .position(
-                            x: CGFloat.random(in: 20...140),
-                            y: CGFloat.random(in: 20...140)
-                        )
-                        .rotationEffect(.degrees(rotationAngle + Double(index) * 30))
-                
-            }
+                    AccentSnowflakeView(
+                        index: index,
+                        rotationAngle: rotationAngle
+                    )
+                }
             
             VStack(spacing: 15) {
                 // Success header
@@ -127,9 +125,16 @@ struct HighConfidenceView: View {
                 
                 // Word recognized with frosted look
                 VStack(spacing: 6) {
-                    Text("辨識單字")
-                        .font(.subheadline)
-                        .foregroundColor(Color(red: 0.0, green: 0.4, blue: 0.0))
+                    HStack {
+                        Text("辨識單字")
+                            .font(.subheadline)
+                            .foregroundColor(Color(red: 0.0, green: 0.4, blue: 0.0))
+                        
+                        // NEW 標記
+                        if isNewWord {
+                            NewWordBadge(isVisible: isNewWord)
+                        }
+                    }
                     
                     Text(recognizedWord.components(separatedBy: " - ").first ?? recognizedWord)
                         .font(.system(size: 26, weight: .bold))
@@ -147,13 +152,20 @@ struct HighConfidenceView: View {
                 
                 // 顯示儲存成功訊息
                 if isSaved {
-                    HStack {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(.green)
-                        Text("單字已儲存至背包庫")
-                            .font(.system(size: 25, weight: .semibold))
-                            .foregroundColor(Color(red: 0.0, green: 0.4, blue: 0.0))
-                            .padding(.vertical, 3)
+                    VStack(spacing: 8) {
+                        HStack {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.green)
+                            Text("單字已儲存至背包庫")
+                                .font(.system(size: 25, weight: .semibold))
+                                .foregroundColor(Color(red: 0.0, green: 0.4, blue: 0.0))
+                                .padding(.vertical, 3)
+                        }
+                        
+                        // 金幣獎勵訊息
+                        if isNewWord {
+                            CoinRewardMessage(showReward: showCoinReward)
+                        }
                     }
                     .padding(.horizontal, 15)
                     .padding(.vertical, 6)
@@ -183,18 +195,7 @@ struct HighConfidenceView: View {
             }
             .padding(15)
             .background(
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(Color.white.opacity(0.4))
-                    .background(
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(Color(red: 0.85, green: 0.9, blue: 0.98).opacity(0.6))
-                            .blur(radius: 1)
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(Color.white.opacity(0.8), lineWidth: 2)
-                    )
-                    .shadow(color: Color(red: 0.7, green: 0.85, blue: 1.0).opacity(0.7), radius: 15)
+                BackgroundCardView()
             )
             .scaleEffect(scale)
             .opacity(contentOpacity)
@@ -225,6 +226,10 @@ struct HighConfidenceView: View {
                     rotationAngle = 360
                 }
                 
+                // 檢查是否為新單字
+                let wordToCheck = recognizedWord.components(separatedBy: " - ").first?.lowercased() ?? recognizedWord.lowercased()
+                checkIfNewWord(wordToCheck)
+                
                 // 自動儲存，不需要用戶點擊儲存按鈕
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     onSave()
@@ -233,6 +238,15 @@ struct HighConfidenceView: View {
                         isSaved = true
                         // Add haptic feedback when word is saved
                         feedbackGenerator.notificationOccurred(.success)
+                        
+                        // 如果是新單字，顯示金幣獎勵動畫
+                        if isNewWord {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                withAnimation(.spring(response: 0.4, dampingFraction: 0.6)) {
+                                    showCoinReward = true
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -240,11 +254,140 @@ struct HighConfidenceView: View {
         .allowsHitTesting(true)
     }
     
+    // 檢查單字是否為新收集的
+    private func checkIfNewWord(_ wordString: String) {
+        let context = CoreDataManager.shared.context
+        let fetchRequest: NSFetchRequest<Word> = Word.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "word == %@", wordString)
+        
+        do {
+            let existingWords = try context.fetch(fetchRequest)
+            if let existingWord = existingWords.first {
+                // 如果找到單字且controlshow為false，表示是新單字
+                isNewWord = !existingWord.controlshow
+            } else {
+                // 如果沒找到單字，表示是全新的單字
+                isNewWord = true
+            }
+            
+            // 立即顯示NEW標記
+            if isNewWord {
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                    // isNewWord已經設置，動畫會自動觸發
+                }
+            }
+        } catch {
+            print("檢查新單字失敗: \(error)")
+            isNewWord = true // 如果檢查失敗，保守地認為是新單字
+        }
+    }
+    
     // Unified dismiss function for better consistency
     private func dismissView() {
         feedbackGenerator.notificationOccurred(.success)
         // Immediately dismiss without animation
         showHighConfidenceView = false
+    }
+}
+
+// 分離的雪花 View 組件
+struct sSnowflakeView: View {
+    let position: (x: CGFloat, y: CGFloat, size: CGFloat)
+    let index: Int
+    let rotationAngle: Double
+    let opacity: Double
+    
+    var body: some View {
+        Image(systemName: "snowflake")
+            .font(.system(size: position.size))
+            .foregroundColor(.white)
+            .position(
+                x: UIScreen.main.bounds.width/2 + position.x,
+                y: UIScreen.main.bounds.height/2 + position.y
+            )
+            .opacity(opacity)
+            .rotationEffect(.degrees(rotationAngle + Double(index) * 10))
+            .animation(
+                Animation.linear(duration: Double.random(in: 3...6))
+                    .repeatForever(autoreverses: true)
+                    .delay(Double.random(in: 0...2)),
+                value: rotationAngle
+            )
+    }
+}
+
+struct AccentSnowflakeView: View {
+    let index: Int
+    let rotationAngle: Double
+    
+    var body: some View {
+        Image(systemName: "snowflake")
+            .font(.system(size: CGFloat.random(in: 15...20)))
+            .foregroundColor(.white.opacity(0.7))
+            .position(
+                x: CGFloat.random(in: 20...140),
+                y: CGFloat.random(in: 20...140)
+            )
+            .rotationEffect(.degrees(rotationAngle + Double(index) * 30))
+    }
+}
+
+struct NewWordBadge: View {
+    let isVisible: Bool
+    
+    var body: some View {
+        Text("NEW")
+            .font(.system(size: 12, weight: .bold))
+            .foregroundColor(.white)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 2)
+            .background(
+                Capsule()
+                    .fill(Color.red)
+                    .shadow(color: Color.red.opacity(0.5), radius: 2)
+            )
+            .scaleEffect(isVisible ? 1.0 : 0.5)
+            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isVisible)
+    }
+}
+
+struct CoinRewardMessage: View {
+    let showReward: Bool
+    
+    var body: some View {
+        HStack {
+            Image(systemName: "fish.fill")
+                .foregroundColor(.yellow)
+            Text("獲得 20 金幣!")
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundColor(.orange)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 4)
+        .background(
+            Capsule()
+                .fill(Color.yellow.opacity(0.2))
+                .shadow(color: Color.yellow.opacity(0.3), radius: 2)
+        )
+        .scaleEffect(showReward ? 1.0 : 0.3)
+        .animation(.spring(response: 0.4, dampingFraction: 0.6), value: showReward)
+    }
+}
+
+struct BackgroundCardView: View {
+    var body: some View {
+        RoundedRectangle(cornerRadius: 20)
+            .fill(Color.white.opacity(0.4))
+            .background(
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(Color(red: 0.85, green: 0.9, blue: 0.98).opacity(0.6))
+                    .blur(radius: 1)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(Color.white.opacity(0.8), lineWidth: 2)
+            )
+            .shadow(color: Color(red: 0.7, green: 0.85, blue: 1.0).opacity(0.7), radius: 15)
     }
 }
 

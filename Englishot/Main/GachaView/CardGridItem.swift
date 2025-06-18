@@ -211,6 +211,7 @@ struct CardGridItem: View {
         }
         .buttonStyle(PlainButtonStyle())
         .sheet(isPresented: $showDetail) {
+            // pop.mp3 sound
             CardDetailView(card: card)
                 .environmentObject(gachaSystem)
                 .onDisappear {

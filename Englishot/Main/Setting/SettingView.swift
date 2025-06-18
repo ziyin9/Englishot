@@ -56,19 +56,19 @@ struct SettingView: View {
                             Spacer()
                             
                             // 幫助按鈕
-                            Button(action: {
-                                showTutorial = true
-                            }) {
-                                Image(systemName: "questionmark.circle.fill")
-                                    .resizable()
-                                    .frame(width: 30, height: 30)
-                                    .foregroundColor(.blue)
-                                    .background(Circle().fill(Color.white.opacity(0.7)).shadow(radius: 3))
-                                    .overlay(
-                                        Circle()
-                                            .stroke(Color.blue.opacity(0.3), lineWidth: 1)
-                                    )
-                            }
+//                            Button(action: {
+//                                showTutorial = true
+//                            }) {
+//                                Image(systemName: "questionmark.circle.fill")
+//                                    .resizable()
+//                                    .frame(width: 30, height: 30)
+//                                    .foregroundColor(.blue)
+//                                    .background(Circle().fill(Color.white.opacity(0.7)).shadow(radius: 3))
+//                                    .overlay(
+//                                        Circle()
+//                                            .stroke(Color.blue.opacity(0.3), lineWidth: 1)
+//                                    )
+//                            }
                         }
                         .padding(.horizontal)
                         .padding(.top, 20)
@@ -119,60 +119,60 @@ struct SettingView: View {
                                     }
                                     .toggleStyle(EnhancedIceToggleStyle())
                                     
-                                    // 新增動畫效果開關
-                                    Toggle(isOn: $animateBackground) {
-                                        HStack {
-                                            Image(systemName: "sparkles")
-                                                .foregroundColor(.blue.opacity(0.8))
-                                            Text("Animation Effects")
-                                                .foregroundColor(.primary)
-                                        }
-                                    }
-                                    .toggleStyle(EnhancedIceToggleStyle())
+//                                    // 新增動畫效果開關
+//                                    Toggle(isOn: $animateBackground) {
+//                                        HStack {
+//                                            Image(systemName: "sparkles")
+//                                                .foregroundColor(.blue.opacity(0.8))
+//                                            Text("Animation Effects")
+//                                                .foregroundColor(.primary)
+//                                        }
+//                                    }
+//                                    .toggleStyle(EnhancedIceToggleStyle())
                                 }
                             }
                             
                             // 通知與主題卡片
-                            SSSettingsCard(icon: "bell.badge.fill", title: "Preferences") {
-                                VStack(spacing: 18) {
-                                    Toggle(isOn: $notificationsEnabled) {
-                                        HStack {
-                                            Image(systemName: "bell.fill")
-                                                .foregroundColor(.blue.opacity(0.8))
-                                            Text("Notifications")
-                                                .foregroundColor(.primary)
-                                        }
-                                    }
-                                    .toggleStyle(EnhancedIceToggleStyle())
-                                    
-                                    Toggle(isOn: $isDarkMode) {
-                                        HStack {
-                                            Image(systemName: isDarkMode ? "moon.fill" : "sun.max.fill")
-                                                .foregroundColor(.blue.opacity(0.8))
-                                            Text("Dark Mode")
-                                                .foregroundColor(.primary)
-                                        }
-                                    }
-                                    .toggleStyle(EnhancedIceToggleStyle())
-                                    
-                                    // 新增雪花強度調整
-                                    if animateBackground {
-                                        VStack(alignment: .leading, spacing: 8) {
-                                            HStack {
-                                                Image(systemName: "snow")
-                                                    .foregroundColor(.blue.opacity(0.8))
-                                                Text("Snow Intensity")
-                                                    .foregroundColor(.primary)
-                                                Spacer()
-                                                Text("\(Int(snowIntensity * 100))%")
-                                                    .foregroundColor(.gray)
-                                                    .monospacedDigit()
-                                            }
-                                            
-                                        }
-                                    }
-                                }
-                            }
+//                            SSSettingsCard(icon: "bell.badge.fill", title: "Preferences") {
+//                                VStack(spacing: 18) {
+//                                    Toggle(isOn: $notificationsEnabled) {
+//                                        HStack {
+//                                            Image(systemName: "bell.fill")
+//                                                .foregroundColor(.blue.opacity(0.8))
+//                                            Text("Notifications")
+//                                                .foregroundColor(.primary)
+//                                        }
+//                                    }
+//                                    .toggleStyle(EnhancedIceToggleStyle())
+//
+//                                    Toggle(isOn: $isDarkMode) {
+//                                        HStack {
+//                                            Image(systemName: isDarkMode ? "moon.fill" : "sun.max.fill")
+//                                                .foregroundColor(.blue.opacity(0.8))
+//                                            Text("Dark Mode")
+//                                                .foregroundColor(.primary)
+//                                        }
+//                                    }
+//                                    .toggleStyle(EnhancedIceToggleStyle())
+//
+//                                    // 新增雪花強度調整
+//                                    if animateBackground {
+//                                        VStack(alignment: .leading, spacing: 8) {
+//                                            HStack {
+//                                                Image(systemName: "snow")
+//                                                    .foregroundColor(.blue.opacity(0.8))
+//                                                Text("Snow Intensity")
+//                                                    .foregroundColor(.primary)
+//                                                Spacer()
+//                                                Text("\(Int(snowIntensity * 100))%")
+//                                                    .foregroundColor(.gray)
+//                                                    .monospacedDigit()
+//                                            }
+//
+//                                        }
+//                                    }
+//                                }
+//                            }
                             
                             // 隱私設定卡片
                             SSSettingsCard(icon: "lock.shield.fill", title: "Privacy") {

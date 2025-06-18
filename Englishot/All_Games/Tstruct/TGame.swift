@@ -130,6 +130,15 @@ struct TGame: View {
                             .zIndex(1)
                     }
                 }
+                
+                // 金幣獎勵動畫
+                if uiState.showCoinReward {
+                    CoinRewardView(amount: Int64(uiState.coinRewardAmount), delay: 0)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                        .padding(.top, 50)
+                        .padding(.trailing, 20)
+                        .zIndex(100)
+                }
             }
             
             .overlay(
@@ -284,7 +293,16 @@ struct TGame: View {
         
         // Check if this word is in our game vocabulary
         if levelData.game_vocabulary.contains(where: { $0.E_word.lowercased() == lowercasedWord }) {
-            addNewWord(wordString: lowercasedWord, image: image!)
+            let isFirstTimeCollection = addNewWord(wordString: lowercasedWord, image: image!)
+            
+            // 如果是第一次收集，顯示金幣獎勵動畫
+            if isFirstTimeCollection {
+                uiState.coinRewardAmount = 20
+                uiState.showCoinReward = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    uiState.showCoinReward = false
+                }
+            }
             
             // Find and reveal the word in the game
             if let wordEntity = wordEntities.first(where: { $0.word == lowercasedWord }) {
@@ -294,6 +312,9 @@ struct TGame: View {
             // 準備單字資料但暫時不顯示FoundWordPopup
             passToFoundWordSeetWord = lowercasedWord
             // showimagePop = true  // 暫時註解掉，不顯示FoundWordPopup
+            
+            // 檢查是否所有單字都找到了
+            checkAllWordsFound()
         }
     }
     

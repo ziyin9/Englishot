@@ -9,7 +9,7 @@ import UIKit
 import CoreData
 
 
-func addNewWord(wordString: String, image: UIImage) {
+func addNewWord(wordString: String, image: UIImage) -> Bool {
 
     let context = CoreDataManager.shared.context
     
@@ -17,17 +17,31 @@ func addNewWord(wordString: String, image: UIImage) {
     let fetchRequest: NSFetchRequest<Word> = Word.fetchRequest()
     fetchRequest.predicate = NSPredicate(format: "word == %@", wordString)
     
+    var isFirstTimeCollection = false
+    
     do {
         let existingWords = try context.fetch(fetchRequest)
         
         if let existingWord = existingWords.first {
-            // 如果找到相同的單字，則更新它的圖片
+            // 如果找到相同的單字，檢查是否是第一次收集
+            if !existingWord.controlshow {
+                // 第一次收集到這個單字，增加金幣
+                isFirstTimeCollection = true
+                addCoin(by: 20)
+                print("🎉 第一次收集到單字 '\(wordString)'，獲得 20 金幣！")
+            }
+            
+            // 更新圖片和狀態
             if let imageData = image.jpegData(compressionQuality: 0.8) {
                 existingWord.itemimage = imageData
                 existingWord.controlshow = true
             }
         } else {
             // 如果沒有找到相同的單字，則創建新的單字
+            isFirstTimeCollection = true
+            addCoin(by: 20)
+            print("🎉 第一次收集到新單字 '\(wordString)'，獲得 20 金幣！")
+            
             let newWord = Word(context: context)
             newWord.word = wordString
             
@@ -38,12 +52,13 @@ func addNewWord(wordString: String, image: UIImage) {
             }
         }
         
-
         CoreDataManager.shared.saveContext()
         
     } catch {
         print("Fetch failed: \(error)")
     }
+    
+    return isFirstTimeCollection
 }
 
 
