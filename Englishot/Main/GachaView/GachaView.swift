@@ -123,7 +123,7 @@ struct GachaView: View {
                                 VStack(alignment: .leading, spacing: 10) {
                                     // Section header
                                     HStack {
-                                        Image(systemName: getTypeIcon(for: type))
+                                        Image("\(getTypeIcon(for: type))")
                                             .font(.system(size: 20))
                                             .foregroundColor(getTypeColor(for: type))
                                         
@@ -220,10 +220,10 @@ struct GachaView: View {
     
     private func getTypeIcon(for type: String) -> String {
             switch type {
-            case "Emotion": return "face.smiling"
-            case "Profession": return "briefcase"
-            case "Activity": return "figure.walk"
-            case "Festival": return "gift.fill"
+            case "Emotion": return "Emotion"
+            case "Profession": return "Profession"
+            case "Activity": return "Activity"
+            case "Festival": return "Festival"
             default: return "questionmark"
             }
         }

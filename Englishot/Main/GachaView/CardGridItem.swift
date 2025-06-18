@@ -47,8 +47,15 @@ struct CardGridItem: View {
                     TurnIsNewTofalse(wordString: card.englishWord)
                     isNew = false
                 }
+                SoundPlayer.shared.playSound(named: "pop")
                 showDetail = true
+                
             }
+            
+            if !showDetail {
+                SoundPlayer.shared.playSound(named: "poplock")
+            }
+            
         }) {
             ZStack {
                 // Card background
@@ -154,7 +161,7 @@ struct CardGridItem: View {
                                     .font(.system(size: 24))
                                     .foregroundColor(.white.opacity(0.5))
                             }
-                            .frame(height: 60)
+                            .frame(height: 70)
                         }
                         //點進去才能看好了
                         // Card name
