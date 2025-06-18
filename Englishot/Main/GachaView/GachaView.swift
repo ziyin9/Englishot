@@ -1,6 +1,15 @@
 import SwiftUI
 import CoreData
 
+enum ActiveSheet: Identifiable {
+    case unlock
+    case delete
+
+    var id: Int {
+        hashValue
+    }
+}
+
 struct GachaView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var uiState: UIState
@@ -22,7 +31,8 @@ struct GachaView: View {
     @State private var refundAmount: Int64 = 0
     @State private var showDeveloperDelete = false
     @State private var selectedGachaType: GachaType = .normal
-    
+    @State private var showUnlockSheet = false
+    @State private var activeSheet: ActiveSheet? = nil
     private let sortOptions = ["Rarity", "Unlocked", "Newest"]
     private let columns = [
         GridItem(.flexible(), spacing: 10),
@@ -166,9 +176,9 @@ struct GachaView: View {
             
             // Add developer delete button
             VStack {
-                HStack {
+                HStack(spacing: 5) {
                     Button(action: {
-                        showDeveloperDelete = true
+                        activeSheet = .delete
                     }) {
                         Image(systemName: "trash.fill")
                             .font(.system(size: 16))
@@ -179,13 +189,24 @@ struct GachaView: View {
                                     .fill(Color.red.opacity(0.8))
                             )
                     }
-                    .padding(.leading, 16)
-                    .padding(.top, 8)
+                    Button(action: {
+                        activeSheet = .unlock
+                    }) {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.system(size: 16))
+                            .foregroundColor(.white)
+                            .padding(8)
+                            .background(
+                                Circle()
+                                    .fill(Color.green.opacity(0.8))
+                            )
+                    }
                     Spacer()
                 }
+                .padding(.horizontal, 16)
+                .padding(.top, 8)
                 Spacer()
             }
-            //  抽卡這裡要有以下這段才會   show
             if uiState.showCoinReward {
                 CoinRewardView(amount: Int64(uiState.coinRewardAmount), delay: 0)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
@@ -215,8 +236,13 @@ struct GachaView: View {
                 }
             }
         }
-        .sheet(isPresented: $showDeveloperDelete) {
-            DeveloperDeleteView(refreshTrigger: $refreshTrigger)
+        .sheet(item: $activeSheet) { sheet in
+            switch sheet {
+            case .delete:
+                DeveloperDeleteView(refreshTrigger: $refreshTrigger)
+            case .unlock:
+                UnlockCardSheet(refreshTrigger: $refreshTrigger, gachaSystem: gachaSystem)
+            }
         }
     }
     
