@@ -294,7 +294,6 @@ struct GachaView: View {
             }
         }
         
-        
         // Draw card using GachaSystem with selected type
         if gachaSystem.drawCard(gameState: GameState(), gachaType: selectedGachaType) {
             // Card drawn successfully
@@ -579,8 +578,10 @@ struct GachaTypeCard: View {
     }
     
     private var coinIcon: some View {
-        Image(systemName: "bitcoinsign.circle.fill")
-            .font(.system(size: 14, weight: .bold))
+        Image("fishcoin")
+            .resizable()
+            .frame(width: 30, height: 30)
+//            .font(.system(size: 14, weight: .bold))
             .foregroundStyle(
                 LinearGradient(
                     colors: [Color.yellow, Color.orange],
