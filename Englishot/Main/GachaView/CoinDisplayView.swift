@@ -96,28 +96,34 @@ struct CoinDisplayView: View {
 struct SetCoinView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var coinAmount: String = ""
+    @AppStorage("neverShowCameraHint") private var neverShowCameraHint: Bool = false
+    @State private var showResetAlert = false
     
     var body: some View {
         NavigationView {
             VStack(spacing: 30) {
-                Text("設置金幣數量")
+                Text("開發者設定")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .padding(.top, 20)
                 
+                // 金幣設置區域
                 VStack(spacing: 15) {
+                    Text("金幣數量設定")
+                        .font(.headline)
+                        .padding(.top, 10)
+                    
                     HStack {
                         Image("fishcoin")
                             .resizable()
                             .frame(width: 30, height: 30)
                         
                         Text("目前金幣數量：")
-                            .font(.headline)
+                            .font(.system(size: 16))
                         
                         if let coin = fetchCoin() {
                             Text("\(coin.amount)")
-                                .font(.headline)
-                                .fontWeight(.bold)
+                                .font(.system(size: 16, weight: .semibold))
                                 .foregroundColor(.blue)
                         }
                     }
@@ -131,7 +137,7 @@ struct SetCoinView: View {
                 }
                 
                 VStack(spacing: 15) {
-                    Text("快速設置")
+                    Text("金幣快速設置")
                         .font(.headline)
                         .padding(.top, 10)
                     
@@ -149,6 +155,35 @@ struct SetCoinView: View {
                                     .cornerRadius(10)
                             }
                         }
+                    }
+                    .padding(.horizontal, 20)
+                }
+                
+                // 相機提示重置區域
+                VStack(spacing: 15) {
+                    Text("相機提示設定")
+                        .font(.headline)
+                        .padding(.top, 10)
+                    
+                    VStack(spacing: 10) {
+                        HStack {
+                            Text("相機提示狀態：")
+                                .font(.system(size: 16))
+                            
+                            Text(neverShowCameraHint ? "已停用" : "啟用中")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(neverShowCameraHint ? .red : .green)
+                        }
+                        
+                        Button("重置相機提示") {
+                            showResetAlert = true
+                        }
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 30)
+                        .padding(.vertical, 12)
+                        .background(Color.orange)
+                        .cornerRadius(10)
                     }
                     .padding(.horizontal, 20)
                 }
@@ -190,6 +225,14 @@ struct SetCoinView: View {
                         dismiss()
                     }
                 }
+            }
+            .alert("重置相機提示", isPresented: $showResetAlert) {
+                Button("取消", role: .cancel) { }
+                Button("重置", role: .destructive) {
+                    neverShowCameraHint = false
+                }
+            } message: {
+                Text("確定要重置相機提示設定嗎？\n重置後將重新顯示相機使用提示。")
             }
         }
     }

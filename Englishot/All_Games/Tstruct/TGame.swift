@@ -212,7 +212,6 @@ struct TGame: View {
             
             .onChange(of: allWordsFound) { _, newValue in
                 if newValue && !hasRewardedAllWords {
-                    addCoin(by: 200)
                     hasRewardedAllWords = true
                 }
             }
