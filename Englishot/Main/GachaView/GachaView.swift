@@ -529,8 +529,9 @@ struct GachaTypeCard: View {
                 .frame(width: 50, height: 50)
                 .scaleEffect(isSelected ? 1.2 : 1.0)
             
-            Image(systemName: gachaType.icon)
-                .font(.system(size: 28, weight: .bold))
+            Image("\(gachaType.icon)")
+                .resizable()
+                .frame(width: 66, height: 66)
                 .foregroundStyle(
                     LinearGradient(
                         colors: iconForegroundColors,
@@ -539,7 +540,9 @@ struct GachaTypeCard: View {
                     )
                 )
                 .shadow(color: .black.opacity(0.3), radius: 2, x: 1, y: 1)
-                .rotationEffect(.degrees(isSelected ? rotationAngle : 0))
+//                .rotationEffect(.degrees(isSelected ? rotationAngle : 0))  rotation effect
+                .rotationEffect(.degrees(rotationAngle))
+
         }
     }
     
@@ -722,11 +725,13 @@ struct GachaTypeCard: View {
             }
             
             // Start rotation animation for selected cards
-            if isSelected {
+            
+            //如有要select的話再改回來
+//            if isSelected {
                 withAnimation(.linear(duration: 8.0).repeatForever(autoreverses: false)) {
                     rotationAngle = 360
                 }
-            }
+//            }
         }
         .onChange(of: isSelected) { newValue in
             if newValue {

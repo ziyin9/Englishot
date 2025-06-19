@@ -47,11 +47,11 @@ enum GachaType: String, CaseIterable {
     
     var icon: String {
         switch self {
-        case .normal: return "sparkles"
-        case .emotion: return "face.smiling"
-        case .profession: return "briefcase"
-        case .activity: return "figure.walk"
-        case .festival: return "gift.fill"
+        case .normal: return "Normal"
+        case .emotion: return "Emotion"
+        case .profession: return "Profession"
+        case .activity: return "Activity"
+        case .festival: return "Festival"
         }
     }
     
