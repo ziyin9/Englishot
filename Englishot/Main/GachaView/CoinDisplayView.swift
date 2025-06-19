@@ -5,21 +5,27 @@ struct CoinDisplayView: View {
     let coins: Int64
     @State private var bounce = false
     @State private var showReward = false
+    @State private var Developer_showSetCoin = false
+
     @State private var rewardAmount: Int64 = 0
     
     var body: some View {
-        Group {
+        
+            Group {
                 ZStack {
                     HStack(spacing: 8) {
-                        Image("fishcoin")
-                            .resizable()
-                            .frame(width: 40, height: 40)
-//                            .font(.system(size: 20))
-                            .foregroundColor(.blue)
-                            .shadow(color: .blue, radius: 2)
-                            .scaleEffect(bounce ? 1.2 : 1.0)
-                            .animation(.spring(response: 0.3, dampingFraction: 0.5), value: bounce)
-                        
+                        Button(action:{
+                            Developer_showSetCoin = true
+                        }){
+                            Image("fishcoin")
+                                .resizable()
+                                .frame(width: 40, height: 40)
+                            //                            .font(.system(size: 20))
+                                .foregroundColor(.blue)
+                                .shadow(color: .blue, radius: 2)
+                                .scaleEffect(bounce ? 1.2 : 1.0)
+                                .animation(.spring(response: 0.3, dampingFraction: 0.5), value: bounce)
+                        }
                         Text("\(coins)")
                             .font(.system(size: 16, weight: .bold, design: .rounded))
                             .foregroundStyle(
@@ -51,24 +57,29 @@ struct CoinDisplayView: View {
                             .position(x: UIScreen.main.bounds.width - 60, y: 70)
                     }
                 }
-        }
-        .ignoresSafeArea(edges: .top)
-        .onChange(of: coins) { _ in
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
-                bounce = true
             }
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            .ignoresSafeArea(edges: .top)
+            .onChange(of: coins) { _ in
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
-                    bounce = false
+                    bounce = true
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
+                        bounce = false
+                    }
                 }
             }
+            .sheet(isPresented: $Developer_showSetCoin){
+                SetCoinView()
+            }
+            
+            
         }
-//        .onAppear {
-//            // Set the reference to this view in UIState
-//            uiState.coinDisplayView = self
-//        }
-    }
+        
+        
+        
+    
     
     // 顯示獎勵動畫
     func showRewardAnimation(amount: Int64) {
@@ -78,6 +89,108 @@ struct CoinDisplayView: View {
         // Hide reward after animation completes
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             showReward = false
+        }
+    }
+}
+
+struct SetCoinView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var coinAmount: String = ""
+    
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 30) {
+                Text("設置金幣數量")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding(.top, 20)
+                
+                VStack(spacing: 15) {
+                    HStack {
+                        Image("fishcoin")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                        
+                        Text("目前金幣數量：")
+                            .font(.headline)
+                        
+                        if let coin = fetchCoin() {
+                            Text("\(coin.amount)")
+                                .font(.headline)
+                                .fontWeight(.bold)
+                                .foregroundColor(.blue)
+                        }
+                    }
+                    
+                    TextField("輸入新的金幣數量", text: $coinAmount)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .keyboardType(.numberPad)
+                        .font(.title2)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 20)
+                }
+                
+                VStack(spacing: 15) {
+                    Text("快速設置")
+                        .font(.headline)
+                        .padding(.top, 10)
+                    
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 10) {
+                        ForEach([100, 500, 1000, 5000, 10000, 50000], id: \.self) { amount in
+                            Button(action: {
+                                coinAmount = "\(amount)"
+                            }) {
+                                Text("\(amount)")
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 15)
+                                    .padding(.vertical, 10)
+                                    .background(Color.blue)
+                                    .cornerRadius(10)
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                }
+                
+                Spacer()
+                
+                HStack(spacing: 20) {
+                    Button("取消") {
+                        dismiss()
+                    }
+                    .font(.headline)
+                    .foregroundColor(.red)
+                    .padding(.horizontal, 30)
+                    .padding(.vertical, 12)
+                    .background(Color.red.opacity(0.1))
+                    .cornerRadius(10)
+                    
+                    Button("確認設置") {
+                        if let amount = Int64(coinAmount), amount >= 0 {
+                            setCoin(to: amount)
+                            dismiss()
+                        }
+                    }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 30)
+                    .padding(.vertical, 12)
+                    .background(coinAmount.isEmpty || Int64(coinAmount) == nil ? Color.gray : Color.green)
+                    .cornerRadius(10)
+                    .disabled(coinAmount.isEmpty || Int64(coinAmount) == nil)
+                }
+                .padding(.bottom, 30)
+            }
+            .navigationTitle("開發者模式")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("關閉") {
+                        dismiss()
+                    }
+                }
+            }
         }
     }
 }

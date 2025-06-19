@@ -116,7 +116,8 @@ struct TopNavBarItem: View {
 
                 if !isSelected{
                     Text(getTabTitle(for: tab))
-                        .font(.caption2)
+                        .font(.system(size: 12))
+                        .bold()
                         .fontWeight(.regular)
                 }
             }

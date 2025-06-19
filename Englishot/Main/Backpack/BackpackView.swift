@@ -216,6 +216,8 @@ struct BackpackView: View {
                                                         .fill(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.cyan]), startPoint: .top, endPoint: .bottom))
                                                         .shadow(radius: 10)
                                                 )
+                                                .opacity(0)
+
                                         }
                                         .sheet(isPresented: $showDeleteWordView) {
                                             DeleteWordView(wordEntities: $wordEntitiesArray) // 傳遞綁定的 wordEntities

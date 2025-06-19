@@ -14,7 +14,7 @@ struct MiniGameView: View {
     
     @State private var SpellingGameRewardCoins : Int64 = 20
     @State private var MemoryGameRewardCoins : Int64  = 50
-    @State private var AudioImageGameRewardCoins : Int64  = 9000
+    @State private var AudioImageGameRewardCoins : Int64  = 20
     
     private var isMemoryGamePlayable: Bool {
         wordEntities.count >= 6
@@ -278,9 +278,10 @@ struct EnhancedGameCard: View {
 //                                .font(.bold)
                                 .foregroundColor(.white)
 
-                            Image(systemName: "fish.fill")
-                                .font(.system(size: 16))
-                                .foregroundColor(.yellow)
+                            Image("fishcoin")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                                .foregroundColor(.blue)
                             
                             Text("\(rewardCoins!)")
                                 .font(.system(size: 14, weight: .bold))

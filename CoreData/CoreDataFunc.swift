@@ -172,6 +172,29 @@ func deductCoin(by amountToDeduct: Int64) {
     }
 }
 
+func setCoin(to amount: Int64) {
+    let context = CoreDataManager.shared.context
+    let fetchRequest: NSFetchRequest<Coin> = Coin.fetchRequest()
+
+    do {
+        let coins = try context.fetch(fetchRequest)
+        
+        // 刪除所有現有的 Coin entity
+        for coin in coins {
+            context.delete(coin)
+        }
+        
+        // 創建新的 Coin entity 並設置為指定金額
+        let newCoin = Coin(context: context)
+        newCoin.amount = amount
+        
+        CoreDataManager.shared.saveContext()
+        print("金幣已設置為: \(amount)")
+    } catch {
+        print("Failed to set Coin: \(error)")
+    }
+}
+
 
 
 //Penguin

@@ -97,12 +97,16 @@ struct GachaView: View {
             
             VStack(spacing: 15) {
                 // Header with collection progress
-                VStack(spacing: 10) {
-                    Text("企鵝卡收集冊")//"Penguin Collection"
-                        .font(.system(size: 24, weight: .bold, design: .rounded))
-                        .foregroundColor(.white)
+                VStack {
+                    HStack{
+                        Image("gachaicon")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                        Text("企鵝卡收集冊")//"Penguin Collection"
+                            .font(.system(size: 24, weight: .bold, design: .rounded))
+                            .foregroundColor(.white)
+                    }
                 }
-                .padding(.top)
                 
                 
                 // Card sections by type
@@ -176,6 +180,7 @@ struct GachaView: View {
                                 Circle()
                                     .fill(Color.red.opacity(0.8))
                             )
+                            .opacity(0)
                     }
                     Button(action: {
                         activeSheet = .unlock
@@ -188,6 +193,8 @@ struct GachaView: View {
                                 Circle()
                                     .fill(Color.green.opacity(0.8))
                             )
+                            .opacity(0)
+
                     }
                     Spacer()
                 }

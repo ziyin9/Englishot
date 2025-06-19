@@ -356,8 +356,9 @@ struct CoinRewardMessage: View {
     
     var body: some View {
         HStack {
-            Image(systemName: "fish.fill")
-                .foregroundColor(.yellow)
+            Image("fishcoin")
+                .resizable()
+                .frame(width: 30, height: 30)
             Text("獲得 20 金幣!")
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundColor(.orange)
