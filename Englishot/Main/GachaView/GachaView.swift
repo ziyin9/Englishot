@@ -539,7 +539,8 @@ struct GachaTypeCard: View {
                     )
                 )
                 .shadow(color: .black.opacity(0.3), radius: 2, x: 1, y: 1)
-                .rotationEffect(.degrees(rotationAngle))
+            //rotationEffect
+//                .rotationEffect(.degrees(rotationAngle))
 
         }
     }
