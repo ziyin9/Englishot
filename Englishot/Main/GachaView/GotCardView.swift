@@ -13,7 +13,7 @@ struct GotCardView: View {
         ZStack {
             // Semi-transparent background
             Color.black.opacity(0.7)
-                .ignoresSafeArea()
+                .ignoresSafeArea(.all)
                 .onTapGesture {
                     withAnimation {
                         isPresented = false
@@ -27,7 +27,7 @@ struct GotCardView: View {
                     // Background glow
                     Circle()
                         .fill(card.rarityGradient)
-                        .frame(width: 220, height: 220)
+                        .frame(width: 200, height: 220)
                         .blur(radius: 20)
                         .opacity(0.5)
                     
@@ -168,7 +168,8 @@ struct GotCardView: View {
             )
             .padding(.horizontal, 20)
         }
-        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.clear)
         .onAppear {
             checkIfWordIsNew()
             withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {

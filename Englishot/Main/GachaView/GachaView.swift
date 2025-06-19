@@ -16,6 +16,9 @@ struct GachaView: View {
     @FetchRequest(entity: Coin.entity(), sortDescriptors: []) var coinEntities: FetchedResults<Coin>
     @ObservedObject var gachaSystem: GachaSystem
     
+    @State private var snowflakes: [Snowflake] = (0..<50).map { _ in Snowflake() }
+
+    
     @State private var showCard = false
     @State private var cardScale: CGFloat = 0.1
     @State private var cardOpacity = 0.0
@@ -87,19 +90,9 @@ struct GachaView: View {
             .ignoresSafeArea()
             
             // Animated snowflakes
-            ForEach(0..<30) { _ in
-                Image(systemName: "snowflake")
-                    .font(.system(size: CGFloat.random(in: 8...15)))
-                    .foregroundColor(.white.opacity(0.3))
-                    .position(
-                        x: CGFloat.random(in: 0...UIScreen.main.bounds.width),
-                        y: CGFloat.random(in: 0...UIScreen.main.bounds.height)
-                    )
-                    .animation(
-                        Animation.linear(duration: Double.random(in: 5...10))
-                            .repeatForever(autoreverses: false),
-                        value: UUID()
-                    )
+            // Improved snow effect with varying sizes
+            ForEach(snowflakes) { snowflake in
+                Snowflake_View(snowflake: snowflake)
             }
             
             VStack(spacing: 15) {
@@ -111,7 +104,7 @@ struct GachaView: View {
                 }
                 .padding(.top)
                 
-                                
+                
                 // Card sections by type
                 ScrollView {
                     VStack(spacing: 25) {
@@ -129,7 +122,7 @@ struct GachaView: View {
                             }
                         )
                         .padding(.horizontal)
-
+                        
                         
                         ForEach(["Emotion", "Profession", "Activity", "Festival"], id: \.self) { type in
                             if let cards = cardsByType[type], !cards.isEmpty {
@@ -165,17 +158,9 @@ struct GachaView: View {
                     .padding(.vertical)
                 }
                 
-
+                
             }
-            // Add GotCardView
-            if showGotCard, let card = lastDrawnCard {
-                GotCardView(
-                    card: card,
-                    isDuplicate: isDuplicate,
-                    refundAmount: refundAmount,
-                    isPresented: $showGotCard
-                )
-            }
+            
             
             // Add developer delete button
             VStack {
@@ -247,6 +232,19 @@ struct GachaView: View {
                 UnlockCardSheet(refreshTrigger: $refreshTrigger, gachaSystem: gachaSystem)
             }
         }
+        .overlay(
+            // Add GotCardView as overlay
+            Group {
+                if showGotCard, let card = lastDrawnCard {
+                    GotCardView(
+                        card: card,
+                        isDuplicate: isDuplicate,
+                        refundAmount: refundAmount,
+                        isPresented: $showGotCard
+                    )
+                }
+            }
+        )
     }
     
     private func getTypeIcon(for type: String) -> String {
@@ -366,7 +364,9 @@ struct GachaTypeSelectorView: View {
                                 selectedGachaType = gachaType
                                 onDrawCard(gachaType)
                             }
-                        ).padding()
+                        )
+//                        .frame(width: 90, height: 100)
+//                        .padding(20)
                     }
                 }
             }
@@ -412,9 +412,9 @@ struct GachaTypeCard: View {
     private var borderColors: [Color] {
         if canAfford {
             return [
-                Color.white.opacity(isSelected ? 0.8 : 0.4),
+                Color.white.opacity(0.4),
                 gachaType.gradientColors.first?.opacity(0.6) ?? .blue,
-                Color.white.opacity(isSelected ? 0.8 : 0.4)
+                Color.white.opacity(0.4)
             ]
         } else {
             return [Color.gray.opacity(0.3)]
@@ -501,7 +501,7 @@ struct GachaTypeCard: View {
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 ),
-                lineWidth: isSelected ? 3 : 2
+                lineWidth: 2
             )
     }
     
@@ -527,7 +527,6 @@ struct GachaTypeCard: View {
                     )
                 )
                 .frame(width: 50, height: 50)
-                .scaleEffect(isSelected ? 1.2 : 1.0)
             
             Image("\(gachaType.icon)")
                 .resizable()
@@ -540,7 +539,6 @@ struct GachaTypeCard: View {
                     )
                 )
                 .shadow(color: .black.opacity(0.3), radius: 2, x: 1, y: 1)
-//                .rotationEffect(.degrees(isSelected ? rotationAngle : 0))  rotation effect
                 .rotationEffect(.degrees(rotationAngle))
 
         }
@@ -576,14 +574,14 @@ struct GachaTypeCard: View {
             costText
         }
         .padding(.horizontal, 12)
-        .padding(.vertical, 6)
+        .padding(.vertical, 2)
         .background(costBackground)
     }
     
     private var coinIcon: some View {
         Image("fishcoin")
             .resizable()
-            .frame(width: 30, height: 30)
+            .frame(width: 28, height: 28)
 //            .font(.system(size: 14, weight: .bold))
             .foregroundStyle(
                 LinearGradient(
@@ -661,13 +659,8 @@ struct GachaTypeCard: View {
                 
                 // Content
                 cardContent
-                
-                // Floating particles effect for selected cards
-                if isSelected && canAfford {
-                    floatingParticles
-                }
             }
-            .frame(width: 160, height: 140)
+            .frame(width: 160, height: 170)
             .cardModifiers(isPressed: isPressed, isSelected: isSelected, canAfford: canAfford, gachaType: gachaType)
                 
 
@@ -724,24 +717,9 @@ struct GachaTypeCard: View {
                 glowIntensity = 1.0
             }
             
-            // Start rotation animation for selected cards
-            
-            //如有要select的話再改回來
-//            if isSelected {
-                withAnimation(.linear(duration: 8.0).repeatForever(autoreverses: false)) {
-                    rotationAngle = 360
-                }
-//            }
-        }
-        .onChange(of: isSelected) { newValue in
-            if newValue {
-                withAnimation(.linear(duration: 8.0).repeatForever(autoreverses: false)) {
-                    rotationAngle = 360
-                }
-            } else {
-                withAnimation(.easeOut(duration: 0.5)) {
-                    rotationAngle = 0
-                }
+            // Start rotation animation
+            withAnimation(.linear(duration: 8.0).repeatForever(autoreverses: false)) {
+                rotationAngle = 360
             }
         }
     }
@@ -752,20 +730,19 @@ extension View {
     @ViewBuilder
     func cardModifiers(isPressed: Bool, isSelected: Bool, canAfford: Bool, gachaType: GachaType) -> some View {
         self
-            .scaleEffect(isPressed ? 0.92 : (isSelected ? 1.08 : 1.0))
+            .scaleEffect(isPressed ? 0.92 : 1.0)
             .opacity(canAfford ? 1.0 : 0.5)
             .shadow(
-                color: canAfford ? (gachaType.gradientColors.first?.opacity(isSelected ? 0.4 : 0.2) ?? .clear) : .clear,
-                radius: isSelected ? 12 : 6,
+                color: canAfford ? (gachaType.gradientColors.first?.opacity(0.2) ?? .clear) : .clear,
+                radius: 6,
                 x: 0,
-                y: isSelected ? 8 : 4
+                y: 4
             )
             .rotation3DEffect(
                 .degrees(isPressed ? 5 : 0),
                 axis: (x: 1, y: 0, z: 0),
                 perspective: 1.0
             )
-            .animation(.spring(response: 0.5, dampingFraction: 0.7), value: isSelected)
             .animation(.easeInOut(duration: 0.15), value: isPressed)
     }
 }

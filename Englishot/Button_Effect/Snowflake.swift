@@ -18,9 +18,9 @@ struct Snowflake: Identifiable {
     
     init() {
         x = CGFloat.random(in: 0...UIScreen.main.bounds.width)
-        size = CGFloat.random(in: 5...15)
-        speed = Double.random(in: 4...8)
-        delay = Double.random(in: 0...2)
+        size = CGFloat.random(in: 5...10)
+        speed = Double.random(in: 10...15)
+        delay = Double.random(in: 0...4)
     }
 }
 
