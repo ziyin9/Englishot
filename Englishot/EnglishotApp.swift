@@ -9,7 +9,7 @@ import SwiftUI
 import UIKit
 
 @main
-struct coreMLtextApp: App {
+struct EnglishotApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var audioManager = AudioManager()
     // init CoreDataManager
