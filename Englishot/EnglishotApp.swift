@@ -12,20 +12,43 @@ import UIKit
 struct EnglishotApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var audioManager = AudioManager()
+    @State private var isLoading = true
+    
     // init CoreDataManager
     init() {
         // 確保 CoreData 的上下文在應用啟動時已經初始化
         _ = CoreDataManager.shared
         
         initializeCoinIfNeeded()
-
     }
 
     var body: some Scene {
         WindowGroup {
-            MainView()
-                .environment(\.managedObjectContext, CoreDataManager.shared.context)  // 如果需要在 View 中使用 CoreData
-                .environmentObject(audioManager)//設定音樂
+            ZStack {
+                if isLoading {
+                    LoadingView {
+                        // 載入完成後的回調
+                        withAnimation(.easeInOut(duration: 1.2)) {
+                            isLoading = false
+                        }
+                    }
+                    .transition(.asymmetric(
+                        insertion: .identity,
+                        removal: .opacity.combined(with: .scale(scale: 0.8).combined(with: .move(edge: .top)))
+                    ))
+                    .zIndex(1)
+                } else {
+                    MainView()
+                        .environment(\.managedObjectContext, CoreDataManager.shared.context)
+                        .environmentObject(audioManager)
+                        .transition(.asymmetric(
+                            insertion: .opacity.combined(with: .scale(scale: 0.95).combined(with: .move(edge: .bottom))),
+                            removal: .identity
+                        ))
+                        .zIndex(0)
+                }
+            }
+            .animation(.spring(response: 1.0, dampingFraction: 0.8, blendDuration: 0.5), value: isLoading)
         }
     }
 }

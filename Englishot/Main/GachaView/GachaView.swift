@@ -36,6 +36,8 @@ struct GachaView: View {
     @State private var selectedGachaType: GachaType = .normal
     @State private var showUnlockSheet = false
     @State private var activeSheet: ActiveSheet? = nil
+    @State private var showRarityAnimation = false
+    @State private var currentRarity = ""
     private let sortOptions = ["Rarity", "Unlocked", "Newest"]
     private let columns = [
         GridItem(.flexible(), spacing: 10),
@@ -252,6 +254,19 @@ struct GachaView: View {
                 }
             }
         )
+        .fullScreenCover(isPresented: $showRarityAnimation) {
+            // 稀有度動畫
+            RarityAnimationView(
+                rarity: currentRarity,
+                isPresented: $showRarityAnimation
+            )
+        }
+        .onChange(of: showRarityAnimation) { isShowing in
+            // 稀有度動畫關閉時稀有度動畫關閉時
+            if !isShowing && lastDrawnCard != nil {
+                showCardAfterAnimation()
+            }
+        }
     }
     
     private func getTypeIcon(for type: String) -> String {
@@ -306,47 +321,74 @@ struct GachaView: View {
             cardScale = 0.1
             cardOpacity = 0.0
             
-            // Simulate card drawing with animation
-            withAnimation(.easeInOut(duration: 1.0)) {
-                isSpinning = true
+            // Get the drawn card rarity and show rarity animation first
+            if let drawnCard = gachaSystem.lastDrawnCard {
+                currentRarity = drawnCard.rarity
+                showRarityAnimation = true
+                
+                // Store the drawn card data for later use
+                lastDrawnCard = drawnCard
+                isDuplicate = gachaSystem.lastDrawWasDuplicate
+                refundAmount = drawnCard.duplicateRefund
+            } else {
+                // Fallback to original animation if no card drawn
+                withAnimation(.easeInOut(duration: 1.0)) {
+                    isSpinning = true
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
+                        cardScale = 1.2
+                        cardOpacity = 1.0
+                        isSpinning = false
+                    }
+                    
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7).delay(0.5)) {
+                        cardScale = 1.0
+                    }
+                    
+                    refreshTrigger.toggle()
+                }
+            }
+        }
+    }
+    
+    private func showCardAfterAnimation() {
+        // Start card reveal animation
+        withAnimation(.easeInOut(duration: 1.0)) {
+            isSpinning = true
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            // Card reveal animation
+            withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
+                cardScale = 1.2
+                cardOpacity = 1.0
+                isSpinning = false
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                // Card reveal animation
-                withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
-                    cardScale = 1.2
-                    cardOpacity = 1.0
-                    isSpinning = false
-                }
-                
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.7).delay(0.5)) {
-                    cardScale = 1.0
-                }
-                
-                // Show GotCardView
-                if let drawnCard = gachaSystem.lastDrawnCard {
-                    lastDrawnCard = drawnCard
-                    isDuplicate = gachaSystem.lastDrawWasDuplicate
-                    refundAmount = drawnCard.duplicateRefund
-                    showGotCard = true
-                    
-                    // If it's a duplicate card, show the refund animation
-                    if isDuplicate {
-                        if let coinDisplayView = uiState.coinDisplayView {
-                            coinDisplayView.showRewardAnimation(amount: Int64(refundAmount))
-                        } else {
-                            uiState.coinRewardAmount = Int(refundAmount)
-                            uiState.showCoinReward = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                uiState.showCoinReward = false
-                            }
-                        }
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.7).delay(0.5)) {
+                cardScale = 1.0
+            }
+            
+            // Show GotCardView
+            showGotCard = true
+            
+            // If it's a duplicate card, show the refund animation
+            if isDuplicate {
+                if let coinDisplayView = uiState.coinDisplayView {
+                    coinDisplayView.showRewardAnimation(amount: Int64(refundAmount))
+                } else {
+                    uiState.coinRewardAmount = Int(refundAmount)
+                    uiState.showCoinReward = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        uiState.showCoinReward = false
                     }
                 }
-                
-                // Trigger refresh after animation completes
-                refreshTrigger.toggle()
             }
+            
+            // Trigger refresh after animation completes
+            refreshTrigger.toggle()
         }
     }
 }

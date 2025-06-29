@@ -4,7 +4,10 @@ import CoreData
 struct CardDetailView: View {
     let card: PenguinCard
     @Environment(\.dismiss) var dismiss
+    
+    @StateObject private var audioPlayer = AudioPlayer()
     @State private var isPlayingAudio = false
+    
     @State private var isCollected = false
     @EnvironmentObject var gachaSystem: GachaSystem
     
@@ -93,8 +96,11 @@ struct CardDetailView: View {
                             if isCollected {
                                 Button(action: {
                                     // Play pronunciation
-                                    isPlayingAudio = true
+                                    isPlayingAudio.toggle()
                                     // Add audio playback logic here
+                                    if let url = URL(string: card.pronunciationURL) {
+                                        audioPlayer.playSound(from: url)
+                                    }
                                 }) {
                                     Image(systemName: isPlayingAudio ? "speaker.wave.2.fill" : "speaker.wave.2")
                                         .font(.system(size: 24))
