@@ -23,8 +23,7 @@ struct GachaView: View {
     @State private var cardScale: CGFloat = 0.1
     @State private var cardOpacity = 0.0
     @State private var isSpinning = false
-    @State private var showInsufficientCoinsAlert = false
-    @State private var showConfirmDrawAlert = false
+
     @State private var selectedSortOption = "Rarity"
     @State private var showGameScene = false
     @State private var refreshTrigger = false
@@ -38,6 +37,8 @@ struct GachaView: View {
     @State private var activeSheet: ActiveSheet? = nil
     @State private var showRarityAnimation = false
     @State private var currentRarity = ""
+    @State private var showCustomAlert = false
+    @State private var currentAlertType: AlertType = .insufficientCoins
     private let sortOptions = ["Rarity", "Unlocked", "Newest"]
     private let columns = [
         GridItem(.flexible(), spacing: 10),
@@ -121,9 +122,11 @@ struct GachaView: View {
                             currentCoins: currentCoins,
                             onDrawCard: { gachaType in
                                 if currentCoins >= gachaType.cost {
-                                    showConfirmDrawAlert = true
+                                    currentAlertType = .confirmDraw
+                                    showCustomAlert = true
                                 } else {
-                                    showInsufficientCoinsAlert = true
+                                    currentAlertType = .insufficientCoins
+                                    showCustomAlert = true
                                 }
                             }
                         )
@@ -213,19 +216,21 @@ struct GachaView: View {
             }
             
         }
-        .alert("Insufficient Coins", isPresented: $showInsufficientCoinsAlert) {
-            Button("OK", role: .cancel) { }
-        } message: {
-            Text("You need \(requiredCoins) coins to draw a card. Play mini-games to earn more coins!")
-        }
-        .alert("Confirm Draw", isPresented: $showConfirmDrawAlert) {
-            Button("Cancel", role: .cancel) { }
-            Button("Draw") {
-                drawCard()
+        .overlay(
+            Group {
+                if showCustomAlert {
+                    CustomAlertView(
+                        type: currentAlertType,
+                        requiredCoins: requiredCoins,
+                        gachaType: selectedGachaType,
+                        isPresented: $showCustomAlert,
+                        onConfirm: currentAlertType == .confirmDraw ? {
+                            drawCard()
+                        } : nil
+                    )
+                }
             }
-        } message: {
-            Text("Spend \(requiredCoins) coins to draw a \(selectedGachaType.title) card?")
-        }
+        )
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 BackButton {
@@ -255,14 +260,14 @@ struct GachaView: View {
             }
         )
         .fullScreenCover(isPresented: $showRarityAnimation) {
-            // 稀有度動畫
+            // 全屏播放稀有度动画
             RarityAnimationView(
                 rarity: currentRarity,
                 isPresented: $showRarityAnimation
             )
         }
         .onChange(of: showRarityAnimation) { isShowing in
-            // 稀有度動畫關閉時稀有度動畫關閉時
+            // 当稀有度动画关闭时，开始显示卡片
             if !isShowing && lastDrawnCard != nil {
                 showCardAfterAnimation()
             }

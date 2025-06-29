@@ -263,4 +263,4 @@ struct FallbackAnimationView: View {
 
 #Preview {
     RarityAnimationView(rarity: "Aurora", isPresented: .constant(true))
-} 
+}

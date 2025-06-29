@@ -139,6 +139,8 @@ struct GotCardView: View {
                 Button(action: {
                     withAnimation {
                         isPresented = false
+                        SoundPlayer.shared.playSound(named: "pop")
+
                     }
                 }) {
                     Text("確認")

@@ -5,6 +5,7 @@ struct MainView: View {
     @StateObject private var uiState = UIState()
     @StateObject private var gameState = GameState()
     @State private var isHovered: Tab?
+    @State private var isMainViewReady = false
     @FetchRequest(entity: Coin.entity(), sortDescriptors: []) var coinEntities: FetchedResults<Coin>
 
     
@@ -21,16 +22,35 @@ struct MainView: View {
                     .environmentObject(uiState)
                     .environmentObject(gameState)
                 
-                if uiState.isNavBarVisible {
+                if uiState.isNavBarVisible && isMainViewReady {
                     TopNavBarView(selectedTab: $selectedTab, isHovered: $isHovered)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
-                if ((selectedTab != .setting)&&(uiState.isCoinVisible)){
+                if ((selectedTab != .setting)&&(uiState.isCoinVisible) && isMainViewReady){
                     CoinDisplayView(coins: currentCoins)
+                        .transition(.move(edge: .top).combined(with: .opacity))
                 }
 
             }
             .ignoresSafeArea(.keyboard)
             .navigationBarHidden(true)
+            .onAppear {
+                // 只在第一次初始化时设置动画
+                if !uiState.isInitialized {
+                    // 延迟显示导航栏和金币，确保转场动画完成
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                        withAnimation(.spring(response: 0.8, dampingFraction: 0.7)) {
+                            isMainViewReady = true
+                            uiState.isNavBarVisible = true
+                            uiState.isCoinVisible = true
+                            uiState.isInitialized = true
+                        }
+                    }
+                } else {
+                    // 如果已经初始化过，直接显示
+                    isMainViewReady = true
+                }
+            }
         }
     }
 }
