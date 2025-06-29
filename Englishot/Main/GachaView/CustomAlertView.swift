@@ -1,12 +1,10 @@
 import SwiftUI
 
-// 弹窗类型枚举
 enum AlertType {
     case insufficientCoins
     case confirmDraw
 }
 
-// 自定义美观弹窗
 struct CustomAlertView: View {
     let type: AlertType
     let requiredCoins: Int64
@@ -37,23 +35,16 @@ struct CustomAlertView: View {
                     dismissAlert()
                 }
             
-            // 雪花粒子效果
-            snowflakeParticles
+//            snowflakeParticles
             
-            // 弹窗内容
             VStack(spacing: 0) {
-                // 顶部装饰
                 topDecoration
                 
-                // 主要内容
                 VStack(spacing: 20) {
-                    // 图标和标题
                     iconAndTitle
                     
-                    // 消息内容
                     messageContent
                     
-                    // 按钮区域
                     buttonArea
                 }
                 .padding(.horizontal, 24)
@@ -158,7 +149,6 @@ struct CustomAlertView: View {
             .mask(RoundedRectangle(cornerRadius: 25))
     }
     
-    // 顶部装饰
     private var topDecoration: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 25)
@@ -175,7 +165,6 @@ struct CustomAlertView: View {
                         .stroke(Color.white.opacity(0.5), lineWidth: 1)
                 )
             
-            // 冰晶装饰
             HStack(spacing: 15) {
                 ForEach(0..<3, id: \.self) { _ in
                     Text("❄️")
@@ -187,12 +176,9 @@ struct CustomAlertView: View {
         .padding(.horizontal, 20)
     }
     
-    // 图标和标题
     private var iconAndTitle: some View {
         VStack(spacing: 15) {
-            // 图标背景
             ZStack {
-                // 外圈冰晶效果
                 Circle()
                     .fill(
                         RadialGradient(
@@ -261,7 +247,6 @@ struct CustomAlertView: View {
                 }
             }
             
-            // 标题
             Text(title)
                 .font(.system(size: 24, weight: .bold, design: .rounded))
                 .foregroundStyle(
@@ -279,7 +264,7 @@ struct CustomAlertView: View {
         }
     }
     
-    // 消息内容
+    // 内容
     private var messageContent: some View {
         Text(message)
             .font(.system(size: 17, weight: .medium, design: .rounded))
@@ -298,11 +283,11 @@ struct CustomAlertView: View {
             .shadow(color: Color.white.opacity(0.3), radius: 1)
     }
     
-    // 按钮区域
+    //
     private var buttonArea: some View {
         VStack(spacing: 12) {
             if type == .confirmDraw {
-                // 确认抽卡按钮
+                // 抽
                 Button(action: {
                     onConfirm?()
                     dismissAlert()

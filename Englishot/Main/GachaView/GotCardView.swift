@@ -11,6 +11,7 @@ struct GotCardView: View {
     
     var body: some View {
         ZStack {
+            
             // Semi-transparent background
             Color.black.opacity(0.7)
                 .ignoresSafeArea(.all)
@@ -174,6 +175,8 @@ struct GotCardView: View {
         .background(Color.clear)
         .onAppear {
             checkIfWordIsNew()
+            // 播放显示卡片音效
+            SoundPlayer.shared.playSound(named: "showcard")
             withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                 showContent = true
             }

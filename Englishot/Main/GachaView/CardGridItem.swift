@@ -224,6 +224,7 @@ struct CardGridItem: View {
                 .onDisappear {
                     gachaSystem.markCardAsViewed(cardId: card.id)
                 }
+
         }
         .onAppear {
             checkIfWordIsCollected()
