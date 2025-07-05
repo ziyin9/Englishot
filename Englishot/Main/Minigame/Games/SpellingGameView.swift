@@ -22,6 +22,7 @@ struct SpellingGameView: View {
     @State private var animateFail = false
     @State private var celebrationParticles: [CelebrationParticle] = []
     @State private var showLeaveGameView = false // 控制顯示離開遊戲視圖
+    @State private var hideClearButton = false // 立即隱藏Clear按鈕
     
     private var currentCoins: Int64 {
         coinEntities.first?.amount ?? 0
@@ -123,8 +124,15 @@ struct SpellingGameView: View {
                                                             selectLetter(letter)
                                                         }
                                                 } else {
-                                                    Color.clear
-                                                        .frame(width: 30, height: 45)
+                                                    // Use same size as unselected tile to prevent layout shift
+                                                    RoundedRectangle(cornerRadius: 10)
+                                                        .fill(Color.clear)
+                                                        .frame(width: 50, height: 60)
+                                                        .opacity(0.3)
+                                                        .overlay(
+                                                            RoundedRectangle(cornerRadius: 10)
+                                                                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                                                        )
                                                 }
                                             }
                                         }
@@ -138,8 +146,8 @@ struct SpellingGameView: View {
                     
                     // Fixed position for Clear/Next button container
                     ZStack {
-                        // Clear button - always positioned in the same place
-                        if !showNextButton {
+                        // Clear button - hide immediately when answer is being checked
+                        if !showNextButton && !hideClearButton {
                             Button(action: {
                                 if !selectedLetters.isEmpty {
                                     withAnimation(.spring(response: 0.3)) {
@@ -205,19 +213,24 @@ struct SpellingGameView: View {
                     Text("Correct! 🎉")
                         .font(.system(size: 40, weight: .heavy))
                         .foregroundColor(Color(#colorLiteral(red: 0.5, green: 0.8, blue: 0.3, alpha: 1)))
-                        .scaleEffect(animateSuccess ? 1.3 : 0.5)
+                        .scaleEffect(animateSuccess ? 1.2 : 0.8)
                         .opacity(animateSuccess ? 1 : 0)
-                        .animation(.interpolatingSpring(stiffness: 400, damping: 25), value: isCorrect)
+                        .animation(.spring(response: 0.6, dampingFraction: 0.8), value: animateSuccess)
                     Spacer()
                 }
                 .zIndex(10) //確保correct在最上層
                 .onAppear {
+                    // Use a single smooth animation trigger
+                    withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                         animateSuccess = true
+                    }
                     createCelebrationParticles()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                        withAnimation {
+                    
+                    // Clean up after animation completes
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                        withAnimation(.easeOut(duration: 0.3)) {
                             self.isCorrect = nil
-//                            self.animateSuccess = false
+                            self.animateSuccess = false
                         }
                     }
                 }
@@ -273,6 +286,7 @@ struct SpellingGameView: View {
         animateSuccess = false
         animateFail = false
         celebrationParticles = []
+        hideClearButton = false  // 重置Clear按鈕狀態
         
         // Pick a random word
         if wordEntities.count > 0 {
@@ -305,7 +319,10 @@ struct SpellingGameView: View {
         let enteredWord = selectedLetters.map { $0.character }.joined()
         let isWordCorrect = enteredWord.lowercased() == correctWord.lowercased()
         
-        withAnimation {
+        // 立即隱藏Clear按鈕，不管答案對錯
+        hideClearButton = true
+        
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
             isCorrect = isWordCorrect
             
             if isWordCorrect {
@@ -313,11 +330,15 @@ struct SpellingGameView: View {
                 addCoin(by:SpellingGameRewardCoins)
                 uiState.coinRewardAmount = Int(SpellingGameRewardCoins)
                 uiState.showCoinReward = true
+                
+                // Consolidate async operations to reduce conflicts
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                     uiState.showCoinReward = false
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-                    showNextButton = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        showNextButton = true
+                    }
                 }
             } else {
                 // Shake the tiles
@@ -328,12 +349,13 @@ struct SpellingGameView: View {
                     shakeTiles = false
                 }
                 
-                // Clear selected letters after a delay
+                // Clear selected letters after a delay and show Clear button again
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
                     withAnimation(.spring(response: 0.3)) {
                         selectedLetters = []
                         isCorrect = nil
                         animateFail = false
+                        hideClearButton = false  // 答錯時重新顯示Clear按鈕
                     }
                 }
             }
@@ -342,7 +364,8 @@ struct SpellingGameView: View {
     
     private func createCelebrationParticles() {
         celebrationParticles = []
-        for _ in 0..<15 {
+        // Reduce particle count from 15 to 8 for better performance
+        for _ in 0..<8 {
             let randomX = CGFloat.random(in: 50...UIScreen.main.bounds.width-50)
             let randomY = CGFloat.random(in: 200...UIScreen.main.bounds.height-200)
             
@@ -351,18 +374,18 @@ struct SpellingGameView: View {
             
             let particle = CelebrationParticle(
                 position: CGPoint(x: randomX, y: randomY),
-                size: CGFloat.random(in: 5...15),
+                size: CGFloat.random(in: 6...12),
                 color: randomColor,
                 opacity: 1.0
             )
             
             celebrationParticles.append(particle)
-            
-            // Animate particle fading
-            withAnimation(Animation.easeOut(duration: 1.5).delay(Double.random(in: 0.1...0.5))) {
-                if let index = celebrationParticles.firstIndex(where: { $0.id == particle.id }) {
-                    celebrationParticles[index].opacity = 0
-                }
+        }
+        
+        // Use a simpler, single animation for all particles
+        withAnimation(.easeOut(duration: 1.2)) {
+            for index in celebrationParticles.indices {
+                celebrationParticles[index].opacity = 0
             }
         }
     }
@@ -414,7 +437,7 @@ struct LetterTile: View {
                 )
                 .shadow(color: Color.black.opacity(0.1), radius: 3, x: 0, y: 2)
             
-            Text(letter.character.uppercased())
+            Text(letter.character.lowercased())
                 .font(.system(size: 24, weight: .bold))
                 .foregroundColor(isSelected ? .white : Color(#colorLiteral(red: 0.3, green: 0.6, blue: 0.3, alpha: 1)))
         }
