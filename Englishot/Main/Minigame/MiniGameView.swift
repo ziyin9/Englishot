@@ -11,10 +11,12 @@ struct MiniGameView: View {
     @State private var isHoveringMemory = false
     @State private var isHoveringAudio = false
     @State private var isHoveringSpelling = false
+    @State private var isHoveringSentencePick = false
     
     @State private var SpellingGameRewardCoins : Int64 = 20
     @State private var MemoryGameRewardCoins : Int64  = 50
     @State private var AudioImageGameRewardCoins : Int64  = 20
+    @State private var SentencePickGameRewardCoins : Int64 = 30
     
     private var isMemoryGamePlayable: Bool {
         wordEntities.count >= 6
@@ -26,6 +28,10 @@ struct MiniGameView: View {
     
     private var isSpellingGamePlayable: Bool {
         wordEntities.count >= 1
+    }
+    
+    private var isSentencePickGamePlayable: Bool {
+        wordEntities.count >= 3
     }
     
     private var currentCoins: Int64 {
@@ -108,6 +114,32 @@ struct MiniGameView: View {
                             .buttonStyle(PlainButtonStyle())
                             .disabled(!isSpellingGamePlayable)
                             .offset(y: isLoaded ? 0 : 300)
+                            .opacity(isLoaded ? 1 : 0)
+                            
+                            // Sentence Pick Game Card
+                            NavigationLink(destination: SentencePickGame(SentencePickGameRewardCoins: SentencePickGameRewardCoins)
+                                .navigationBarBackButtonHidden()
+                            ) {
+                                EnhancedGameCard(
+                                    title: "例句選圖",
+                                    subtitle: "選擇正確的圖片完成句子",
+                                    mainIcon: "textformat.size",
+                                    decorativeIcons: ["photo.fill", "text.cursor", "checkmark.circle.fill"],
+                                    colors: [Color(#colorLiteral(red: 0.9, green: 0.4, blue: 0.6, alpha: 1)), Color(#colorLiteral(red: 0.95, green: 0.6, blue: 0.8, alpha: 1))],
+                                    isHovering: $isHoveringSentencePick,
+                                    isEnabled: isSentencePickGamePlayable,
+                                    lockedMessage: "Collect At Least 3 Words",
+                                    rewardCoins: SentencePickGameRewardCoins
+                                )
+                                .scaleEffect(isHoveringSentencePick ? 1.03 : 1.0)
+                                .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHoveringSentencePick)
+                                .onHover { hovering in
+                                    isHoveringSentencePick = hovering
+                                }
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                            .disabled(!isSentencePickGamePlayable)
+                            .offset(x: isLoaded ? 0 : -200)
                             .opacity(isLoaded ? 1 : 0)
                             
                             // Memory Game Card
