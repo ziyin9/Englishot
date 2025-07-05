@@ -81,7 +81,6 @@ struct MiniGameView: View {
                     }
                     .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 2)
                     .padding(.top, 60)
-                    .offset(y: isLoaded ? 0 : -50)
                     .opacity(isLoaded ? 1 : 0)
                     
                     Spacer().frame(height: 15)
@@ -122,7 +121,7 @@ struct MiniGameView: View {
                             ) {
                                 EnhancedGameCard(
                                     title: "例句選圖",
-                                    subtitle: "選擇正確的圖片完成句子",
+                                    subtitle: "Which picture fits the sentence?",
                                     mainIcon: "textformat.size",
                                     decorativeIcons: ["photo.fill", "text.cursor", "checkmark.circle.fill"],
                                     colors: [Color(#colorLiteral(red: 0.9, green: 0.4, blue: 0.6, alpha: 1)), Color(#colorLiteral(red: 0.95, green: 0.6, blue: 0.8, alpha: 1))],

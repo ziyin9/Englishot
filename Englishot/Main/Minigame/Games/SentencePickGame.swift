@@ -52,7 +52,7 @@ struct SentencePickGame: View {
             VStack(spacing: 20) {
                 GameHeaderView(
                     title: "例句選圖",
-                    subtitle: "選擇正確的圖片完成句子",
+                    subtitle: "Choose the correct picture to complete the sentence",
                     colors: [Color(#colorLiteral(red: 0.9, green: 0.4, blue: 0.6, alpha: 1)), Color(#colorLiteral(red: 0.95, green: 0.6, blue: 0.8, alpha: 1))],
                     showLeaveGameView: $showLeaveGameView
                 )
@@ -111,8 +111,9 @@ struct SentencePickGame: View {
                                         .resizable()
                                         .scaledToFit()
                                         .padding(15)
+                                        .frame(height: 180) //
                                 }
-                                .frame(height: 180) // 增加高度从150到180
+                                .frame(height: 180) //
                                 .scaleEffect(selectedImageIndex == index ? 0.95 : 1.0)
                                 .onTapGesture {
                                     if isCorrect == nil {
@@ -139,7 +140,7 @@ struct SentencePickGame: View {
                             setupNextQuestion()
                         }) {
                             HStack(spacing: 10) {
-                                Text("下一題")
+                                Text("Next Question")
                                     .font(.system(size: 18, weight: .semibold, design: .rounded))
                                 
                                 Image(systemName: "arrow.right")
@@ -222,6 +223,7 @@ struct SentencePickGame: View {
         }
         .onAppear {
             setupGame()
+            uiState.isNavBarVisible = false
         }
     }
     
