@@ -59,8 +59,14 @@ struct TutorialOverlayView: View {
         TeachingStep(
             imageName: "Tutorial11",
             title: "Complete Challenges",
-            description: "收集單字解鎖三款複習小遊戲等你玩！"
+            description: "收集單字解鎖四款複習小遊戲等你玩！"
+        ),
+        TeachingStep(
+            imageName: "Tutorial12",
+            title: "Collect Penguin Cards",
+            description: "用小魚金幣來抽卡，抽出超可愛的企鵝卡！閃亮稀有角色等你來收集！"
         )
+        
     ]
     
     var body: some View {
@@ -170,6 +176,8 @@ struct TutorialOverlayView: View {
                     } else {
                         Button(action: {
                             dismiss()
+                            uiState.isCoinVisible = true
+
                         }) {
                             Text("開始探索")
                                 .padding(.vertical, 10)

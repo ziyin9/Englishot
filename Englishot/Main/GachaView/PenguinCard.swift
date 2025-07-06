@@ -844,7 +844,7 @@ class GachaSystem: ObservableObject {
                     cardName: "Moon Festival Penguin",
                     englishWord: "Moon Festival",
                     chineseWord: "中秋節",
-                    pronunciationURL: "https://dictionary.cambridge.org/zht/media/%E8%8B%B1%E8%AA%9E/us_pron/u/usc/uscld/uscld00136.mp3",
+                    pronunciationURL: "https://s3-ap-northeast-1.amazonaws.com/ehanlin-keyword/audio/Moon Festival.mp3",
                     emotionType: "Festival",
                     rarity: "Ice Crystal",
                     imageName: "penguin_moonfestival",

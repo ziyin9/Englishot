@@ -44,14 +44,11 @@ struct SentencePickGame: View {
             )
             .ignoresSafeArea()
             
-            // Coin Display
-            if uiState.isCoinVisible {
-                CoinDisplayView(coins: currentCoins)
-            }
+            
             
             VStack(spacing: 20) {
                 GameHeaderView(
-                    title: "例句選圖",
+                    title: "Sentence & Picture",
                     subtitle: "Choose the correct picture to complete the sentence",
                     colors: [Color(#colorLiteral(red: 0.9, green: 0.4, blue: 0.6, alpha: 1)), Color(#colorLiteral(red: 0.95, green: 0.6, blue: 0.8, alpha: 1))],
                     showLeaveGameView: $showLeaveGameView
