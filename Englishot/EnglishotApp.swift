@@ -27,28 +27,15 @@ struct EnglishotApp: App {
             ZStack {
                 if isLoading {
                     LoadingView {
-                        // 載入完成後的回調
-                        withAnimation(.easeInOut(duration: 1.2)) {
-                            isLoading = false
-                        }
+                        // 載入完成後直接切換，無動畫
+                        isLoading = false
                     }
-                    .transition(.asymmetric(
-                        insertion: .identity,
-                        removal: .opacity.combined(with: .scale(scale: 0.8).combined(with: .move(edge: .top)))
-                    ))
-                    .zIndex(1)
                 } else {
                     MainView()
                         .environment(\.managedObjectContext, CoreDataManager.shared.context)
                         .environmentObject(audioManager)
-                        .transition(.asymmetric(
-                            insertion: .opacity.combined(with: .scale(scale: 0.95).combined(with: .move(edge: .bottom))),
-                            removal: .identity
-                        ))
-                        .zIndex(0)
                 }
             }
-            .animation(.spring(response: 1.0, dampingFraction: 0.8, blendDuration: 0.5), value: isLoading)
         }
     }
 }

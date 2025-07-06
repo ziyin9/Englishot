@@ -10,7 +10,8 @@
 //    @State private var angle: Double = 0
 //    @State private var rotateForward = true
 //    @EnvironmentObject var uiState: UIState
-//    
+//    @State private var snowflakes: [Snowflake] = (0..<50).map { _ in Snowflake() }
+
 //    let mapSize = CGSize(width: 640, height: 1904)
 //
 //    var body: some View {
@@ -49,7 +50,11 @@
 //                                    }
 //                                }
 //                        )
-//                    
+//                    ForEach(snowflakes) { snowflake in
+//                        Snowflake_View(snowflake: snowflake)
+//                    }
+
+
 //                    MapButton(iconName: "Homeimage", label: "Home", position: CGPoint(x: 370, y: 990), mapOffset: $mapOffset, currentDragOffset: $currentDragOffset,floatOffset: $floatOffset) {
 //                            selectedLocation = "Home"
 //                            triggerImpactFeedback(style: .light)
@@ -345,6 +350,8 @@ struct GameMapView: View {
     @State private var showDestination = false
     @State private var showTutorial: Bool = false
     @State private var angle: Double = 0
+    @State private var snowflakes: [Snowflake] = (0..<50).map { _ in Snowflake() }
+
 
     @EnvironmentObject var uiState: UIState
     @FetchRequest(entity: Coin.entity(), sortDescriptors: []) var coinEntities: FetchedResults<Coin>
@@ -392,7 +399,9 @@ struct GameMapView: View {
 //                                }
 //                            }
 //                    )
-                
+                ForEach(snowflakes) { snowflake in
+                    Snowflake_View(snowflake: snowflake)
+                }
                 Button {
                     selectedLocation = "Home"
                     triggerImpactFeedback(style: .light)
