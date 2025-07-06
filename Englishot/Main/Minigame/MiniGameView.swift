@@ -80,7 +80,7 @@ struct MiniGameView: View {
                             .foregroundColor(Color(#colorLiteral(red: 0.4, green: 0.5, blue: 0.8, alpha: 1)))
                     }
                     .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 2)
-                    .padding(.top, 60)
+                    .padding(.top, 0)
                     .opacity(isLoaded ? 1 : 0)
                     
                     Spacer().frame(height: 15)

@@ -205,6 +205,8 @@ struct SentencePickGame: View {
                     button1Title: "離開遊戲",
                     button1Action: {
                         dismiss()
+                        uiState.isNavBarVisible = true
+
                     },
                     button2Title: "繼續遊戲",
                     button2Action: {

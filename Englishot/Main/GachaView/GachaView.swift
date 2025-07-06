@@ -39,6 +39,7 @@ struct GachaView: View {
     @State private var currentRarity = ""
     @State private var showCustomAlert = false
     @State private var currentAlertType: AlertType = .insufficientCoins
+    @State private var showCollectionInfo = false
     private let sortOptions = ["Rarity", "Unlocked", "Newest"]
     private let columns = [
         GridItem(.flexible(), spacing: 10),
@@ -102,9 +103,26 @@ struct GachaView: View {
                 // Header with collection progress
                 VStack {
                     HStack{
-                        Image("gachaicon")
-                            .resizable()
-                            .frame(width: 30, height: 30)
+                        Button(action: {
+                            let impactFeedback = UIImpactFeedbackGenerator(style: .light)
+                            impactFeedback.impactOccurred()
+                            showCollectionInfo = true
+                        }) {
+                            Image("gachaicon")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                                .padding(8)
+                                .background(
+                                    Circle()
+                                        .fill(Color.white.opacity(0.1))
+                                        .overlay(
+                                            Circle()
+                                                .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                                        )
+                                )
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
                         Text("企鵝卡收集冊")//"Penguin Collection"
                             .font(.system(size: 24, weight: .bold, design: .rounded))
                             .foregroundColor(.white)
@@ -227,6 +245,13 @@ struct GachaView: View {
                         onConfirm: currentAlertType == .confirmDraw ? {
                             drawCard()
                         } : nil
+                    )
+                }
+                
+                if showCollectionInfo {
+                    CollectionInfoView(
+                        isPresented: $showCollectionInfo,
+                        gachaSystem: gachaSystem
                     )
                 }
             }
