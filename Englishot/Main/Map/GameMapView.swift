@@ -415,7 +415,7 @@ struct GameMapView: View {
                     }
                 }
                 .position(CGPoint(x: 370 + mapOffset.width + currentDragOffset.width,
-                                 y: 1010 + mapOffset.height + currentDragOffset.height))
+                                 y: 1000 + mapOffset.height + currentDragOffset.height))
                 .gesture(
                     LongPressGesture(minimumDuration: 1)
                         .onEnded { _ in
@@ -436,7 +436,7 @@ struct GameMapView: View {
                     }
                 }
                 .position(CGPoint(x: 270 + mapOffset.width + currentDragOffset.width,
-                                 y: 1220 + mapOffset.height + currentDragOffset.height))
+                                 y: 1190 + mapOffset.height + currentDragOffset.height))
                 .gesture(
                     LongPressGesture(minimumDuration: 1)
                         .onEnded { _ in
@@ -478,7 +478,7 @@ struct GameMapView: View {
                     }
                 }
                 .position(CGPoint(x: 420 + mapOffset.width + currentDragOffset.width,
-                                 y: 730 + mapOffset.height + currentDragOffset.height))
+                                 y: 700 + mapOffset.height + currentDragOffset.height))
                 .gesture(
                     LongPressGesture(minimumDuration: 1)
                         .onEnded { _ in
@@ -509,20 +509,20 @@ struct GameMapView: View {
                 
                 
                 // Reset button
-                Button(action: {
-                    withAnimation {
-                        mapOffset = .zero // 重置偏移量
-                    }
-                    triggerImpactFeedback(style: .light)
-                }) {
-                    Image("compass2")
-                        .resizable()
-                        .frame(width: 60, height: 60)
-                        .foregroundColor(.blue)
-                        .padding(3)
-                        .background(Circle().fill(Color.white.opacity(0.9)).shadow(radius: 4))
-                }
-                .position(x: 470, y: 1250)
+//                Button(action: {
+//                    withAnimation {
+//                        mapOffset = .zero // 重置偏移量
+//                    }
+//                    triggerImpactFeedback(style: .light)
+//                }) {
+//                    Image("compass2")
+//                        .resizable()
+//                        .frame(width: 60, height: 60)
+//                        .foregroundColor(.blue)
+//                        .padding(3)
+//                        .background(Circle().fill(Color.white.opacity(0.9)).shadow(radius: 4))
+//                }
+//                .position(x: 470, y: 1250)
                 
                 Button(action: {
                     withAnimation {
